@@ -1,0 +1,14 @@
+# Native projects
+android/
+ios/
+
+# Ruby / Bundler
+vendor/
+.bundle/
+
+# Build output
+coverage/
+**/build/
+
+# Lockfiles
+package-lock.json
