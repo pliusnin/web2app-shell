@@ -5,17 +5,10 @@
  * @format
  */
 
-import {StatusBar, useColorScheme} from 'react-native';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import { WebAppShell } from './src';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}/>
-    </SafeAreaProvider>
-  );
+  return <WebAppShell />;
 }
 
 export default App;

@@ -25,7 +25,10 @@ DerivedData
 # Android/IntelliJ
 #
 build/
-.idea
+**/.idea/*
+# Shared WebStorm settings: Prettier and ESLint fix on save
+!.idea/prettier.xml
+!.idea/jsLinters/
 .gradle
 local.properties
 *.iml

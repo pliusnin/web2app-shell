@@ -1,0 +1,23 @@
+{
+  "startUrl": "https://symfonyart.com/portfolio/",
+  "userAgentSuffix": "web2appShell/0.0.1",
+  "theme": { "primary": "#1E6FFF", "tabBarBg": "#FFFFFF" },
+  "tabs": [
+    {
+      "title": "Portfolio",
+      "icon": "briefcase",
+      "url": "https://symfonyart.com/portfolio/"
+    },
+    {
+      "title": "About us",
+      "icon": "info",
+      "url": "https://symfonyart.com/#about"
+    },
+    {
+      "title": "Contacts",
+      "icon": "phone",
+      "url": "https://symfonyart.com/#contacts"
+    },
+    { "title": "Jira", "icon": "info", "url": "https://jira.symfonyart.com/" }
+  ]
+}
