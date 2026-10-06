@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import TabView from 'react-native-bottom-tabs';
-import { WebView } from 'react-native-webview';
 
 import type { ImageSourcePropType } from 'react-native';
 
-import type { TabConfig, ThemeConfig } from '../config';
-import { tabIcon } from '../config';
+import type { TabConfig } from '../config';
+import { tabIcon, useConfig } from '../config';
 import { useAndroidBackHandler, useTabWebViews } from '../hooks';
+import { BrowserScreen } from './browser-screen';
 
 type TabRoute = {
   key: string;
@@ -23,21 +23,11 @@ const toRoute = (tab: TabConfig, index: number): TabRoute => ({
   focusedIcon: tabIcon(tab.icon),
 });
 
-type TabsLayoutProps = {
-  tabs: ReadonlyArray<TabConfig>;
-  initialIndex: number;
-  theme: ThemeConfig;
-  userAgentSuffix?: string;
-};
+export const BrowserView = () => {
+  const { tabs, startTabIndex, theme } = useConfig();
 
-export const TabsLayout = ({
-  tabs,
-  initialIndex,
-  theme,
-  userAgentSuffix,
-}: TabsLayoutProps) => {
   const routes = useMemo(() => tabs.map(toRoute), [tabs]);
-  const [index, setIndex] = useState(initialIndex);
+  const [index, setIndex] = useState(startTabIndex);
   const webViews = useTabWebViews();
 
   // Android back button goes back in the active tab's WebView history
@@ -60,11 +50,9 @@ export const TabsLayout = ({
       tabBarActiveTintColor={theme.primary}
       tabBarStyle={{ backgroundColor: theme.tabBarBg }}
       renderScene={({ route }) => (
-        <WebView
+        <BrowserScreen
           ref={webViews.ref(route.key)}
-          source={{ uri: route.uri }}
-          applicationNameForUserAgent={userAgentSuffix}
-          allowsBackForwardNavigationGestures
+          uri={route.uri}
           onNavigationStateChange={webViews.onNavigationStateChange(route.key)}
         />
       )}

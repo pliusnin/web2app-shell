@@ -16,3 +16,5 @@ export const resolveConfig = (config: AppConfig) => {
     startTabIndex: Math.max(startIndex, 0),
   };
 };
+
+export type ResolvedConfig = ReturnType<typeof resolveConfig>;
