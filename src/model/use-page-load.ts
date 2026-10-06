@@ -1,0 +1,83 @@
+import { useReducer } from 'react';
+import type { RefObject } from 'react';
+
+import { classifyLoadError } from './classify-load-error';
+import { initialPageLoadState, pageLoadReducer } from './page-load-reducer';
+import { resolveHttpError } from './resolve-http-error';
+import { showServerErrorToast } from './show-server-error-toast';
+import type {
+  ErrorHandler,
+  HttpErrorHandler,
+  LoadProgressHandler,
+  WebViewControls,
+} from './types';
+import { useNetworkChange } from './use-network-change';
+
+export const usePageLoad = (webView: RefObject<WebViewControls | null>) => {
+  const [state, dispatch] = useReducer(pageLoadReducer, initialPageLoadState);
+  const retry = () => webView.current?.reload();
+
+  useNetworkChange({
+    onOnline: () => {
+      if (state.error?.type === 'offline') {
+        retry();
+      }
+    },
+  });
+
+  const onError: ErrorHandler = event => {
+    switch (classifyLoadError(event.nativeEvent)) {
+      case 'network':
+        event.preventDefault();
+        dispatch({ type: 'loadFailed', error: { type: 'offline' } });
+        break;
+      case 'ignored':
+        event.preventDefault();
+        break;
+      case 'other':
+        break;
+    }
+  };
+
+  const abortLoad = () => {
+    showServerErrorToast();
+    webView.current?.stopLoading();
+  };
+
+  const onHttpError: HttpErrorHandler = ({ nativeEvent: { statusCode } }) => {
+    const httpError = { type: 'http', status: statusCode } as const;
+
+    switch (resolveHttpError(statusCode, state.hasShownPage)) {
+      case 'showErrorScreen':
+        dispatch({ type: 'loadFailed', error: httpError });
+        break;
+      case 'abortToErrorScreen':
+        abortLoad();
+        dispatch({ type: 'loadFailed', error: httpError });
+        break;
+      case 'abortToCurrentPage':
+        abortLoad();
+        dispatch({ type: 'loadStopped' });
+        break;
+    }
+  };
+
+  const onLoadProgress: LoadProgressHandler = ({ nativeEvent }) => {
+    dispatch({ type: 'progressChanged', progress: nativeEvent.progress });
+  };
+
+  return {
+    isLoading: state.isLoading,
+    progress: state.progress,
+    error: state.error,
+    isSettled: state.hasShownPage || state.error !== null,
+    retry,
+    webViewHandlers: {
+      onError,
+      onHttpError,
+      onLoadStart: () => dispatch({ type: 'loadStarted' }),
+      onLoadProgress,
+      onLoadEnd: () => dispatch({ type: 'loadFinished' }),
+    },
+  };
+};

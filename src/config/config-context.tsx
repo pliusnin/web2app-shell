@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 
-import type { ResolvedConfig } from '../types';
+import type { ResolvedConfig } from './types';
 
 const ConfigContext = createContext<ResolvedConfig | null>(null);
 

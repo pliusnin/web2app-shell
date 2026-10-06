@@ -7,8 +7,10 @@
 
 import { WebAppShell } from './src';
 
+import webAppConfig from './web-app-config.json';
+
 function App() {
-  return <WebAppShell />;
+  return <WebAppShell config={webAppConfig} />;
 }
 
 export default App;

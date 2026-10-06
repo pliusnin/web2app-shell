@@ -1,0 +1,7 @@
+import { showOfflineToast } from './show-offline-toast';
+import { useNetworkChange } from './use-network-change';
+
+// A loaded page stays on screen when the connection drops, so the user is only notified
+export const useOfflineToast = () => {
+  useNetworkChange({ onOffline: showOfflineToast });
+};
