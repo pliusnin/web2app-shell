@@ -17,7 +17,11 @@ export const WebAppShell = () => {
     <ConfigProvider value={config}>
       <SafeAreaProvider>
         {/* The tab bar handles the bottom inset itself */}
-        <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+        <SafeAreaView
+          // The area under the notch and the tab bar share one color
+          style={[styles.container, { backgroundColor: config.theme.tabBarBg }]}
+          edges={['top', 'left', 'right']}
+        >
           <BrowserView />
         </SafeAreaView>
       </SafeAreaProvider>

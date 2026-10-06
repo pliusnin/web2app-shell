@@ -50,6 +50,7 @@ PODS:
     - React-timing
     - ReactNativeDependencies
   - React-callinvoker (0.87.1)
+  - React-Codegen (0.1.0)
   - React-Core (0.87.1):
     - React-Core-prebuilt
     - React-Core/Default (= 0.87.1)
@@ -1293,6 +1294,26 @@ PODS:
     - ReactNativeDependencies
     - SwiftUIIntrospect (~> 1.0)
     - Yoga
+  - react-native-progress-view (1.5.0):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - react-native-progress-view/common (= 1.5.0)
+    - react-native-progress-view/fabric (= 1.5.0)
+    - ReactCommon/turbomodule/core
+  - react-native-progress-view/common (1.5.0):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - ReactCommon/turbomodule/core
+  - react-native-progress-view/fabric (1.5.0):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - react-native-progress-view/common
+    - React-RCTFabric
+    - ReactCommon/turbomodule/core
   - react-native-safe-area-context (5.10.1):
     - hermes-engine
     - RCTRequired
@@ -1821,6 +1842,7 @@ DEPENDENCIES:
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - React-mutationobservernativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/mutationobserver`)
   - react-native-bottom-tabs (from `../node_modules/react-native-bottom-tabs`)
+  - "react-native-progress-view (from `../node_modules/@react-native-community/progress-view`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-vector-icons (from `../node_modules/@react-native-vector-icons/get-image`)"
   - "react-native-vector-icons-material-design-icons (from `../node_modules/@react-native-vector-icons/material-design-icons`)"
@@ -1866,6 +1888,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - React-Codegen
     - SwiftUIIntrospect
 
 EXTERNAL SOURCES:
@@ -1966,6 +1989,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/mutationobserver"
   react-native-bottom-tabs:
     :path: "../node_modules/react-native-bottom-tabs"
+  react-native-progress-view:
+    :path: "../node_modules/@react-native-community/progress-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-vector-icons:
@@ -2068,6 +2093,7 @@ SPEC CHECKSUMS:
   React: 2de853bffdce9d79608a256892cadfdd42124fb1
   React-bridging: ad588ebf664b5339b159f7bb1076a52967a5e433
   React-callinvoker: 33c0c2c46a808f55ef5a2927fa373977a334ea3e
+  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: 48305724ff82e5922efc52bf8d0e713fbf84be5a
   React-Core-prebuilt: cd44efd12c9bfad37c194372a6d3a18a6a6d5c00
   React-CoreModules: a190415306d55fbe58fb3d8eb045c0e46c5c8437
@@ -2100,6 +2126,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 269f81deee27a2a9bedb6b2d1088c1ae93de9bd3
   React-mutationobservernativemodule: 877e9f730e0d8175c2e952901b55c170fc3d372f
   react-native-bottom-tabs: 919e0cce22b40003e716a11b1c81118afffec2aa
+  react-native-progress-view: 2b52abd3e0563e96cceb2e2cda4ee8631ed94a3a
   react-native-safe-area-context: f2bf5d3db254014a48910436c4a58ab0c4e2fe1f
   react-native-vector-icons: f2113f10fdac87ee0570ef217f1e2e031be2c910
   react-native-vector-icons-material-design-icons: 9e98e87947156bfe95135fb523b62821486044e3
