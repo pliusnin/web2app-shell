@@ -14,10 +14,14 @@
       "url": "https://symfonyart.com/#about"
     },
     {
-      "title": "Contacts",
-      "icon": "phone",
-      "url": "https://symfonyart.com/#contacts"
+      "title": "Dev To",
+      "icon": "info",
+      "url": "https://dev.to/"
     },
-    { "title": "Jira", "icon": "info", "url": "https://jira.symfonyart.com/" }
+    {
+      "title": "Wildberries",
+      "icon": "info",
+      "url": "https://www.wildberries.by/"
+    }
   ]
 }
