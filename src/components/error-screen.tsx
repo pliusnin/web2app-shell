@@ -26,9 +26,10 @@ export const ErrorScreen = ({
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.message}>{message}</Text>
       <Pressable
-        style={[
+        style={({ pressed }) => [
           styles.button,
           { backgroundColor: theme.primary ?? DEFAULT_PRIMARY_COLOR },
+          pressed && styles.buttonPressed,
         ]}
         onPress={onRetry}
         accessibilityRole="button"
@@ -66,5 +67,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 8,
   },
+  buttonPressed: { opacity: 0.6 },
   buttonText: { fontSize: 16, fontWeight: '600', color: '#ffffff' },
 });

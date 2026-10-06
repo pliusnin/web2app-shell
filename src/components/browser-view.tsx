@@ -2,7 +2,11 @@ import { useMemo } from 'react';
 import TabView from 'react-native-bottom-tabs';
 
 import { tabIcon, useConfig } from '../config';
-import { useTabNavigation, useTabWebViews } from '../hooks';
+import {
+  useTabBarInactiveColor,
+  useTabNavigation,
+  useTabWebViews,
+} from '../hooks';
 import type { TabConfig, TabRoute } from '../types';
 import { BrowserScreen } from './browser-screen';
 
@@ -18,6 +22,7 @@ export const BrowserView = () => {
 
   const routes = useMemo(() => tabs.map(toRoute), [tabs]);
   const webViews = useTabWebViews();
+  const inactiveTintColor = useTabBarInactiveColor();
   const { index, onIndexChange } = useTabNavigation(
     routes,
     startTabIndex,
@@ -29,6 +34,7 @@ export const BrowserView = () => {
       navigationState={{ index, routes }}
       onIndexChange={onIndexChange}
       tabBarActiveTintColor={theme.primary}
+      tabBarInactiveTintColor={inactiveTintColor}
       tabBarStyle={{ backgroundColor: theme.tabBarBg }}
       renderScene={({ route }) => (
         <BrowserScreen

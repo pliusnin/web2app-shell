@@ -6,3 +6,4 @@ export * from './use-network-status';
 export * from './use-network-change';
 export * from './use-offline-toast';
 export * from './use-page-load';
+export * from './use-tab-bar-inactive-color';

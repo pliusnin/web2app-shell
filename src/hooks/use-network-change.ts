@@ -12,15 +12,21 @@ export const useNetworkChange = ({
   onOnline,
 }: NetworkChangeHandlers) => {
   const { isOnline } = useNetworkStatus();
-  const wasOnline = useRef(isOnline);
+  const lastKnownOnline = useRef<boolean | null>(null);
   const onChange = useEffectEvent((online: boolean) => {
     (online ? onOnline : onOffline)?.();
   });
 
   useEffect(() => {
-    if (isOnline !== wasOnline.current) {
+    if (isOnline === null) {
+      return;
+    }
+    if (
+      lastKnownOnline.current !== null &&
+      lastKnownOnline.current !== isOnline
+    ) {
       onChange(isOnline);
     }
-    wasOnline.current = isOnline;
+    lastKnownOnline.current = isOnline;
   }, [isOnline]);
 };

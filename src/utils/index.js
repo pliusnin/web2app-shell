@@ -1,4 +1,5 @@
 export * from './classify-load-error';
+export * from './contrast-color';
 export * from './get-host';
 export * from './merge-refs';
 export * from './open-external-url';
