@@ -1,13 +1,16 @@
+import { useRef } from 'react';
 import type { RefCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ProgressView } from '@react-native-community/progress-view';
 import { WebView } from 'react-native-webview';
 import type { WebViewNavigation } from 'react-native-webview';
 
 import { useConfig } from '../config';
-import { useLoadProgress, useShouldStartLoadWithRequest } from '../hooks';
-import type { WebViewControls } from '../hooks';
-import { ignoreUnknownSchemeError } from '../utils';
+import { DEFAULT_PRIMARY_COLOR } from '../constants';
+import { usePageLoad, useShouldStartLoadWithRequest } from '../hooks';
+import type { WebViewControls } from '../types';
+import { mergeRefs } from '../utils';
+import { PageErrorOverlay } from './page-error-overlay';
+import { ProgressBar } from './progress-bar';
 
 type BrowserScreenProps = {
   ref: RefCallback<WebViewControls>;
@@ -21,41 +24,36 @@ export const BrowserScreen = ({
   onNavigationStateChange,
 }: BrowserScreenProps) => {
   const { userAgentSuffix, theme } = useConfig();
+  const webView = useRef<WebViewControls | null>(null);
   const onShouldStartLoadWithRequest = useShouldStartLoadWithRequest();
-  const { progress, isLoading, onLoadStart, onLoadProgress, onLoadEnd } =
-    useLoadProgress();
+  const { webViewHandlers, isLoading, progress, error, retry } =
+    usePageLoad(webView);
 
   return (
     <View style={styles.container}>
       <WebView
-        ref={ref}
+        ref={mergeRefs(ref, webView)}
         source={{ uri }}
         applicationNameForUserAgent={userAgentSuffix}
         allowsBackForwardNavigationGestures
         onNavigationStateChange={onNavigationStateChange}
-        // With the default whitelist the WebView opens tel:, mailto: itself
-        // and never calls onShouldStartLoadWithRequest for them
         originWhitelist={['*']}
         onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-        onError={ignoreUnknownSchemeError}
-        onLoadStart={onLoadStart}
-        onLoadProgress={onLoadProgress}
-        onLoadEnd={onLoadEnd}
+        {...webViewHandlers}
       />
       {isLoading && (
-        <ProgressView
+        <ProgressBar
           style={styles.progress}
           progress={progress}
-          progressTintColor={theme.primary}
-          trackTintColor="transparent"
+          color={theme.primary ?? DEFAULT_PRIMARY_COLOR}
         />
       )}
+      <PageErrorOverlay error={error} onRetry={retry} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  // Overlays the page so the WebView doesn't jump when the bar appears
   progress: { position: 'absolute', top: 0, left: 0, right: 0, height: 2 },
 });

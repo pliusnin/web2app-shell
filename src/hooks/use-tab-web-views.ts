@@ -1,10 +1,8 @@
 import { useRef } from 'react';
-import type { WebView, WebViewNavigation } from 'react-native-webview';
+import type { WebViewNavigation } from 'react-native-webview';
 
-// Only the WebView methods the app uses
-export type WebViewControls = Pick<WebView, 'goBack' | 'injectJavaScript'>;
+import type { WebViewControls } from '../types';
 
-// Keeps the WebView of every tab and controls them by tab key
 export const useTabWebViews = () => {
   const webViews = useRef<Record<string, WebViewControls | null>>({});
   const canGoBack = useRef<Record<string, boolean>>({});

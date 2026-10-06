@@ -1,9 +1,11 @@
 import { Alert, Linking } from 'react-native';
 
+import { TEXTS } from '../constants';
+
 export const openExternalUrl = async (url: string) => {
   // The iOS simulator resolves tel: to false instead of failing
   const opened = await Linking.openURL(url).catch(() => false);
   if (!opened) {
-    Alert.alert("Can't open the link", 'No app is installed to open it.');
+    Alert.alert(TEXTS.cantOpenLinkTitle, TEXTS.cantOpenLinkMessage);
   }
 };
