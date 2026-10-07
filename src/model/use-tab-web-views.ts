@@ -1,6 +1,7 @@
 import { useMemo, useRef } from 'react';
 
-import type { TabWebViews, WebViewControls } from './types';
+import type { TabWebViews } from './tabs.types';
+import type { WebViewControls } from './web-view.types';
 
 export const useTabWebViews = (): TabWebViews => {
   const webViews = useRef<Record<string, WebViewControls | null>>({});

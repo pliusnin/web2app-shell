@@ -1,4 +1,4 @@
-import type { HttpErrorAction } from './types';
+import type { HttpErrorAction } from './page-load-error.types';
 
 export const getHttpErrorActionHelper = (
   status: number,

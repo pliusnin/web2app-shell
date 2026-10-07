@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 
-import { hideSplashHelper } from './hide-splash-helper';
-import { useNetworkStatus } from './use-network-status';
+import { hideSplashHelper, useNetworkStatus } from '../lib';
 
 export const useHideSplash = (isPageSettled: boolean) => {
   const { isOnline } = useNetworkStatus();

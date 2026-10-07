@@ -1,5 +1,6 @@
 import { TEXTS } from '../config';
-import type { ErrorScreenContent, PageError } from './types';
+import type { ErrorScreenContent } from './error-screen-content.types';
+import type { PageError } from './page-load-error.types';
 
 export const getErrorScreenContentHelper = (
   error: PageError,

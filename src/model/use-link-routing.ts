@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 
 import { useConfig } from '../config';
-import { getTabHostsHelper } from './get-tab-hosts-helper';
-import { openExternalUrlHelper } from './open-external-url-helper';
-import { shouldLoadInAppHelper } from './should-load-in-app-helper';
-import type { ShouldStartLoadHandler } from './types';
+import { getTabHostsHelper } from './get-tab-hosts.helper';
+import { openExternalUrlHelper } from './open-external-url.helper';
+import { shouldLoadInAppHelper } from './should-load-in-app.helper';
+import type { ShouldStartLoadHandler } from './web-view.types';
 
 export const useLinkRouting = (): ShouldStartLoadHandler => {
   const { tabs } = useConfig();

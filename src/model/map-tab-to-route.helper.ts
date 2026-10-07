@@ -1,6 +1,6 @@
-import type { TabConfig } from '../config';
-import { getTabIconHelper } from './get-tab-icon-helper';
-import type { TabRoute } from './types';
+import type { TabConfig } from './app-config.types';
+import { getTabIconHelper } from './get-tab-icon.helper';
+import type { TabRoute } from './tabs.types';
 
 export const mapTabToRouteHelper = (
   tab: TabConfig,

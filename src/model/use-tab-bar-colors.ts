@@ -1,7 +1,7 @@
 import { Platform, useColorScheme } from 'react-native';
 
-import { getSchemeBackgroundColorHelper } from './get-scheme-background-color-helper';
-import { getSchemeForegroundColorHelper } from './get-scheme-foreground-color-helper';
+import { getSchemeBackgroundColorHelper } from './get-scheme-background-color.helper';
+import { getSchemeForegroundColorHelper } from './get-scheme-foreground-color.helper';
 
 export const useTabBarColors = () => {
   const isDark = useColorScheme() === 'dark';

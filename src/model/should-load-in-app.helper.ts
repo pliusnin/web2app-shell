@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 
-import { getHost } from '../lib';
-import type { ShouldStartLoadRequest } from './types';
+import { getHostHelper } from '../lib';
+import type { ShouldStartLoadRequest } from './web-view.types';
 
 export const shouldLoadInAppHelper = (
   { url, isTopFrame }: ShouldStartLoadRequest,
@@ -11,6 +11,6 @@ export const shouldLoadInAppHelper = (
   if (Platform.OS === 'ios' && !isTopFrame) {
     return true;
   }
-  const host = getHost(url);
+  const host = getHostHelper(url);
   return host !== undefined && appHosts.has(host);
 };

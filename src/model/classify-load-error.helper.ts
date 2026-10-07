@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 
-import type { LoadErrorKind, WebViewError } from './types';
+import type { LoadErrorKind } from './page-load-error.types';
+import type { WebViewError } from './web-view.types';
 
 const ANDROID_UNKNOWN_URL_SCHEME = -10;
 

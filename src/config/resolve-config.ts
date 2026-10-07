@@ -1,4 +1,4 @@
-import type { AppConfig, ResolvedConfig } from './types';
+import type { AppConfig, ResolvedConfig } from '../model';
 
 // "https://example.com" and "https://example.com/" are the same page
 const normalizeUrl = (url: string) => url.replace(/\/+$/, '');

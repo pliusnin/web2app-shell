@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useAndroidBackHandler } from '../lib';
-import type { TabRoute, TabWebViews } from './types';
+import type { TabRoute, TabWebViews } from './tabs.types';
 
 export const useTabNavigation = (
   routes: Array<TabRoute>,

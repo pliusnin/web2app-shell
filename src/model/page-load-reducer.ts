@@ -1,4 +1,4 @@
-import type { PageLoadEvent, PageLoadState } from './types';
+import type { PageLoadEvent, PageLoadState } from './page-load.types';
 
 export const initialPageLoadState: PageLoadState = {
   isLoading: false,

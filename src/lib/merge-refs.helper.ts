@@ -1,7 +1,7 @@
 import type { Ref, RefCallback } from 'react';
 
 // One element, several owners: the parent's ref and the component's own ref
-export const mergeRefs =
+export const mergeRefsHelper =
   <T>(...refs: Array<Ref<T> | undefined>): RefCallback<T> =>
   value => {
     refs.forEach(ref => {

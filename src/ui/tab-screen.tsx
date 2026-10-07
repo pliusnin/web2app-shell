@@ -5,7 +5,7 @@ import { WebView } from 'react-native-webview';
 import type { WebViewNavigation } from 'react-native-webview';
 
 import { useConfig } from '../config';
-import { mergeRefs } from '../lib';
+import { mergeRefsHelper } from '../lib';
 import { useHideSplash, useLinkRouting, usePageLoad } from '../model';
 import type { WebViewControls } from '../model';
 import { PageErrorOverlay } from './page-error-overlay';
@@ -24,7 +24,7 @@ export const TabScreen = ({
 }: TabScreenProps) => {
   const { userAgentSuffix, theme } = useConfig();
   const webView = useRef<WebViewControls | null>(null);
-  const webViewRef = useMemo(() => mergeRefs(ref, webView), [ref]);
+  const webViewRef = useMemo(() => mergeRefsHelper(ref, webView), [ref]);
   const onShouldStartLoadWithRequest = useLinkRouting();
   const { webViewHandlers, isLoading, isSettled, progress, error, retry } =
     usePageLoad(webView);

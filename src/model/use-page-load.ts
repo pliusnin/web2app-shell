@@ -1,17 +1,17 @@
 import { useReducer } from 'react';
 import type { RefObject } from 'react';
 
-import { classifyLoadErrorHelper } from './classify-load-error-helper';
+import { useNetworkChange } from '../lib';
+import { classifyLoadErrorHelper } from './classify-load-error.helper';
 import { initialPageLoadState, pageLoadReducer } from './page-load-reducer';
-import { getHttpErrorActionHelper } from './get-http-error-action-helper';
-import { showServerErrorToastHelper } from './show-server-error-toast-helper';
+import { getHttpErrorActionHelper } from './get-http-error-action.helper';
+import { showServerErrorToastHelper } from './show-server-error-toast.helper';
 import type {
   ErrorHandler,
   HttpErrorHandler,
   LoadProgressHandler,
   WebViewControls,
-} from './types';
-import { useNetworkChange } from './use-network-change';
+} from './web-view.types';
 
 export const usePageLoad = (webView: RefObject<WebViewControls | null>) => {
   const [state, dispatch] = useReducer(pageLoadReducer, initialPageLoadState);
