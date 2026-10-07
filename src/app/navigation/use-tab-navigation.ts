@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { openExternalUrlHelper } from '../../features/link-routing';
 import { useAndroidBackHandler } from '../../shared/lib';
 import type { TabRoute, TabWebViews } from './tabs.types';
 
@@ -13,9 +14,13 @@ export const useTabNavigation = (
   useAndroidBackHandler(() => webViews.tryGoBack(routes[index].key));
 
   const onIndexChange = (newIndex: number) => {
+    const { key, uri, isExternal } = routes[newIndex];
+    if (isExternal) {
+      openExternalUrlHelper(uri);
+      return;
+    }
     const isReselect = newIndex === index;
     if (isReselect) {
-      const { key, uri } = routes[index];
       webViews.resetToRoot(key, uri);
     }
     setIndex(newIndex);

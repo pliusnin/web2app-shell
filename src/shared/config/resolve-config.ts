@@ -12,11 +12,13 @@ export const resolveConfig = ({
   const startIndex = tabs.findIndex(
     tab => normalizeUrl(tab.url) === normalizeUrl(startUrl ?? ''),
   );
+  const startTabIndex = Math.max(startIndex, 0);
 
   return {
+    startUrl: startUrl ?? tabs[startTabIndex].url,
     userAgentSuffix,
     tabs,
     theme,
-    startTabIndex: Math.max(startIndex, 0),
+    startTabIndex,
   };
 };

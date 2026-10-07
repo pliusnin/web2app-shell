@@ -9,9 +9,12 @@ import { useTabNavigation } from './use-tab-navigation';
 import { useTabWebViews } from './use-tab-web-views';
 
 export const TabsView = () => {
-  const { tabs, startTabIndex, theme } = useConfig();
+  const { tabs, startTabIndex, startUrl, theme } = useConfig();
 
-  const routes = useMemo(() => tabs.map(mapTabToRouteHelper), [tabs]);
+  const routes = useMemo(
+    () => tabs.map((tab, index) => mapTabToRouteHelper(tab, index, startUrl)),
+    [tabs, startUrl],
+  );
   const webViews = useTabWebViews();
   const tabBarColors = useTabBarColors();
   const { index, onIndexChange } = useTabNavigation(
@@ -24,6 +27,7 @@ export const TabsView = () => {
     <TabView
       navigationState={{ index, routes }}
       onIndexChange={onIndexChange}
+      getPreventsDefault={({ route }) => route.isExternal}
       tabBarActiveTintColor={theme.primary}
       tabBarInactiveTintColor={tabBarColors.inactiveTint}
       tabBarStyle={{ backgroundColor: tabBarColors.background }}

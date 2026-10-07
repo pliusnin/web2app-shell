@@ -4,11 +4,11 @@ import { StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import type { WebViewNavigation } from 'react-native-webview';
 
+import { useLinkRouting } from '../../../features/link-routing';
 import { useConfig } from '../../../shared/config';
 import { mergeRefsHelper } from '../../../shared/lib';
 import type { WebViewControls } from '../../../shared/lib';
 import { ProgressBar } from '../../../shared/ui';
-import { useLinkRouting } from '../model/link-routing/use-link-routing';
 import { usePageLoad } from '../model/page-load/use-page-load';
 import { useHideSplash } from '../model/splash/use-hide-splash';
 import { PageErrorOverlay } from './page-error-overlay';

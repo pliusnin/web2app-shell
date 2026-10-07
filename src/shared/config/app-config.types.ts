@@ -16,6 +16,7 @@ export type AppConfig = {
 };
 
 export type ResolvedConfig = {
+  startUrl: string;
   userAgentSuffix?: string;
   theme: ThemeConfig;
   tabs: Array<TabConfig>;

@@ -1,6 +1,6 @@
 import { Alert, Linking } from 'react-native';
 
-import { TEXTS } from '../../../../shared/config';
+import { TEXTS } from '../../../shared/config';
 
 export const openExternalUrlHelper = (url: string) => {
   // The iOS simulator resolves tel: to false instead of failing

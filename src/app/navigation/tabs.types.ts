@@ -8,6 +8,7 @@ export type TabRoute = {
   key: string;
   title: string;
   uri: string;
+  isExternal: boolean;
   focusedIcon?: ImageSourcePropType;
 };
 
