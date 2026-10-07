@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { hideSplash } from './hide-splash';
+import { hideSplashHelper } from './hide-splash-helper';
 import { useNetworkStatus } from './use-network-status';
 
 export const useHideSplash = (isPageSettled: boolean) => {
@@ -9,7 +9,7 @@ export const useHideSplash = (isPageSettled: boolean) => {
 
   useEffect(() => {
     if (shouldHide) {
-      hideSplash();
+      hideSplashHelper();
     }
   }, [shouldHide]);
 };

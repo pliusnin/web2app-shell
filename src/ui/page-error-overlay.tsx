@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { getErrorScreenContent } from '../model';
+import { getErrorScreenContentHelper } from '../model';
 import type { PageError } from '../model';
 import { ErrorScreen } from './error-screen';
 
@@ -15,7 +15,7 @@ export const PageErrorOverlay = ({ error, onRetry }: PageErrorOverlayProps) => {
   }
   return (
     <ErrorScreen
-      {...getErrorScreenContent(error)}
+      {...getErrorScreenContentHelper(error)}
       style={StyleSheet.absoluteFill}
       onRetry={onRetry}
     />

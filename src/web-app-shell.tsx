@@ -4,7 +4,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { ConfigProvider, resolveConfig } from './config';
 import type { AppConfig } from './config';
-import { useOfflineToast } from './model';
+import { useOfflineToast, useTabBarColors } from './model';
 import { TabsView, ToastHost } from './ui';
 
 type WebAppShellProps = {
@@ -14,6 +14,7 @@ type WebAppShellProps = {
 export const WebAppShell = ({ config }: WebAppShellProps) => {
   const resolvedConfig = useMemo(() => resolveConfig(config), [config]);
   useOfflineToast();
+  const tabBarColors = useTabBarColors();
 
   return (
     <ConfigProvider value={resolvedConfig}>
@@ -21,7 +22,7 @@ export const WebAppShell = ({ config }: WebAppShellProps) => {
         <SafeAreaView
           style={[
             styles.container,
-            { backgroundColor: resolvedConfig.theme.tabBarBg },
+            { backgroundColor: tabBarColors.background },
           ]}
           edges={['top', 'left', 'right']}
         >

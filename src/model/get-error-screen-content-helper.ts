@@ -1,7 +1,9 @@
 import { TEXTS } from '../config';
 import type { ErrorScreenContent, PageError } from './types';
 
-export const getErrorScreenContent = (error: PageError): ErrorScreenContent => {
+export const getErrorScreenContentHelper = (
+  error: PageError,
+): ErrorScreenContent => {
   switch (error.type) {
     case 'offline':
       return {

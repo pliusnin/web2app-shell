@@ -2,9 +2,9 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
-        <!-- With contrast enforcement on, React Native's edge-to-edge makes the navigation
-             buttons white in dark mode, and they disappear on the white tab bar -->
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">@bool/light_navigation_bar</item>
+        <!-- Without this the system draws a scrim over the navigation bar, and it no longer
+             matches the tab bar color -->
         <item name="android:enforceNavigationBarContrast" tools:targetApi="29">false</item>
     </style>
 

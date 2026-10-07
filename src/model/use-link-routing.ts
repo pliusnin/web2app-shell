@@ -1,21 +1,21 @@
 import { useMemo } from 'react';
 
 import { useConfig } from '../config';
-import { getTabHosts } from './get-tab-hosts';
-import { openExternalUrl } from './open-external-url';
-import { shouldLoadInApp } from './should-load-in-app';
+import { getTabHostsHelper } from './get-tab-hosts-helper';
+import { openExternalUrlHelper } from './open-external-url-helper';
+import { shouldLoadInAppHelper } from './should-load-in-app-helper';
 import type { ShouldStartLoadHandler } from './types';
 
 export const useLinkRouting = (): ShouldStartLoadHandler => {
   const { tabs } = useConfig();
-  const appHosts = useMemo(() => getTabHosts(tabs), [tabs]);
+  const appHosts = useMemo(() => getTabHostsHelper(tabs), [tabs]);
 
   return request => {
-    if (shouldLoadInApp(request, appHosts)) {
+    if (shouldLoadInAppHelper(request, appHosts)) {
       return true;
     }
     // Android waits for the answer only 250 ms, so the URL is opened without waiting
-    openExternalUrl(request.url);
+    openExternalUrlHelper(request.url);
 
     return false;
   };

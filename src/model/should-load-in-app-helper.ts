@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { getHost } from '../lib';
 import type { ShouldStartLoadRequest } from './types';
 
-export const shouldLoadInApp = (
+export const shouldLoadInAppHelper = (
   { url, isTopFrame }: ShouldStartLoadRequest,
   appHosts: ReadonlySet<string>,
 ) => {

@@ -12,7 +12,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "postinstall": "patch-package",
-    "splash": "react-native-bootsplash generate assets/splash-logo.png --platforms=android,ios --background=#1E6FFF --logo-width=160 --assets-output=assets/bootsplash"
+    "splash": "react-native-bootsplash generate assets/splash-logo.png --platforms=android,ios --background=#FFFFFF --logo-width=160 --assets-output=assets/bootsplash"
   },
   "dependencies": {
     "@react-native-community/netinfo": "^12.0.1",

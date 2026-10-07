@@ -13,7 +13,9 @@ const ICONS = {
 
 const ICON_SIZE = 24;
 
-export const tabIcon = (name: string): ImageSourcePropType | undefined => {
+export const getTabIconHelper = (
+  name: string,
+): ImageSourcePropType | undefined => {
   if (!(name in ICONS)) {
     if (__DEV__) {
       console.warn(`Unknown tab icon "${name}"`);

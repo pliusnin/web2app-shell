@@ -6,7 +6,6 @@ export type TabConfig = {
 
 export type ThemeConfig = {
   primary: string;
-  tabBarBg?: string;
 };
 
 export type AppConfig = {

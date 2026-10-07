@@ -1,7 +1,7 @@
 {
   "startUrl": "https://symfonyart.com/portfolio/",
   "userAgentSuffix": "web2appShell/0.0.1",
-  "theme": { "primary": "#1E6FFF", "tabBarBg": "#FFFFFF" },
+  "theme": { "primary": "#1E6FFF" },
   "tabs": [
     {
       "title": "Portfolio",

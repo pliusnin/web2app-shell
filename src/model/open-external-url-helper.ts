@@ -2,7 +2,7 @@ import { Alert, Linking } from 'react-native';
 
 import { TEXTS } from '../config';
 
-export const openExternalUrl = (url: string) => {
+export const openExternalUrlHelper = (url: string) => {
   // The iOS simulator resolves tel: to false instead of failing
   Linking.openURL(url)
     .catch(() => false)

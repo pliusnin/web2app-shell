@@ -31,7 +31,7 @@ export type ErrorScreenContent = {
 
 export type LoadErrorKind = 'ignored' | 'network' | 'other';
 
-export type HttpErrorOutcome =
+export type HttpErrorAction =
   'showErrorScreen' | 'abortToErrorScreen' | 'abortToCurrentPage';
 
 export type WebViewControls = Pick<

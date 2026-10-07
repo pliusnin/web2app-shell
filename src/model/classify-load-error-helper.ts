@@ -12,7 +12,7 @@ const ANDROID_NETWORK_CODES = [-2, -6, -7, -8];
 // DataNotAllowed
 const IOS_NETWORK_CODES = [-1001, -1003, -1004, -1005, -1009, -1018, -1020];
 
-export const classifyLoadError = ({
+export const classifyLoadErrorHelper = ({
   code,
   domain,
 }: WebViewError): LoadErrorKind => {

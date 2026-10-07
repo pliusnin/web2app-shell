@@ -1,9 +1,9 @@
-import type { HttpErrorOutcome } from './types';
+import type { HttpErrorAction } from './types';
 
-export const resolveHttpError = (
+export const getHttpErrorActionHelper = (
   status: number,
   hasShownPage: boolean,
-): HttpErrorOutcome => {
+): HttpErrorAction => {
   if (status < 500) {
     return 'showErrorScreen';
   }

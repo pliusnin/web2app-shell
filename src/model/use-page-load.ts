@@ -1,10 +1,10 @@
 import { useReducer } from 'react';
 import type { RefObject } from 'react';
 
-import { classifyLoadError } from './classify-load-error';
+import { classifyLoadErrorHelper } from './classify-load-error-helper';
 import { initialPageLoadState, pageLoadReducer } from './page-load-reducer';
-import { resolveHttpError } from './resolve-http-error';
-import { showServerErrorToast } from './show-server-error-toast';
+import { getHttpErrorActionHelper } from './get-http-error-action-helper';
+import { showServerErrorToastHelper } from './show-server-error-toast-helper';
 import type {
   ErrorHandler,
   HttpErrorHandler,
@@ -26,7 +26,7 @@ export const usePageLoad = (webView: RefObject<WebViewControls | null>) => {
   });
 
   const onError: ErrorHandler = event => {
-    switch (classifyLoadError(event.nativeEvent)) {
+    switch (classifyLoadErrorHelper(event.nativeEvent)) {
       case 'network':
         event.preventDefault();
         dispatch({ type: 'loadFailed', error: { type: 'offline' } });
@@ -40,14 +40,14 @@ export const usePageLoad = (webView: RefObject<WebViewControls | null>) => {
   };
 
   const abortLoad = () => {
-    showServerErrorToast();
+    showServerErrorToastHelper();
     webView.current?.stopLoading();
   };
 
   const onHttpError: HttpErrorHandler = ({ nativeEvent: { statusCode } }) => {
     const httpError = { type: 'http', status: statusCode } as const;
 
-    switch (resolveHttpError(statusCode, state.hasShownPage)) {
+    switch (getHttpErrorActionHelper(statusCode, state.hasShownPage)) {
       case 'showErrorScreen':
         dispatch({ type: 'loadFailed', error: httpError });
         break;
