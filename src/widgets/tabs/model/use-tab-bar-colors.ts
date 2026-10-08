@@ -1,16 +1,16 @@
-import { Platform, useColorScheme } from 'react-native';
+import { Platform } from 'react-native';
 
-import { getSchemeBackgroundColorHelper } from './get-scheme-background-color.helper';
-import { getSchemeForegroundColorHelper } from './get-scheme-foreground-color.helper';
+import { useSchemeColors } from '../../../shared/lib';
 
+/**
+ * Returns the tab bar colors for the current color scheme. The inactive
+ * icon color is set only on Android; iOS keeps the system one.
+ */
 export const useTabBarColors = () => {
-  const isDark = useColorScheme() === 'dark';
+  const { background, foreground } = useSchemeColors();
 
   return {
-    background: getSchemeBackgroundColorHelper(isDark),
-    inactiveTint:
-      Platform.OS === 'android'
-        ? getSchemeForegroundColorHelper(isDark)
-        : undefined,
+    background,
+    inactiveTint: Platform.OS === 'android' ? foreground : undefined,
   };
 };

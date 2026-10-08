@@ -2,6 +2,10 @@ import { TEXTS } from '../../../../shared/config';
 import type { ErrorScreenContent } from './error-screen-content.types';
 import type { PageError } from './page-load-error.types';
 
+/**
+ * Picks the icon, title and message of the error screen for a page error:
+ * no connection or an HTTP error with its status.
+ */
 export const getErrorScreenContentHelper = (
   error: PageError,
 ): ErrorScreenContent => {

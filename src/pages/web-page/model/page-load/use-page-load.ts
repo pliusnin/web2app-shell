@@ -13,6 +13,12 @@ import { initialPageLoadState, pageLoadReducer } from './page-load-reducer';
 import { getHttpErrorActionHelper } from './get-http-error-action.helper';
 import { showServerErrorToastHelper } from './show-server-error-toast.helper';
 
+/**
+ * Tracks the WebView page load and returns the WebView handlers along with
+ * progress, loading state, page error and retry. After an offline error the
+ * page reloads by itself once the connection is back. isSettled turns true
+ * when the page or an error screen is on screen.
+ */
 export const usePageLoad = (webView: RefObject<WebViewControls | null>) => {
   const [state, dispatch] = useReducer(pageLoadReducer, initialPageLoadState);
   const retry = () => webView.current?.reload();

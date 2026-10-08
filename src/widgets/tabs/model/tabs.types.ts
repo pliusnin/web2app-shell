@@ -2,7 +2,7 @@ import type { RefCallback } from 'react';
 import type { ImageSourcePropType } from 'react-native';
 import type { WebViewNavigation } from 'react-native-webview';
 
-import type { WebViewControls } from '../../shared/lib';
+import type { WebViewControls } from '../../../shared/lib';
 
 export type TabRoute = {
   key: string;
@@ -19,4 +19,10 @@ export type TabWebViews = {
   ) => (navState: WebViewNavigation) => void;
   resetToRoot: (key: string, uri: string) => void;
   tryGoBack: (key: string) => boolean;
+};
+
+export type TabScene = {
+  ref: RefCallback<WebViewControls>;
+  uri: string;
+  onNavigationStateChange: (navState: WebViewNavigation) => void;
 };

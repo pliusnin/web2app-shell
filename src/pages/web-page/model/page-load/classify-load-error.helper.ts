@@ -13,6 +13,11 @@ const ANDROID_NETWORK_CODES = [-2, -6, -7, -8];
 // DataNotAllowed
 const IOS_NETWORK_CODES = [-1001, -1003, -1004, -1005, -1009, -1018, -1020];
 
+/**
+ * Sorts a WebView load error: network (no connection, the offline screen is
+ * shown), ignored (Android error for app links that already opened outside),
+ * other (left to the WebView).
+ */
 export const classifyLoadErrorHelper = ({
   code,
   domain,

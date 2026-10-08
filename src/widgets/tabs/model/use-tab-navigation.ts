@@ -1,9 +1,14 @@
 import { useState } from 'react';
 
-import { openExternalUrlHelper } from '../../features/link-routing';
-import { useAndroidBackHandler } from '../../shared/lib';
+import { openExternalUrlHelper } from '../../../features/link-routing';
+import { useAndroidBackHandler } from '../../../shared/lib';
 import type { TabRoute, TabWebViews } from './tabs.types';
 
+/**
+ * Keeps the selected tab and handles tab presses: an external tab opens its
+ * URL outside the app, pressing the active tab again returns it to the tab
+ * root URL. The Android back button goes back in the active tab's history.
+ */
 export const useTabNavigation = (
   routes: Array<TabRoute>,
   startIndex: number,

@@ -13,6 +13,11 @@ const toIsOnline = (
   return true;
 };
 
+/**
+ * Returns whether the device is online: true or false once NetInfo knows,
+ * null while the connection or internet reachability is still unknown, so
+ * callers don't react to the unknown state on start.
+ */
 export const useNetworkStatus = () => {
   const { isConnected, isInternetReachable } = useNetInfo();
 

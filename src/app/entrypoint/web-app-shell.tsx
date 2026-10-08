@@ -7,11 +7,12 @@ import {
   useForegroundNotifications,
   useNotificationsSetup,
 } from '../../features/push-notifications';
+import { WebPageScreen } from '../../pages/web-page';
 import { ConfigProvider, resolveConfig } from '../../shared/config';
 import type { AppConfig } from '../../shared/config';
+import { useSchemeColors } from '../../shared/lib';
 import { ToastHost } from '../../shared/ui';
-import { TabsView } from '../navigation/tabs-view';
-import { useTabBarColors } from '../navigation/use-tab-bar-colors';
+import { TabsView } from '../../widgets/tabs';
 
 type WebAppShellProps = {
   config: AppConfig;
@@ -22,7 +23,7 @@ export const WebAppShell = ({ config }: WebAppShellProps) => {
   useOfflineToast();
   useNotificationsSetup();
   useForegroundNotifications();
-  const tabBarColors = useTabBarColors();
+  const schemeColors = useSchemeColors();
 
   return (
     <ConfigProvider value={resolvedConfig}>
@@ -30,11 +31,11 @@ export const WebAppShell = ({ config }: WebAppShellProps) => {
         <SafeAreaView
           style={[
             styles.container,
-            { backgroundColor: tabBarColors.background },
+            { backgroundColor: schemeColors.background },
           ]}
           edges={['top', 'left', 'right']}
         >
-          <TabsView />
+          <TabsView renderScene={scene => <WebPageScreen {...scene} />} />
         </SafeAreaView>
 
         <ToastHost />

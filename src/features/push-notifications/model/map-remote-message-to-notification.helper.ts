@@ -3,6 +3,10 @@ import type { RemoteMessage } from '@react-native-firebase/messaging';
 
 import { NOTIFICATIONS } from '../config/notifications';
 
+/**
+ * Converts an FCM message into a notifee notification: title, body and data
+ * as they are, plus the push channel on Android.
+ */
 export const mapRemoteMessageToNotificationHelper = ({
   notification,
   data,

@@ -1,1 +1,1 @@
-export { TabScreen } from './ui/tab-screen';
+export { WebPageScreen } from './ui/web-page-screen';

@@ -13,17 +13,17 @@ import { usePageLoad } from '../model/page-load/use-page-load';
 import { useHideSplash } from '../model/splash/use-hide-splash';
 import { PageErrorOverlay } from './page-error-overlay';
 
-type TabScreenProps = {
+type WebPageScreenProps = {
   ref: RefCallback<WebViewControls>;
   uri: string;
   onNavigationStateChange: (navState: WebViewNavigation) => void;
 };
 
-export const TabScreen = ({
+export const WebPageScreen = ({
   ref,
   uri,
   onNavigationStateChange,
-}: TabScreenProps) => {
+}: WebPageScreenProps) => {
   const { userAgentSuffix, theme } = useConfig();
   const webView = useRef<WebViewControls | null>(null);
   const webViewRef = useMemo(() => mergeRefsHelper(ref, webView), [ref]);

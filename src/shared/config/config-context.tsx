@@ -14,6 +14,10 @@ export const ConfigProvider = ({ value, children }: ConfigProviderProps) => (
   <ConfigContext value={value}>{children}</ConfigContext>
 );
 
+/**
+ * Returns the resolved app config from ConfigProvider. Throws outside the
+ * provider, so a missing provider fails right away.
+ */
 export const useConfig = () => {
   const config = useContext(ConfigContext);
   if (!config) {

@@ -7,6 +7,11 @@ type NetworkChangeHandlers = {
   onOnline?: () => void;
 };
 
+/**
+ * Calls onOffline / onOnline when the connection is lost or comes back.
+ * The first known status doesn't fire, only real changes, so nothing
+ * happens on app start.
+ */
 export const useNetworkChange = ({
   onOffline,
   onOnline,

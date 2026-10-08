@@ -4,6 +4,7 @@ export { mergeRefsHelper } from './merge-refs.helper';
 export { useAndroidBackHandler } from './use-android-back-handler';
 export { useNetworkChange } from './use-network-change';
 export { useNetworkStatus } from './use-network-status';
+export { useSchemeColors } from './use-scheme-colors';
 export type {
   ErrorHandler,
   HttpErrorHandler,
