@@ -33,10 +33,20 @@ One responsibility per module. Components only render and wire props. Behavior s
 - Components, types, config fields, reducers and `resolveConfig` get no header comment.
 - Inside functions, comment only non-obvious platform or library quirks, the kind a reader would otherwise "fix".
 
+## Tests
+
+- Jest with `@testing-library/react-native`. A test sits next to its module: `web-app-shell.test.tsx` for `web-app-shell.tsx`.
+- Tests follow the FSD import rules: own slice by a relative file path, other slices only through their `index.ts`.
+- Steiger checks tests like any other file. Only `fsd/shared-lib-grouping` skips `*.test.*`, so tests don't count toward the `shared/lib` module limit.
+- Native and third-party modules are mocked once for all tests, never inside a test. Handwritten mocks live in the root `__mocks__/` and are picked up automatically. Mocks shipped by a library are wired in `jest.setup.ts`.
+- Components are queried by role, then text. A `testID` goes into component code only on an element without text or role that carries a computed value, named `<component>-<part>`: `progress-bar-fill`.
+- A native component mock renders a host element with a `testID` (`web-view`, `tab-view`, `toast`) and all props, so a test reads what reached the native side. The `react-native-bottom-tabs` mock renders only the active scene.
+
 ## Checks
 
 Run after a change:
 
+- `npm test`
 - `npx tsc --noEmit`
 - `npm run lint`: ESLint, Prettier violations included
 - `npm run lint:fsd`: Steiger, config `steiger.config.mjs`

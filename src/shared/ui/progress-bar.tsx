@@ -10,6 +10,7 @@ type ProgressBarProps = {
 export const ProgressBar = ({ progress, color, style }: ProgressBarProps) => (
   <View style={style}>
     <View
+      testID="progress-bar-fill"
       style={[
         styles.fill,
         { width: `${progress * 100}%`, backgroundColor: color },

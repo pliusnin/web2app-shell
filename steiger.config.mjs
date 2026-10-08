@@ -8,4 +8,11 @@ export default defineConfig([
       'fsd/no-wildcard-exports': 'error',
     },
   },
+  {
+    // Tests sit next to their modules but are not modules of shared/lib
+    files: ['./src/shared/lib/**/*.test.*'],
+    rules: {
+      'fsd/shared-lib-grouping': 'off',
+    },
+  },
 ]);
