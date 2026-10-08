@@ -14,7 +14,8 @@ iOS pods use the prebuilt React-Core, the RN 0.87 default. Native libs that rely
 - `ios/Podfile`: `use_frameworks! :linkage => :static`, `$RNFirebaseAsStaticFramework = true`, `$RNFirebaseDisableSPM = true`. Firebase comes from CocoaPods, linked statically.
 - Firebase CocoaPods are deprecated, with no new pod versions after Oct 2026. A future RNFB upgrade means moving to SPM and dynamic linkage.
 - `pod install` crashes with `Encoding::CompatibilityError` in a non-UTF-8 shell, Claude's included. Run it in `ios/` as `LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 pod install`.
-- `AppDelegate.swift`: `FirebaseApp.configure()` at launch, `RNBootSplash.initWithStoryboard("BootSplash", …)` in `customize`.
+- `AppDelegate.swift`: `FirebaseApp.configure()` at launch, `RNBootSplash.initWithStoryboard("BootSplash", …)` in `customize`. It declares `var window: UIWindow?` that stays nil: RNFB Messaging reads `delegate.window` on launch, and without the property the app crashes before React Native starts, leaving the launch screen up.
+- `SceneDelegate.swift` starts React Native after `SessionCookieStore` restores session cookies → [cookie-persistence.md](cookie-persistence.md).
 - `Info.plist`: `UIBackgroundModes` has `remote-notification`, `UILaunchStoryboardName` is `BootSplash`, `UIAppFonts` lists `MaterialDesignIcons.ttf`.
 - `web2appShell.entitlements`: `aps-environment` is `development`.
 - Bundle id `com.web2appshell` matches `ios/web2appShell/GoogleService-Info.plist`.
@@ -23,7 +24,7 @@ iOS pods use the prebuilt React-Core, the RN 0.87 default. Native libs that rely
 
 - `applicationId` `com.web2appshell` matches `android/app/google-services.json`. Google Services Gradle plugin 4.4.2.
 - `AndroidManifest.xml` declares `POST_NOTIFICATIONS`, the Android 13+ push permission.
-- `MainActivity` starts with `BootTheme` and calls `RNBootSplash.init(this, R.style.BootTheme)`; `postBootSplashTheme` is `AppTheme`.
+- `MainActivity` starts with `BootTheme` and calls `RNBootSplash.init(this, R.style.BootTheme)`; `postBootSplashTheme` is `AppTheme`. `onPause` flushes WebView cookies → [cookie-persistence.md](cookie-persistence.md).
 - `styles.xml` sets `enforceNavigationBarContrast` to false: otherwise the system draws a scrim over the navigation bar and it no longer matches the tab bar color.
 
 ## Firebase config files

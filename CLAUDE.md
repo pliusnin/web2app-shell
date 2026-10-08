@@ -10,4 +10,5 @@ Read the doc of the area you change before editing it. If you change its behavio
 - Which links open in the app and which outside → [link-routing.md](llm-docs/link-routing.md)
 - FCM + Notifee, topic, channel, payload contract → [push-notifications.md](llm-docs/push-notifications.md)
 - Toast when the connection drops → [offline-toast.md](llm-docs/offline-toast.md)
+- Staying signed in after the app is killed, session cookies, logout → [cookie-persistence.md](llm-docs/cookie-persistence.md)
 - iOS/Android build, pods, patches, splash assets → [native-build.md](llm-docs/native-build.md)

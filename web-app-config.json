@@ -1,5 +1,5 @@
 {
-  "startUrl": "https://symfonyart.com/portfolio/",
+  "startUrl": "https://jira.symfonyart.com/",
   "userAgentSuffix": "web2appShell/0.0.1",
   "theme": { "primary": "#1E6FFF" },
   "tabs": [
@@ -17,6 +17,11 @@
       "title": "Dev To",
       "icon": "info",
       "url": "https://dev.to/"
+    },
+    {
+      "title": "Jira",
+      "icon": "info",
+      "url": "https://jira.symfonyart.com/"
     },
     {
       "title": "Wildberries",

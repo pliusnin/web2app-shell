@@ -1,6 +1,7 @@
 package com.web2appshell
 
 import android.os.Bundle
+import android.webkit.CookieManager
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
@@ -12,6 +13,13 @@ class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     RNBootSplash.init(this, R.style.BootTheme)
     super.onCreate(savedInstanceState)
+  }
+
+  override fun onPause() {
+    super.onPause()
+    // Chromium writes cookies to disk on a timer, so a login done via XHR
+    // right before the app is killed would be lost without this.
+    CookieManager.getInstance().flush()
   }
 
   /**

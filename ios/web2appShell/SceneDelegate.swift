@@ -16,9 +16,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let window = UIWindow(windowScene: windowScene)
     self.window = window
 
-    appDelegate.reactNativeFactory?.startReactNative(
-      withModuleName: "web2appShell",
-      in: window
-    )
+    SessionCookieStore.shared.restore {
+      appDelegate.reactNativeFactory?.startReactNative(
+        withModuleName: "web2appShell",
+        in: window
+      )
+    }
   }
 }
