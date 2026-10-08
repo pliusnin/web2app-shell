@@ -1,4 +1,4 @@
-import notifee, { AndroidImportance } from '@notifee/react-native';
+import notifee, { AndroidImportance } from 'react-native-notify-kit';
 
 import { TEXTS } from '../../../shared/config';
 import { NOTIFICATIONS } from '../config/notifications';

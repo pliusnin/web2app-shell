@@ -16,7 +16,6 @@
     "splash": "react-native-bootsplash generate assets/splash-logo.png --platforms=android,ios --background=#FFFFFF --logo-width=160 --assets-output=assets/bootsplash"
   },
   "dependencies": {
-    "@notifee/react-native": "^9.1.8",
     "@react-native-community/netinfo": "^12.0.1",
     "@react-native-firebase/app": "^26.4.0",
     "@react-native-firebase/messaging": "^26.4.0",
@@ -27,6 +26,7 @@
     "react-native": "0.87.1",
     "react-native-bootsplash": "^7.3.4",
     "react-native-bottom-tabs": "^1.4.0",
+    "react-native-notify-kit": "^10.8.0",
     "react-native-safe-area-context": "^5.5.2",
     "react-native-toast-message": "^2.5.2",
     "react-native-webview": "^14.0.1"

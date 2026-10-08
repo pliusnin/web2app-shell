@@ -16,7 +16,7 @@ A React Native shell that wraps a website into a native app: native bottom tabs,
 | `pages`    | `web-page`           | the screen of every tab: WebView, load state, errors, splash                     | [web-page.md](web-page.md)                     |
 | `widgets`  | `tabs`               | native bottom tabs, per-tab WebView control                                      | [tabs.md](tabs.md)                             |
 | `features` | `link-routing`       | in-app vs external links                                                         | [link-routing.md](link-routing.md)             |
-| `features` | `push-notifications` | FCM + Notifee                                                                    | [push-notifications.md](push-notifications.md) |
+| `features` | `push-notifications` | FCM + notify-kit                                                                 | [push-notifications.md](push-notifications.md) |
 | `features` | `offline-toast`      | toast when the connection drops                                                  | [offline-toast.md](offline-toast.md)           |
 | `shared`   | `config`             | config types, `resolveConfig`, `ConfigProvider` / `useConfig`, `COLORS`, `TEXTS` | [config.md](config.md)                         |
 | `shared`   | `lib`, `ui`          | generic hooks, helpers, components                                               | below                                          |

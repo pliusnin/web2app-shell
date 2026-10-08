@@ -1917,11 +1917,51 @@ PODS:
     - ReactNativeDependencies
     - RNFBApp
     - Yoga
-  - RNNotifee (9.1.8):
+  - RNNotifee (10.8.0):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-bridging
     - React-Core
-    - RNNotifee/NotifeeCore (= 9.1.8)
-  - RNNotifee/NotifeeCore (9.1.8):
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - RNNotifee/NotifeeCore (= 10.8.0)
+    - Yoga
+  - RNNotifee/NotifeeCore (10.8.0):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-bridging
     - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - SocketRocket (0.7.1):
     - ReactNativeDependencies
   - SwiftUIIntrospect (1.3.0)
@@ -2022,7 +2062,7 @@ DEPENDENCIES:
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
-  - "RNNotifee (from `../node_modules/@notifee/react-native`)"
+  - RNNotifee (from `../node_modules/react-native-notify-kit`)
   - SocketRocket (from `build/rndeps-facades/SocketRocket`)
   - Yoga (from `build/rncore-facades/Yoga`)
 
@@ -2227,7 +2267,7 @@ EXTERNAL SOURCES:
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNNotifee:
-    :path: "../node_modules/@notifee/react-native"
+    :path: "../node_modules/react-native-notify-kit"
   SocketRocket:
     :path: build/rndeps-facades/SocketRocket
   Yoga:
@@ -2336,11 +2376,11 @@ SPEC CHECKSUMS:
   RNBootSplash: cb275f890209996cb68463a1bd2f65c483331ac7
   RNFBApp: b2a6488cfc84694ae79abb10474c0aa030722246
   RNFBMessaging: 90bab2ad25b0e6fc61b1dda8e9dae53f48993a69
-  RNNotifee: 5e3b271e8ea7456a36eec994085543c9adca9168
+  RNNotifee: 11eea68c1ce8548516204d5d59e3778c1e6b0630
   SocketRocket: 37aec555668fb852ec12e3c0de59a86ca58f0871
   SwiftUIIntrospect: fee9aa07293ee280373a591e1824e8ddc869ba5d
   Yoga: d1c536142c5ff8ec8cd856ab2a7c227a1d875c8e
 
 PODFILE CHECKSUM: ca63b44f7a51491a09a24ffdad0517a003a4a403
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.17.0

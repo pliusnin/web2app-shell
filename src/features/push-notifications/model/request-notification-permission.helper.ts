@@ -1,4 +1,4 @@
-import notifee from '@notifee/react-native';
+import notifee from 'react-native-notify-kit';
 
 /**
  * Asks the user for permission to show notifications (iOS, Android 13+).

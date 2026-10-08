@@ -1,4 +1,4 @@
-import notifee from '@notifee/react-native';
+import notifee from 'react-native-notify-kit';
 import type { RemoteMessage } from '@react-native-firebase/messaging';
 
 import { mapRemoteMessageToNotificationHelper } from './map-remote-message-to-notification.helper';

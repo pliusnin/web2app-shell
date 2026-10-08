@@ -1,4 +1,4 @@
-import type { Notification } from '@notifee/react-native';
+import type { Notification } from 'react-native-notify-kit';
 import type { RemoteMessage } from '@react-native-firebase/messaging';
 
 import { NOTIFICATIONS } from '../config/notifications';
