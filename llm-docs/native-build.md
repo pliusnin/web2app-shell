@@ -26,6 +26,7 @@ iOS pods use the prebuilt React-Core, the RN 0.87 default. Native libs that rely
 - `AndroidManifest.xml` declares `POST_NOTIFICATIONS`, the Android 13+ push permission.
 - `MainActivity` starts with `BootTheme` and calls `RNBootSplash.init(this, R.style.BootTheme)`; `postBootSplashTheme` is `AppTheme`. `onPause` flushes WebView cookies → [cookie-persistence.md](cookie-persistence.md).
 - `styles.xml` sets `enforceNavigationBarContrast` to false: otherwise the system draws a scrim over the navigation bar and it no longer matches the tab bar color.
+- `npm run android:apk` builds a release APK for testers (`android/app/build/outputs/apk/release/app-release.apk`): both ARM ABIs (no x86, an arm64-only build fails to install on 32-bit phones with "app isn't compatible"), signed with `debug.keystore`, so it is not for the Play Store. Gradle needs the SDK path: `android/local.properties` with `sdk.dir` (git-ignored) or `ANDROID_HOME`.
 
 ## Firebase config files
 
