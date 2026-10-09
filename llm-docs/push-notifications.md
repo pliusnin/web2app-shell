@@ -4,7 +4,7 @@ FCM delivers pushes. notify-kit (`react-native-notify-kit`, the maintained fork 
 
 ## Entry points
 
-- `src/features/push-notifications/model/use-notifications-setup.ts`: on start, Android channel → permission → topic subscription.
+- `src/features/push-notifications/model/use-notifications-setup.ts`: on start, Android channel → permission → APNs registration → topic subscription.
 - `src/features/push-notifications/model/use-foreground-notifications.ts`: `onMessage` → system notification via notify-kit.
 - `src/features/push-notifications/config/notifications.ts`: `NOTIFICATIONS` with `topic: 'all'` and `channelId: 'default'`.
 
@@ -20,6 +20,9 @@ FCM delivers pushes. notify-kit (`react-native-notify-kit`, the maintained fork 
 
 - The setup chain only logs errors with `console.warn`, so a push problem never breaks the app.
 - Without permission (iOS, Android 13+) pushes arrive but are not shown.
+- iOS: FCM needs the APNs token before it can create its own token, so `subscribeToTopic` called earlier fails with `No APNS token specified before fetching FCM Token`. `firebase.json` turns off `messaging_ios_auto_register_for_remote_messages`, and the chain awaits `registerDeviceForRemoteMessages` before subscribing. It resolves at once on Android and rejects after 10 s if APNs doesn't answer.
+- iOS Simulator on Apple Silicon never gets an APNs token: RNFB skips the APNs registration there on purpose. Test FCM pushes on a physical iPhone; `xcrun simctl push` only checks how a notification is shown.
+- A changed `firebase.json` needs a native rebuild: RNFB copies it into `Info.plist` at build time.
 - Android: without `pressAction: { id: 'default' }` a tap on a notify-kit notification doesn't open the app.
 - Tap handling is not implemented yet. When adding it, keep the sender contract above.
 - RNFB is used through the modular API (`getMessaging()`, `onMessage(messaging, …)`, `subscribeToTopic(messaging, topic)`), not `messaging().…`.
