@@ -1,11 +1,11 @@
 # Architecture
 
-A React Native shell that wraps a website into a native app: native bottom tabs, a WebView per tab, push notifications. The host app passes a JSON config; the shell lives in `src/` and is going to become a separate package.
+A React Native shell that wraps a website into a native app: native bottom tabs, a WebView per tab, push notifications. The host app passes a JSON config; the shell lives in the local package `packages/web2app-shell` → [package.md](package.md).
 
 ## Host and public API
 
-- `App.tsx` imports `web-app-config.json` and renders `<WebAppShell config={...} />`.
-- `src/index.ts` is the future package API: `WebAppShell` and `type AppConfig`, nothing else.
+- `App.tsx` imports `web-app-config.json` and renders `<WebAppShell config={...} />` from `web2app-shell`.
+- `src/index.ts` is the package API: `WebAppShell` and `type AppConfig`, nothing else.
 - `index.js` only registers `App`.
 
 ## Layer map

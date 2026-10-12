@@ -8,7 +8,11 @@ const config: AppConfig = {
   theme: { primary: '#1E6FFF' },
   tabs: [
     { title: 'Home', icon: 'home', url: 'https://example.com/' },
-    { title: 'Catalog', icon: 'grid', url: 'https://example.com/catalog/' },
+    {
+      title: 'Catalog',
+      icon: 'view-grid',
+      url: 'https://example.com/catalog/',
+    },
   ],
 };
 

@@ -10,8 +10,12 @@ const config: ResolvedConfig = {
   theme: { primary: '#1E6FFF' },
   tabs: [
     { title: 'Home', icon: 'home', url: 'https://example.com/' },
-    { title: 'Catalog', icon: 'grid', url: 'https://example.com/catalog/' },
-    { title: 'Blog', icon: 'info', url: 'https://blog.other.com/' },
+    {
+      title: 'Catalog',
+      icon: 'view-grid',
+      url: 'https://example.com/catalog/',
+    },
+    { title: 'Blog', icon: 'information', url: 'https://blog.other.com/' },
   ],
   startTabIndex: 0,
 };

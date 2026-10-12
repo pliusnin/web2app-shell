@@ -21,12 +21,12 @@ Native bottom tabs (`react-native-bottom-tabs`) built from `config.tabs`. Every 
 
 ## How to change
 
-- Add a tab: add `{ title, icon, url }` to `tabs` in `web-app-config.json`. `icon` must be a key of `TAB_ICONS` in `src/widgets/tabs/config/tab-icons.ts`; for a new icon add a key mapped to a Material Design Icons name there.
+- Add a tab: add `{ title, icon, url }` to `tabs` in `web-app-config.json`. `icon` is any [Material Design Icons](https://pictogrammers.com/library/mdi/) name, e.g. `home`, `information`, `view-grid`.
 
 ## Gotchas
 
 - A tab is external when its host differs from the `startUrl` host (`isAppUrlHelper`, [link-routing.md](link-routing.md)). Pressing it opens the URL outside the app.
-- An unknown icon key gives a tab without an icon and a dev-only `console.warn`, no crash.
+- `getTabIconHelper` checks the name against the library glyph map (`glyphmaps/MaterialDesignIcons.json`) with `Object.hasOwn`, so `constructor` and other prototype keys don't pass. An unknown name gives a tab without an icon and a dev-only `console.warn`; the library itself would draw a `?` glyph.
 - The native tab bar takes images, not components: icons go through `MaterialDesignIcons.getImageSourceSync`.
 - `resetToRoot` navigates with `injectJavaScript` (`window.location.href = ...`) instead of remounting, so the WebView instance stays.
 - Colors: active tint is `theme.primary`, background comes from `useSchemeColors`. The inactive tint is set on Android only; iOS keeps the system one.

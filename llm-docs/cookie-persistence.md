@@ -4,7 +4,7 @@ Keeps the user signed in to the site after the app is killed. Native only, no JS
 
 ## Entry points
 
-- `ios/web2appShell/SessionCookieStore.swift`: saves and restores session cookies of `WKWebsiteDataStore.default()`.
+- `packages/web2app-shell/native/ios/SessionCookieStore.swift`: saves and restores session cookies of `WKWebsiteDataStore.default()`. `ios/web2appShell/SessionCookieStore.swift` is a symlink to it, so the package carries the file for new apps.
 - `ios/web2appShell/SceneDelegate.swift`: starts React Native only after `SessionCookieStore.shared.restore`.
 - `android/app/src/main/java/com/web2appshell/MainActivity.kt`: `CookieManager.flush()` in `onPause`.
 
@@ -23,7 +23,7 @@ Keeps the user signed in to the site after the app is killed. Native only, no JS
 - The snapshot lives in the app sandbox, not the Keychain: the Keychain survives app deletion and would sign the user in after a reinstall.
 - `HttpOnly` round-trips through the undocumented `HttpOnly` key of `HTTPCookie.properties`.
 - Android needs no snapshot: its WebView keeps session cookies across launches. It writes them to disk on a timer, so the flush in `onPause` saves a login done right before the app is killed. `react-native-webview` also flushes in `onPageFinished`.
-- The code lives in the host app, not in `src/`. Moving `src/` to a package means moving it to the package's native part.
+- The native code is not autolinked: a new app copies `SessionCookieStore.swift` and writes `SceneDelegate`, the scene manifest and the `MainActivity` flush by hand, see `packages/web2app-shell/README.md`. A change to the scene setup here goes to the README too.
 
 ## Related
 

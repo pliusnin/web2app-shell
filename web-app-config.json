@@ -1,7 +1,14 @@
 {
   "startUrl": "https://jira.symfonyart.com/",
   "userAgentSuffix": "web2appShell/0.0.1",
-  "theme": { "primary": "#1E6FFF" },
+  "theme": {
+    "primary": "#1E6FFF"
+  },
+  "splash": {
+    "logo": "assets/splash-logo.png",
+    "background": "#FFFFFF",
+    "logoWidth": 160
+  },
   "tabs": [
     {
       "title": "Portfolio",
@@ -10,22 +17,22 @@
     },
     {
       "title": "About us",
-      "icon": "info",
+      "icon": "account-group",
       "url": "https://symfonyart.com/#about"
     },
     {
       "title": "Dev To",
-      "icon": "info",
+      "icon": "dev-to",
       "url": "https://dev.to/"
     },
     {
       "title": "Jira",
-      "icon": "info",
+      "icon": "jira",
       "url": "https://jira.symfonyart.com/"
     },
     {
       "title": "Wildberries",
-      "icon": "info",
+      "icon": "shopping",
       "url": "https://www.wildberries.by/"
     }
   ]

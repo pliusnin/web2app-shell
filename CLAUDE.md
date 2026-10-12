@@ -4,6 +4,7 @@ Read the doc of the area you change before editing it. If you change its behavio
 
 - Code rules: FSD imports, naming, SRP, comments, checks → @llm-docs/conventions.md
 - Layer map, composition, public API, shared modules → [architecture.md](llm-docs/architecture.md)
+- The `web2app-shell` package: layout, dependencies, setup command → [package.md](llm-docs/package.md)
 - web-app-config.json schema, theme and light/dark colors, texts → [config.md](llm-docs/config.md)
 - Page loading, progress, error screens, offline reload, splash hide → [web-page.md](llm-docs/web-page.md)
 - Bottom tabs, icons, external tabs, reselect to root, Android back → [tabs.md](llm-docs/tabs.md)

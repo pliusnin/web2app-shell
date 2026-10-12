@@ -5,7 +5,7 @@
  * @format
  */
 
-import { WebAppShell } from './src';
+import { WebAppShell } from 'web2app-shell';
 
 import webAppConfig from './web-app-config.json';
 

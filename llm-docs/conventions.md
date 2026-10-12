@@ -1,6 +1,6 @@
 # Code conventions
 
-Rules for every code change in `src/`. Layer map and composition: [architecture.md](architecture.md).
+Rules for every code change in `src/` of the package `packages/web2app-shell`. Layer map and composition: [architecture.md](architecture.md).
 
 ## FSD
 
@@ -9,8 +9,8 @@ FSD v2.1, pages first. Layers from top to bottom: `app` → `pages` → `widgets
 - Import only from lower layers. Slices of one layer never import each other.
 - Every slice and every `shared` segment has an `index.ts` with explicit named exports, no `export *`. Other slices import only through it.
 - Inside a slice, import the exact file by a relative path.
-- Imports between slices are relative too, no `@/` aliases: `tsc` doesn't rewrite aliases in `.d.ts`, and `src/` is going to become a separate package.
-- Never import from outside `src/`.
+- Imports between slices are relative too, no `@/` aliases: the host app compiles `src/` with its own Metro and `tsc` configs, which don't know the alias.
+- Never import from outside `src/`. An npm import must be listed in the package's `package.json` → [package.md](package.md).
 - Place code by meaning, not by its only current caller: generic helpers go to `src/shared/lib` even when one slice uses them.
 - Code used by one page stays in that page. Move it to `features` only when a second consumer appears (Steiger `insignificant-slice`).
 - `shared/ui` holds components only, never colors or helpers.

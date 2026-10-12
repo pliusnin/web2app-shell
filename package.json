@@ -10,11 +10,11 @@
     "start": "react-native start",
     "test": "jest",
     "lint:fix": "eslint . --fix",
-    "lint:fsd": "steiger ./src",
+    "lint:fsd": "steiger ./packages/web2app-shell/src",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "postinstall": "patch-package",
-    "splash": "react-native-bootsplash generate assets/splash-logo.png --platforms=android,ios --background=#FFFFFF --logo-width=160 --assets-output=assets/bootsplash"
+    "postinstall": "patch-package --patch-dir packages/web2app-shell/patches",
+    "setup": "node packages/web2app-shell/scripts/setup.mjs"
   },
   "dependencies": {
     "@react-native-community/netinfo": "^12.0.1",
@@ -28,8 +28,8 @@
     "react-native-bottom-tabs": "^1.4.0",
     "react-native-notify-kit": "^10.8.0",
     "react-native-safe-area-context": "^5.5.2",
-    "react-native-toast-message": "^2.5.2",
-    "react-native-webview": "^14.0.1"
+    "react-native-webview": "^14.0.1",
+    "web2app-shell": "file:packages/web2app-shell"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

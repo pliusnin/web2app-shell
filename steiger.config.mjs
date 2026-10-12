@@ -10,7 +10,7 @@ export default defineConfig([
   },
   {
     // Tests sit next to their modules but are not modules of shared/lib
-    files: ['./src/shared/lib/**/*.test.*'],
+    files: ['./packages/web2app-shell/src/shared/lib/**/*.test.*'],
     rules: {
       'fsd/shared-lib-grouping': 'off',
     },

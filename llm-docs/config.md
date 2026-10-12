@@ -17,6 +17,7 @@ The host app configures the shell with one JSON file. Types and resolution live 
 | `theme.primary`   | yes      | active tab tint, progress bar, error screen button                                 |
 | `startUrl`        | no       | which tab opens first; its host is the app domain. Defaults to the first tab's URL |
 | `userAgentSuffix` | no       | passed to the WebView as `applicationNameForUserAgent`, appended to the user agent |
+| `splash`          | no       | `{ logo, background, logoWidth? }` for the native boot splash, see below           |
 
 ## Flow
 
@@ -26,6 +27,7 @@ The host app configures the shell with one JSON file. Types and resolution live 
 
 - The `startUrl` host decides which links stay in the app and which tabs are external ([link-routing.md](link-routing.md)). A `startUrl` that matches no tab is never loaded: the first tab opens, but routing still uses that host.
 - `theme` has no defaults on purpose: no hardcoded fallback colors.
+- `splash` is build-time: the shell ignores it and `AppConfig` doesn't type it. The setup command `packages/web2app-shell/scripts/setup.mjs` (`npm run setup` here) passes `logo` (path from the app root), `background` (hex) and `logoWidth` (dp at @1x, bootsplash default if missing) to `react-native-bootsplash generate`. Rerun it after changing them → [native-build.md](native-build.md).
 
 ## Colors and texts
 
