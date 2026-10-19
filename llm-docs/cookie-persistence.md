@@ -1,31 +1,30 @@
 # cookie-persistence
 
-Keeps the user signed in to the site after the app is killed. Native only, no JS: the WebView keeps its default persistent store (`incognito` off, `cacheEnabled` on, both library defaults).
+Keeps the user signed in to the site after the system unloads the app: the cookies of all WebViews are saved to the Keychain and put back on the next launch before the first page loads.
 
 ## Entry points
 
-- `packages/web2app-shell/native/ios/SessionCookieStore.swift`: saves and restores session cookies of `WKWebsiteDataStore.default()`. `ios/web2appShell/SessionCookieStore.swift` is a symlink to it, so the package carries the file for new apps.
-- `ios/web2appShell/SceneDelegate.swift`: starts React Native only after `SessionCookieStore.shared.restore`.
-- `android/app/src/main/java/com/web2appshell/MainActivity.kt`: `CookieManager.flush()` in `onPause`.
+- `src/features/cookie-persistence/model/restore-web-view-cookies.helper.ts`: restore on launch, called from `app`.
+- `save-web-view-cookies.helper.ts`: save, run by `useCookieSaving` when the app leaves the foreground.
+- `track-visited-host.helper.ts`: the page calls it on every navigation.
 
-## iOS flow
+## Flow
 
-1. On scene connect, `restore` reads `Application Support/session-cookies.plist` and puts back the cookies the store doesn't have. Then React Native starts and the first page loads with them. The launch screen stays up meanwhile.
-2. `restore` then adds a `WKHTTPCookieStoreObserver`. On every cookie change it rewrites the snapshot with all session-only cookies of the store.
+1. Launch, in `useWebViewsReady` (`app`): clear the Keychain after an iOS reinstall, restore the cookies, check the session ([session.md](session.md)). The tabs mount after that or after 5 s, and once the [bundled site](bundled-site.md) is served; the splash stays up meanwhile.
+2. Restore: only the cookies the WebView store doesn't have are set.
+3. `AppState` `background` or `inactive` → save: Android flush, read without duplicates, write. Expired cookies are dropped on restore.
 
 ## Gotchas
 
-- Only session cookies are saved. WebKit persists cookies with an expiry itself but drops session ones with the process.
-- A saved cookie never overwrites one the store already has: the snapshot may be older, e.g. a rotated refresh token.
-- Logout: the observer also fires on deletion, so a cookie the site removed leaves the snapshot. This covers XHR logouts that never trigger `onLoadEnd`.
-- A snapshot not rewritten for 30 days (`maxAge`) is ignored.
-- `restore` gives up after 1 s (`restoreTimeout`) so a stuck cookie store can't keep the app on the launch screen.
-- The snapshot lives in the app sandbox, not the Keychain: the Keychain survives app deletion and would sign the user in after a reinstall.
-- `HttpOnly` round-trips through the undocumented `HttpOnly` key of `HTTPCookie.properties`.
-- Android needs no snapshot: its WebView keeps session cookies across launches. It writes them to disk on a timer, so the flush in `onPause` saves a login done right before the app is killed. `react-native-webview` also flushes in `onPageFinished`.
-- The native code is not autolinked: a new app copies `SessionCookieStore.swift` and writes `SceneDelegate`, the scene manifest and the `MainActivity` flush by hand, see `packages/web2app-shell/README.md`. A change to the scene setup here goes to the README too.
+- Saving starts only after the restore: earlier it would overwrite the saved cookies with an empty store.
+- `inactive` counts: an iOS app swiped away in the app switcher dies without reaching `background`.
+- Saves run one after another.
+- Android reads cookies only by URL, so on Android the last 50 hosts opened in the WebViews are kept and saved with the cookies. iOS reads all cookies at once and tracks no hosts.
+- A cookie without a leading dot in its domain is host-only. It is restored without `domain`: an explicit one widens it to subdomains on Android.
+- The iOS Keychain outlives app deletion. `resetSecureStorageAfterInstallHelper` (`shared/lib`) deletes every Keychain item on the first launch after an install, marked in `NSUserDefaults`, which the uninstall wipes.
+- Keychain items are readable after the first unlock and stay out of backups and device migration.
+- iOS uses the WebKit store (`WEB_VIEW_COOKIE_STORE`), Android has one store for the WebView and the app.
 
 ## Related
 
 - WebView setup, page loading → [web-page.md](web-page.md)
-- Native project layout → [native-build.md](native-build.md)

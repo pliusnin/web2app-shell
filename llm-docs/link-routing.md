@@ -4,8 +4,8 @@ Decides which URLs the WebView loads and which open outside the app: browser, ph
 
 ## Entry points
 
-- `src/features/link-routing/model/use-link-routing.ts`: `useLinkRouting()`, the `onShouldStartLoadWithRequest` handler for the WebView.
-- `isAppUrlHelper(url, startUrl)`: the app-domain rule.
+- `src/features/link-routing/model/route-link-request.helper.ts`: `routeLinkRequestHelper`, the `onShouldStartLoadWithRequest` handler for the WebView.
+- `isAppUrlHelper(url)`: whether the URL is a page of the bundled site.
 - `openExternalUrlHelper(url)`: opens a URL outside the app.
 
 ## Flow
@@ -17,12 +17,12 @@ Decides which URLs the WebView loads and which open outside the app: browser, ph
 
 ## Contracts
 
-- App domain is the host of `config.startUrl` ([config.md](config.md)). Hosts are compared exactly and lowercased; scheme (http/https), port and path don't matter. Non-web URLs (`tel:`, `mailto:`) never match.
+- The app's pages are the ones on `SITE_ORIGIN` (`http://127.0.0.1:3035`), the local server of the [bundled site](bundled-site.md). The origin must match exactly, port included. Non-web URLs (`tel:`, `mailto:`) never match.
 
 ## Gotchas
 
-- Exact host match is a deliberate decision: `www.` and other subdomains of the `startUrl` host open outside. Don't add subdomain handling or allow-lists unless asked.
+- Android reports the bare origin (`http://127.0.0.1:3035`, no slash) as the URL of a bridge message, so it matches too.
 - Android waits for the `onShouldStartLoadWithRequest` answer only 250 ms, so the external URL is opened without awaiting.
-- iOS asks about iframe loads too (reCAPTCHA, analytics). They must stay inside the page, hence the `isTopFrame` check.
+- iOS asks about iframe loads too (maps, analytics). They must stay inside the page, hence the `isTopFrame` check.
 - The iOS simulator resolves `tel:` to `false` instead of failing, so the "can't open" alert shows there.
-- Android still reports WebView error `-10` for blocked app links; it is ignored in [web-page.md](web-page.md).
+- Android still reports WebView error `-10` for blocked app links; its error page is prevented in [web-page.md](web-page.md).

@@ -5,7 +5,6 @@ import type { ResolvedConfig } from './app-config.types';
 import { ConfigProvider, useConfig } from './config-context';
 
 const config: ResolvedConfig = {
-  startUrl: 'https://example.com/',
   theme: { primary: '#1E6FFF' },
   tabs: [{ title: 'Home', icon: 'home', url: 'https://example.com/' }],
   startTabIndex: 0,

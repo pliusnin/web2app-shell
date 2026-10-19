@@ -1,11 +1,10 @@
 # push-notifications
 
-FCM delivers pushes. notify-kit (`react-native-notify-kit`, the maintained fork of Notifee with the same API, default export still named `notifee`) creates the Android channel, asks for permission and shows pushes while the app is open. Both hooks run once from `app`.
+FCM delivers pushes. notify-kit (`react-native-notify-kit`, the maintained fork of Notifee with the same API, default export still named `notifee`) creates the Android channel, asks for permission and shows pushes while the app is open. `usePushNotifications` runs once from `app`.
 
 ## Entry points
 
-- `src/features/push-notifications/model/use-notifications-setup.ts`: on start, Android channel → permission → APNs registration → topic subscription.
-- `src/features/push-notifications/model/use-foreground-notifications.ts`: `onMessage` → system notification via notify-kit.
+- `src/features/push-notifications/model/use-push-notifications.ts`: on start, Android channel → permission → APNs registration → topic subscription; while the app is open, `onMessage` → system notification via notify-kit.
 - `src/features/push-notifications/config/notifications.ts`: `NOTIFICATIONS` with `topic: 'all'` and `channelId: 'default'`.
 
 ## Contracts

@@ -5,32 +5,20 @@ const config: AppConfig = {
   userAgentSuffix: 'shell/1.0',
   theme: { primary: '#1E6FFF' },
   tabs: [
-    { title: 'Home', icon: 'home', url: 'https://example.com/' },
-    {
-      title: 'Catalog',
-      icon: 'view-grid',
-      url: 'https://example.com/catalog/',
-    },
-    { title: 'About', icon: 'information', url: 'https://example.com/about' },
+    { title: 'Catalog', icon: 'view-grid', url: '/catalog' },
+    { title: 'Home', icon: 'home', url: '/' },
+    { title: 'About', icon: 'information', url: '/about/' },
   ],
 };
 
 describe('resolveConfig', () => {
   it('opens the tab whose URL equals startUrl', () => {
-    const resolved = resolveConfig({
-      ...config,
-      startUrl: 'https://example.com/catalog/',
-    });
-
-    expect(resolved).toMatchObject({
-      startTabIndex: 1,
-      startUrl: 'https://example.com/catalog/',
-    });
+    expect(resolveConfig({ ...config, startUrl: '/' }).startTabIndex).toBe(1);
   });
 
   it.each([
-    ['without', 'with', 'https://example.com/catalog', 1],
-    ['with', 'without', 'https://example.com/about/', 2],
+    ['with', 'without', '/catalog/', 0],
+    ['without', 'with', '/about', 2],
   ])(
     'matches startUrl %s a trailing slash to a tab URL %s one',
     (_startSlash, _tabSlash, startUrl, startTabIndex) => {
@@ -40,23 +28,14 @@ describe('resolveConfig', () => {
     },
   );
 
-  it('opens the first tab and keeps startUrl when no tab matches it', () => {
-    const resolved = resolveConfig({
-      ...config,
-      startUrl: 'https://example.com/landing/',
-    });
-
-    expect(resolved).toMatchObject({
-      startTabIndex: 0,
-      startUrl: 'https://example.com/landing/',
-    });
+  it('opens the first tab when no tab matches startUrl', () => {
+    expect(
+      resolveConfig({ ...config, startUrl: '/landing' }).startTabIndex,
+    ).toBe(0);
   });
 
-  it('takes startUrl from the first tab when it is not set', () => {
-    expect(resolveConfig(config)).toMatchObject({
-      startTabIndex: 0,
-      startUrl: 'https://example.com/',
-    });
+  it('opens the first tab when startUrl is not set', () => {
+    expect(resolveConfig(config).startTabIndex).toBe(0);
   });
 
   it('keeps the tabs, the theme and the user agent suffix', () => {

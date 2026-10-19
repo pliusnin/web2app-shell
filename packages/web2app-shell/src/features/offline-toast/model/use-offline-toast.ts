@@ -1,10 +1,11 @@
-import { useNetworkChange } from '../../../shared/lib';
+import { useConnectionLost } from '../../../shared/lib';
 import { showOfflineToastHelper } from './show-offline-toast.helper';
 
 /**
- * Shows a toast when the connection drops. A loaded page stays on screen
- * while offline, so the user is only notified, without an error screen.
+ * Показывает тост, когда пропадает соединение. Загруженная страница остаётся
+ * на экране и без сети, поэтому пользователя только предупреждают, без
+ * экрана ошибки.
  */
 export const useOfflineToast = () => {
-  useNetworkChange({ onOffline: showOfflineToastHelper });
+  useConnectionLost(showOfflineToastHelper);
 };

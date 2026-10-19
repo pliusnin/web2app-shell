@@ -5,11 +5,11 @@ import { openExternalUrlHelper } from './open-external-url.helper';
 
 const URL = 'tel:+123456789';
 
-// The helper doesn't return its promise, so the test waits for the chain to settle
+// Хелпер не возвращает свой промис, поэтому тест ждёт, пока цепочка завершится
 const flushPromises = () =>
   new Promise<void>(resolve => setTimeout(() => resolve(), 0));
 
-// RN types say Promise<void>, but the native module resolves whether the URL opened
+// В типах RN Promise<void>, но нативный модуль резолвит, открылся ли URL
 const openURL = Linking.openURL as unknown as jest.Mock<
   Promise<boolean>,
   [string]

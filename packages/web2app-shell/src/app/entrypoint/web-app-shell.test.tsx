@@ -1,27 +1,24 @@
 import { render, screen } from '@testing-library/react-native';
 
+import { SITE_ORIGIN } from '../../shared/config';
 import type { AppConfig } from '../../shared/config';
 import { WebAppShell } from './web-app-shell';
 
 const config: AppConfig = {
-  startUrl: 'https://example.com/catalog/',
+  startUrl: '/catalog',
   theme: { primary: '#1E6FFF' },
   tabs: [
-    { title: 'Home', icon: 'home', url: 'https://example.com/' },
-    {
-      title: 'Catalog',
-      icon: 'view-grid',
-      url: 'https://example.com/catalog/',
-    },
+    { title: 'Home', icon: 'home', url: '/' },
+    { title: 'Catalog', icon: 'view-grid', url: '/catalog' },
   ],
 };
 
 describe('WebAppShell', () => {
-  it('opens the start tab page in the WebView', async () => {
+  it('opens the start tab page of the bundled site in the WebView', async () => {
     await render(<WebAppShell config={config} />);
 
-    expect(screen.getByTestId('web-view')).toHaveProp('source', {
-      uri: 'https://example.com/catalog/',
+    expect(await screen.findByTestId('web-view')).toHaveProp('source', {
+      uri: `${SITE_ORIGIN}/catalog`,
     });
   });
 });

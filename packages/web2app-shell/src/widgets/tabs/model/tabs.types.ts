@@ -10,6 +10,7 @@ export type TabRoute = {
   uri: string;
   isExternal: boolean;
   focusedIcon?: ImageSourcePropType;
+  unfocusedIcon?: ImageSourcePropType;
 };
 
 export type TabWebViews = {

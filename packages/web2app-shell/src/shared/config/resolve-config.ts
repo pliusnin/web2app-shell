@@ -1,6 +1,6 @@
 import type { AppConfig, ResolvedConfig } from './app-config.types';
 
-// "https://example.com" and "https://example.com/" are the same page
+// "/catalog" и "/catalog/" — одна и та же страница
 const normalizeUrl = (url: string) => url.replace(/\/+$/, '');
 
 export const resolveConfig = ({
@@ -9,16 +9,15 @@ export const resolveConfig = ({
   theme,
   tabs,
 }: AppConfig): ResolvedConfig => {
-  const startIndex = tabs.findIndex(
-    tab => normalizeUrl(tab.url) === normalizeUrl(startUrl ?? ''),
-  );
-  const startTabIndex = Math.max(startIndex, 0);
+  const startIndex =
+    startUrl === undefined
+      ? 0
+      : tabs.findIndex(tab => normalizeUrl(tab.url) === normalizeUrl(startUrl));
 
   return {
-    startUrl: startUrl ?? tabs[startTabIndex].url,
     userAgentSuffix,
     tabs,
     theme,
-    startTabIndex,
+    startTabIndex: Math.max(startIndex, 0),
   };
 };

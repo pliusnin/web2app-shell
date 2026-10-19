@@ -1,2 +1,1 @@
-export { useForegroundNotifications } from './model/use-foreground-notifications';
-export { useNotificationsSetup } from './model/use-notifications-setup';
+export { usePushNotifications } from './model/use-push-notifications';

@@ -1,21 +1,27 @@
 import { isAppUrlHelper } from '../../../features/link-routing';
-import type { TabConfig } from '../../../shared/config';
+import { SITE_ORIGIN, type TabConfig } from '../../../shared/config';
+import { getOutlineTabIconHelper } from './get-outline-tab-icon.helper';
 import { getTabIconHelper } from './get-tab-icon.helper';
 import type { TabRoute } from './tabs.types';
 
 /**
- * Converts a tab from the config into a tab bar route: key, title, URL,
- * icon, and isExternal for tabs outside the app domain, which open outside
- * the app instead of switching the tab.
+ * Превращает таб из конфига в маршрут таб-бара: key, title, URL на локальном
+ * origin для пути сайта ("/catalog"), залитая иконка для активного таба
+ * и контурная для неактивного, isExternal для табов с URL другого сайта,
+ * которые открываются вне приложения, а не переключают таб.
  */
 export const mapTabToRouteHelper = (
   tab: TabConfig,
   index: number,
-  startUrl: string,
-): TabRoute => ({
-  key: `tab-${index}`,
-  title: tab.title,
-  uri: tab.url,
-  isExternal: !isAppUrlHelper(tab.url, startUrl),
-  focusedIcon: getTabIconHelper(tab.icon),
-});
+): TabRoute => {
+  const uri = tab.url.startsWith('/') ? `${SITE_ORIGIN}${tab.url}` : tab.url;
+
+  return {
+    key: `tab-${index}`,
+    title: tab.title,
+    uri,
+    isExternal: !isAppUrlHelper(uri),
+    focusedIcon: getTabIconHelper(tab.icon),
+    unfocusedIcon: getOutlineTabIconHelper(tab.icon),
+  };
+};

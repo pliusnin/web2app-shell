@@ -1,34 +1,41 @@
+import { SITE_ORIGIN } from '../../../shared/config';
 import { getTabIconHelper } from './get-tab-icon.helper';
 import { mapTabToRouteHelper } from './map-tab-to-route.helper';
 
-const START_URL = 'https://example.com/';
-
 describe('mapTabToRouteHelper', () => {
-  it('builds the route of an app tab', () => {
+  it('builds the route of a page of the bundled site', () => {
     const route = mapTabToRouteHelper(
       {
         title: 'Catalog',
         icon: 'view-grid',
-        url: 'https://example.com/catalog/',
+        url: '/catalog',
       },
       2,
-      START_URL,
     );
 
     expect(route).toEqual({
       key: 'tab-2',
       title: 'Catalog',
-      uri: 'https://example.com/catalog/',
+      uri: `${SITE_ORIGIN}/catalog`,
       isExternal: false,
       focusedIcon: getTabIconHelper('view-grid'),
+      unfocusedIcon: getTabIconHelper('view-grid-outline'),
     });
   });
 
-  it('marks a tab on another host as external', () => {
+  it('has no inactive icon when the icon has no outline variant', () => {
+    const route = mapTabToRouteHelper(
+      { title: 'Jira', icon: 'jira', url: '/jira' },
+      0,
+    );
+
+    expect(route.unfocusedIcon).toBeUndefined();
+  });
+
+  it('marks a tab with a URL of another site as external', () => {
     const route = mapTabToRouteHelper(
       { title: 'Blog', icon: 'information', url: 'https://blog.other.com/' },
       0,
-      START_URL,
     );
 
     expect(route.isExternal).toBe(true);

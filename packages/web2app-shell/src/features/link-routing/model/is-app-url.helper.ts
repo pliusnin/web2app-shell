@@ -1,10 +1,8 @@
-import { getHostHelper } from '../../../shared/lib';
+import { SITE_ORIGIN } from '../../../shared/config';
 
 /**
- * Checks whether the URL is on the same host as startUrl, i.e. belongs to
- * the website the app wraps. Non-web URLs (tel:, mailto:) never are.
+ * Проверяет, что URL — страница встроенного сайта на локальном origin.
+ * Страницы других сайтов и не-веб URL (tel:, mailto:) ею не бывают.
  */
-export const isAppUrlHelper = (url: string, startUrl: string) => {
-  const host = getHostHelper(url);
-  return host !== undefined && host === getHostHelper(startUrl);
-};
+export const isAppUrlHelper = (url: string) =>
+  url === SITE_ORIGIN || url.startsWith(`${SITE_ORIGIN}/`);

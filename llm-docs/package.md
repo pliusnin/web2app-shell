@@ -10,7 +10,7 @@ The shell is the local package `packages/web2app-shell`. Any React Native CLI ap
 - `scripts/install-dependencies.mjs`: `installDependencies`, see below.
 - `scripts/generate-splash.mjs`: `generateSplash`, the native boot splash from `splash` in the app's `web-app-config.json` → [config.md](config.md). Without `splash` it logs a hint and returns, so a first setup before the config works.
 - `scripts/run-command.mjs`: `runCommand`, shared by the scripts.
-- `native/ios/SessionCookieStore.swift`: copied into new apps by hand, symlinked into this repo's iOS project → [cookie-persistence.md](cookie-persistence.md).
+- `vendor/web-in-mobile-tools-0.1.0.tgz`: unpacks the bundled site ([bundled-site.md](bundled-site.md)); a `file:` dependency of the package.
 - `patches/`: `patch-package` patches for peer dependencies, applied by the app's `postinstall` with `--patch-dir packages/web2app-shell/patches`. Delete the folder when no patch is left: the setup command then skips patch-package.
 
 ## Dependencies

@@ -15,8 +15,8 @@ export const ConfigProvider = ({ value, children }: ConfigProviderProps) => (
 );
 
 /**
- * Returns the resolved app config from ConfigProvider. Throws outside the
- * provider, so a missing provider fails right away.
+ * Возвращает итоговый конфиг приложения из ConfigProvider. Вне провайдера
+ * бросает ошибку, чтобы отсутствие провайдера обнаружилось сразу.
  */
 export const useConfig = () => {
   const config = useContext(ConfigContext);

@@ -1,1 +1,0 @@
-../../packages/web2app-shell/native/ios/SessionCookieStore.swift

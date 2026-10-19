@@ -1,17 +1,16 @@
 import { useMemo, useRef } from 'react';
 import type { RefCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import type { WebViewNavigation } from 'react-native-webview';
 
-import { useLinkRouting } from '../../../features/link-routing';
+import { trackVisitedHostHelper } from '../../../features/cookie-persistence';
+import { routeLinkRequestHelper } from '../../../features/link-routing';
 import { useConfig } from '../../../shared/config';
 import { mergeRefsHelper } from '../../../shared/lib';
 import type { WebViewControls } from '../../../shared/lib';
-import { ProgressBar } from '../../../shared/ui';
-import { usePageLoad } from '../model/page-load/use-page-load';
-import { useHideSplash } from '../model/splash/use-hide-splash';
-import { PageErrorOverlay } from './page-error-overlay';
+import { useBridgeMessages } from '../model/bridge/use-bridge-messages';
+import { handleLoadErrorHelper } from '../model/load-error/handle-load-error.helper';
+import { useWebViewRecovery } from '../model/process-recovery/use-web-view-recovery';
 
 type WebPageScreenProps = {
   ref: RefCallback<WebViewControls>;
@@ -24,39 +23,30 @@ export const WebPageScreen = ({
   uri,
   onNavigationStateChange,
 }: WebPageScreenProps) => {
-  const { userAgentSuffix, theme } = useConfig();
+  const { userAgentSuffix } = useConfig();
   const webView = useRef<WebViewControls | null>(null);
   const webViewRef = useMemo(() => mergeRefsHelper(ref, webView), [ref]);
-  const onShouldStartLoadWithRequest = useLinkRouting();
-  const { webViewHandlers, isLoading, isSettled, progress, error, retry } =
-    usePageLoad(webView);
-  useHideSplash(isSettled);
+  const onMessage = useBridgeMessages(webView);
+  const recovery = useWebViewRecovery(uri);
 
   return (
-    <View style={styles.container}>
-      <WebView
-        ref={webViewRef}
-        source={{ uri }}
-        applicationNameForUserAgent={userAgentSuffix}
-        allowsBackForwardNavigationGestures
-        onNavigationStateChange={onNavigationStateChange}
-        originWhitelist={['*']}
-        onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-        {...webViewHandlers}
-      />
-      {isLoading && (
-        <ProgressBar
-          style={styles.progress}
-          progress={progress}
-          color={theme.primary}
-        />
-      )}
-      <PageErrorOverlay error={error} onRetry={retry} />
-    </View>
+    <WebView
+      key={recovery.key}
+      ref={webViewRef}
+      source={{ uri: recovery.uri }}
+      applicationNameForUserAgent={userAgentSuffix}
+      allowsBackForwardNavigationGestures
+      onNavigationStateChange={navState => {
+        onNavigationStateChange(navState);
+        recovery.trackUrl(navState.url);
+        trackVisitedHostHelper(navState.url);
+      }}
+      originWhitelist={['*']}
+      onShouldStartLoadWithRequest={routeLinkRequestHelper}
+      onMessage={onMessage}
+      onError={handleLoadErrorHelper}
+      onContentProcessDidTerminate={recovery.onContentProcessDidTerminate}
+      onRenderProcessGone={recovery.onRenderProcessGone}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  progress: { position: 'absolute', top: 0, left: 0, right: 0, height: 2 },
-});

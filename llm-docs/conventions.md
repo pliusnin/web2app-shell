@@ -29,7 +29,7 @@ One responsibility per module. Components only render and wire props. Behavior s
 
 ## Comments
 
-- Every exported helper and hook gets a JSDoc of 1–4 lines right above it: what it does and why. In English.
+- Every exported helper and hook gets a JSDoc of 1–4 lines right above it: what it does and why. In Russian.
 - Components, types, config fields, reducers and `resolveConfig` get no header comment.
 - Inside functions, comment only non-obvious platform or library quirks, the kind a reader would otherwise "fix".
 

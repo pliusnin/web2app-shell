@@ -4,9 +4,9 @@ import { TEXTS } from '../../../shared/config';
 import { NOTIFICATIONS } from '../config/notifications';
 
 /**
- * Creates the Android notification channel for pushes. Android 8+ shows no
- * notifications without a channel, high importance makes them pop up.
- * Does nothing on iOS.
+ * Создаёт Android-канал уведомлений для пушей. Android 8+ без канала
+ * уведомления не показывает, высокая важность делает их всплывающими.
+ * На iOS ничего не делает.
  */
 export const createNotificationChannelHelper = () =>
   notifee.createChannel({

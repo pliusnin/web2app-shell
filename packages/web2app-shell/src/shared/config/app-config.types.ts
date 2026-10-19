@@ -15,10 +15,6 @@ export type AppConfig = {
   tabs: Array<TabConfig>;
 };
 
-export type ResolvedConfig = {
-  startUrl: string;
-  userAgentSuffix?: string;
-  theme: ThemeConfig;
-  tabs: Array<TabConfig>;
+export type ResolvedConfig = Omit<AppConfig, 'startUrl'> & {
   startTabIndex: number;
 };

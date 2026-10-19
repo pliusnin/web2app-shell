@@ -7,8 +7,8 @@ import RNBootSplash
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-  // Stays nil, the window lives in SceneDelegate. RNFB Messaging reads
-  // `delegate.window` at launch and crashes when the property doesn't exist.
+  // Остаётся nil, окно живёт в SceneDelegate. RNFB Messaging читает
+  // `delegate.window` при запуске и падает, если такого свойства нет.
   var window: UIWindow?
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?

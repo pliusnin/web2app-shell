@@ -1,8 +1,8 @@
 import notifee from 'react-native-notify-kit';
 
 /**
- * Asks the user for permission to show notifications (iOS, Android 13+).
- * Without it pushes arrive but are not shown.
+ * Запрашивает у пользователя разрешение на уведомления (iOS, Android 13+).
+ * Без него пуши приходят, но не показываются.
  */
 export const requestNotificationPermissionHelper = () =>
   notifee.requestPermission();

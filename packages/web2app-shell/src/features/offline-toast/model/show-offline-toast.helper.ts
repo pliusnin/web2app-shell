@@ -2,7 +2,7 @@ import Toast from 'react-native-toast-message';
 
 import { TEXTS } from '../../../shared/config';
 
-/** Shows the "No internet connection" toast. */
+/** Показывает тост «Нет подключения к интернету». */
 export const showOfflineToastHelper = () => {
   Toast.show({ type: 'info', text1: TEXTS.offlineTitle });
 };

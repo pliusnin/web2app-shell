@@ -3,7 +3,8 @@ import { renderHook } from '@testing-library/react-native';
 
 import { useAndroidBackHandler } from './use-android-back-handler';
 
-// Jest resolves the iOS BackHandler, which never calls handlers, so the test presses back itself
+// Jest подключает iOS-версию BackHandler, которая не вызывает обработчики,
+// поэтому тест сам нажимает «назад»
 const mockBackHandler = () => {
   const remove = jest.fn();
   let onBackPress:

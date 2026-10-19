@@ -6,51 +6,51 @@ apply plugin: "com.facebook.react"
 apply plugin: 'com.google.gms.google-services'
 
 /**
- * This is the configuration block to customize your React Native Android app.
- * By default you don't need to apply any configuration, just uncomment the lines you need.
+ * Блок настройки Android-приложения React Native.
+ * По умолчанию настраивать ничего не нужно, достаточно раскомментировать нужные строки.
  */
 react {
-    /* Folders */
-    //   The root of your project, i.e. where "package.json" lives. Default is '../..'
+    /* Папки */
+    //   Корень проекта, т. е. где лежит "package.json". По умолчанию '../..'
     // root = file("../../")
-    //   The folder where the react-native NPM package is. Default is ../../node_modules/react-native
+    //   Папка NPM-пакета react-native. По умолчанию ../../node_modules/react-native
     // reactNativeDir = file("../../node_modules/react-native")
-    //   The folder where the react-native Codegen package is. Default is ../../node_modules/@react-native/codegen
+    //   Папка пакета Codegen react-native. По умолчанию ../../node_modules/@react-native/codegen
     // codegenDir = file("../../node_modules/@react-native/codegen")
-    //   The cli.js file which is the React Native CLI entrypoint. Default is ../../node_modules/react-native/cli.js
+    //   Файл cli.js — точка входа React Native CLI. По умолчанию ../../node_modules/react-native/cli.js
     // cliFile = file("../../node_modules/react-native/cli.js")
 
-    /* Variants */
-    //   The list of variants to that are debuggable. For those we're going to
-    //   skip the bundling of the JS bundle and the assets. Default is "debug", "debugOptimized".
-    //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
+    /* Варианты */
+    //   Список отлаживаемых вариантов: для них JS-бандл и ассеты не собираются.
+    //   По умолчанию "debug", "debugOptimized".
+    //   При добавлении flavors (lite, prod и т. п.) перечислите их debuggableVariants.
     // debuggableVariants = ["liteDebug", "liteDebugOptimized", "prodDebug", "prodDebugOptimized"]
 
-    /* Bundling */
-    //   A list containing the node command and its flags. Default is just 'node'.
+    /* Сборка бандла */
+    //   Команда node и её флаги. По умолчанию просто 'node'.
     // nodeExecutableAndArgs = ["node"]
     //
-    //   The command to run when bundling. By default is 'bundle'
+    //   Команда сборки бандла. По умолчанию 'bundle'
     // bundleCommand = "ram-bundle"
     //
-    //   The path to the CLI configuration file. Default is empty.
+    //   Путь к файлу конфигурации CLI. По умолчанию пусто.
     // bundleConfig = file(../rn-cli.config.js)
     //
-    //   The name of the generated asset file containing your JS bundle
+    //   Имя генерируемого файла ассета с JS-бандлом
     // bundleAssetName = "MyApplication.android.bundle"
     //
-    //   The entry file for bundle generation. Default is 'index.android.js' or 'index.js'
+    //   Входной файл для сборки бандла. По умолчанию 'index.android.js' или 'index.js'
     // entryFile = file("../js/MyApplication.android.js")
     //
-    //   A list of extra flags to pass to the 'bundle' commands.
-    //   See https://github.com/react-native-community/cli/blob/main/docs/commands.md#bundle
+    //   Дополнительные флаги для команд 'bundle'.
+    //   См. https://github.com/react-native-community/cli/blob/main/docs/commands.md#bundle
     // extraPackagerArgs = []
 
-    /* Hermes Commands */
-    //   The hermes compiler command to run. By default it is 'hermesc'
+    /* Команды Hermes */
+    //   Команда компилятора Hermes. По умолчанию 'hermesc'
     // hermesCommand = "$rootDir/my-custom-hermesc/bin/hermesc"
     //
-    //   The list of flags to pass to the Hermes compiler. By default is "-O", "-output-source-map"
+    //   Флаги компилятора Hermes. По умолчанию "-O", "-output-source-map"
     // hermesFlags = ["-O", "-output-source-map"]
 
     /* Autolinking */
@@ -58,20 +58,20 @@ react {
 }
 
 /**
- * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
+ * true включает Proguard в release-сборках для минификации Java-байткода.
  */
 def enableProguardInReleaseBuilds = false
 
 /**
- * The preferred build flavor of JavaScriptCore (JSC)
+ * Предпочтительный flavor сборки JavaScriptCore (JSC)
  *
- * For example, to use the international variant, you can use:
+ * Например, для международного варианта:
  * `def jscFlavor = io.github.react-native-community:jsc-android-intl:2026004.+`
  *
- * The international variant includes ICU i18n library and necessary data
- * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
- * give correct results when using with locales other than en-US. Note that
- * this variant is about 6MiB larger per architecture than default.
+ * Международный вариант включает библиотеку ICU i18n и данные, с которыми,
+ * например, `Date.toLocaleString` и `String.localeCompare` работают корректно
+ * с локалями кроме en-US. Этот вариант примерно на 6 МиБ больше стандартного
+ * на каждую архитектуру.
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
@@ -101,8 +101,8 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
+            // Внимание! Для production нужно сгенерировать собственный keystore.
+            // См. https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
@@ -111,7 +111,7 @@ android {
 }
 
 dependencies {
-    // The version of react-native is set by the React Native Gradle Plugin
+    // Версию react-native задаёт React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
     if (hermesEnabled.toBoolean()) {

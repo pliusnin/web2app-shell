@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// Sets up web2app-shell in the app: dependencies, then the boot splash from web-app-config.json.
-// Safe to rerun, e.g. after changing the splash logo or updating the package.
-// Run from the app root: node packages/web2app-shell/scripts/setup.mjs
+// Настраивает web2app-shell в приложении: зависимости, затем boot splash из web-app-config.json.
+// Можно запускать повторно, например после смены логотипа splash или обновления пакета.
+// Запуск из корня приложения: node packages/web2app-shell/scripts/setup.mjs
 
 import { existsSync } from 'node:fs';
 

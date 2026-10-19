@@ -64,13 +64,13 @@ describe('useTabWebViews', () => {
     expect(result.current.tryGoBack('home')).toBe(false);
   });
 
-  it('sends only the tab WebView to the tab root URL', async () => {
+  it('sends only the tab page to the tab root URL without a reload', async () => {
     const { result, webViews } = await renderTabWebViews();
 
     result.current.resetToRoot('catalog', 'https://example.com/catalog/');
 
     expect(webViews.catalog.injectJavaScript).toHaveBeenCalledWith(
-      'window.location.href = "https://example.com/catalog/"; true;',
+      'window.__MG_Native_invoke && window.__MG_Native_invoke({"cmd":"CHANGE_LOCATION","args":{"url":"https://example.com/catalog/"}}); true;',
     );
     expect(webViews.home.injectJavaScript).not.toHaveBeenCalled();
   });

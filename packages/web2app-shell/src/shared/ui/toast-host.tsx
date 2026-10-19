@@ -3,7 +3,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const TOAST_GAP = 8;
 
-// The toast library doesn't know about the notch, so the offset comes from the insets
+// Библиотека тостов не знает о вырезе экрана, поэтому отступ берётся
+// из insets
 export const ToastHost = () => {
   const { top } = useSafeAreaInsets();
 

@@ -14,12 +14,9 @@ type TabsViewProps = {
 };
 
 export const TabsView = ({ renderScene }: TabsViewProps) => {
-  const { tabs, startTabIndex, startUrl, theme } = useConfig();
+  const { tabs, startTabIndex, theme } = useConfig();
 
-  const routes = useMemo(
-    () => tabs.map((tab, index) => mapTabToRouteHelper(tab, index, startUrl)),
-    [tabs, startUrl],
-  );
+  const routes = useMemo(() => tabs.map(mapTabToRouteHelper), [tabs]);
   const webViews = useTabWebViews();
   const tabBarColors = useTabBarColors();
   const { index, onIndexChange } = useTabNavigation(

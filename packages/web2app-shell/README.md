@@ -1,6 +1,6 @@
 # web2app-shell
 
-React Native shell that wraps a website into a native app: native bottom tabs, a WebView per tab, push notifications, an offline toast, a boot splash and a login that survives app restarts.
+React Native shell that turns a website into a native app: the site ships inside the app as `webapp.zip` and is served from a local server, native bottom tabs open its pages, a WebView per tab, push notifications, an offline toast, a boot splash, a login that survives app restarts, a session check before the site opens, biometric sign-in, requests to other origins without CORS and downloads of files the site makes.
 
 The package holds the JS code. The native setup is done once per app by hand, this README lists every step.
 
@@ -40,7 +40,6 @@ Don't run `npm install` inside this folder: a second `node_modules` here means a
 
 ```json
 {
-  "startUrl": "https://example.com/",
   "userAgentSuffix": "MyApp/1.0.0",
   "theme": {
     "primary": "#1E6FFF"
@@ -51,26 +50,22 @@ Don't run `npm install` inside this folder: a second `node_modules` here means a
     "logoWidth": 160
   },
   "tabs": [
-    { "title": "Home", "icon": "home", "url": "https://example.com/" },
-    {
-      "title": "About",
-      "icon": "information",
-      "url": "https://example.com/about"
-    }
+    { "title": "Home", "icon": "home", "url": "/" },
+    { "title": "Catalog", "icon": "view-grid", "url": "/catalog" }
   ]
 }
 ```
 
-| Key                 | Required       | Meaning                                                                                           |
-| ------------------- | -------------- | ------------------------------------------------------------------------------------------------- |
-| `tabs[]`            | yes            | one bottom tab per item: `title`, `icon`, `url`                                                   |
-| `tabs[].icon`       | yes            | `icon` is the name of any icon of [Material Design Icons](https://pictogrammers.com/library/mdi/) |
-| `theme.primary`     | yes            | brand accent color, hex, see below. No default                                                    |
-| `startUrl`          | no             | the tab with this URL opens first. Defaults to the first tab's URL                                |
-| `userAgentSuffix`   | no             | appended to the WebView user agent                                                                |
-| `splash.logo`       | for the splash | PNG or SVG path from the app root                                                                 |
-| `splash.background` | for the splash | splash background, hex                                                                            |
-| `splash.logoWidth`  | no             | logo width in dp at @1x, bootsplash default 100                                                   |
+| Key                 | Required       | Meaning                                                                                                                           |
+| ------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `tabs[]`            | yes            | one bottom tab per item: `title`, `icon`, `url`. `url` is a path of the site, or a URL of another site that opens outside the app |
+| `tabs[].icon`       | yes            | `icon` is the name of any icon of [Material Design Icons](https://pictogrammers.com/library/mdi/)                                 |
+| `theme.primary`     | yes            | brand accent color, hex, see below. No default                                                                                    |
+| `startUrl`          | no             | the `url` of the tab that opens first. Defaults to the first tab                                                                  |
+| `userAgentSuffix`   | no             | appended to the WebView user agent                                                                                                |
+| `splash.logo`       | for the splash | PNG or SVG path from the app root                                                                                                 |
+| `splash.background` | for the splash | splash background, hex                                                                                                            |
+| `splash.logoWidth`  | no             | logo width in dp at @1x, bootsplash default 100                                                                                   |
 
 ## Usage
 
@@ -87,6 +82,28 @@ function App() {
 
 export default App;
 ```
+
+A site with sign-in can be opened signed in: it sends the app a token after signing in (`SAVE_TOKEN`), and `checkSession` checks it before the first page loads. Return the response when the token is valid (its `Set-Cookie` sign the user in on the site), `null` when it is not, and throw when the check failed:
+
+```tsx
+const checkSession: CheckSession = async token => {
+  const response = await fetch('https://api.example.com/session', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.ok ? response : null;
+};
+
+<WebAppShell config={webAppConfig} checkSession={checkSession} />;
+```
+
+## The site
+
+Build the site so that `index.html` is at the root of a zip, name it `webapp.zip` and put the same file into both native projects:
+
+- iOS: `ios/<App>/webapp.zip`, added to the app target (Copy Bundle Resources);
+- Android: `android/app/src/main/assets/webapp.zip`.
+
+On the first launch the shell unpacks it and serves it on `http://127.0.0.1:3035`; tab `url`s are paths of it. A single-page app gets `index.html` for every path without a file. The unpacked site is kept: a new zip reaches users after a reinstall.
 
 ## Native setup
 
@@ -115,6 +132,27 @@ export default App;
   use_frameworks! :linkage => :static
   ```
 
+- `ios/Podfile`: iOS 15.5, which `react-native-zip-archive` requires, and the same minimum for every pod, Xcode 27 rejects lower ones:
+
+  ```ruby
+  IOS_DEPLOYMENT_TARGET = '15.5'
+  platform :ios, IOS_DEPLOYMENT_TARGET
+  ```
+
+  and at the end of `post_install`:
+
+  ```ruby
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |build_config|
+      if build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < IOS_DEPLOYMENT_TARGET.to_f
+        build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = IOS_DEPLOYMENT_TARGET
+      end
+    end
+  end
+  ```
+
+  Set the app target's deployment target in Xcode to 15.5 too.
+
 #### Boot splash
 
 1. Set `splash` in `web-app-config.json`, see [Config](#config).
@@ -124,7 +162,7 @@ export default App;
 
 3. The two init lines are added by hand: `AppDelegate.swift` and `MainActivity.kt` below.
 
-The shell hides the splash once the first page or an error screen is on screen.
+The shell hides the splash once the site has painted its first screen, or when its page failed to load.
 
 ### iOS
 
@@ -137,6 +175,13 @@ The shell hides the splash once the first page or an error screen is on screen.
   <array>
     <string>MaterialDesignIcons.ttf</string>
   </array>
+  ```
+
+- the Face ID prompt text for biometric sign-in:
+
+  ```xml
+  <key>NSFaceIDUsageDescription</key>
+  <string>Face ID confirms your sign-in to the site</string>
   ```
 
 - the scene manifest, React Native starts from `SceneDelegate`:
@@ -160,8 +205,6 @@ The shell hides the splash once the first page or an error screen is on screen.
     </dict>
   </dict>
   ```
-
-**`SessionCookieStore.swift`**: copy `native/ios/SessionCookieStore.swift` of this package to `ios/<App>/` and add it to the app target. WebKit drops session cookies when the app is killed, so without it the user is signed out on every launch. It saves them to the app sandbox and restores them before the first page loads.
 
 **`AppDelegate.swift`**, replacing the template one. It configures Firebase, keeps the React Native factory for `SceneDelegate`, and inits the splash:
 
@@ -226,7 +269,7 @@ class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
 }
 ```
 
-**`SceneDelegate.swift`**, a new file in `ios/<App>/` added to the app target. It starts React Native only after the session cookies are restored; the launch screen stays up meanwhile. Replace `<AppName>`:
+**`SceneDelegate.swift`**, a new file in `ios/<App>/` added to the app target. It creates the window and starts React Native. Replace `<AppName>`:
 
 ```swift
 import UIKit
@@ -247,29 +290,46 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let window = UIWindow(windowScene: windowScene)
     self.window = window
 
-    SessionCookieStore.shared.restore {
-      appDelegate.reactNativeFactory?.startReactNative(
-        withModuleName: "<AppName>",
-        in: window
-      )
-    }
+    appDelegate.reactNativeFactory?.startReactNative(
+      withModuleName: "<AppName>",
+      in: window
+    )
   }
 }
 ```
 
 ### Android
 
-**`AndroidManifest.xml`**: the Android 13+ push permission, the shell requests it at runtime:
+**Release builds**: plain HTTP to the local server. Debug builds allow it already. `android/app/src/release/res/xml/network_security_config.xml`:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+  <domain-config cleartextTrafficPermitted="true">
+    <domain includeSubdomains="false">127.0.0.1</domain>
+  </domain-config>
+</network-security-config>
+```
+
+and `android/app/src/release/AndroidManifest.xml`:
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <application android:networkSecurityConfig="@xml/network_security_config" />
+</manifest>
+```
+
+**`AndroidManifest.xml`**: the Android 13+ push permission, the shell requests it at runtime, and the biometric sign-in permission:
 
 ```xml
 <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+<uses-permission android:name="android.permission.USE_BIOMETRIC" />
 ```
 
-**`MainActivity.kt`**: the splash init, and a cookie flush. Android keeps session cookies itself but writes them to disk on a timer, so a login done right before the app is killed would be lost:
+**`MainActivity.kt`**: the splash init:
 
 ```kotlin
 import android.os.Bundle
-import android.webkit.CookieManager
 import com.zoontek.rnbootsplash.RNBootSplash
 
 class MainActivity : ReactActivity() {
@@ -277,11 +337,6 @@ class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     RNBootSplash.init(this, R.style.BootTheme)
     super.onCreate(savedInstanceState)
-  }
-
-  override fun onPause() {
-    super.onPause()
-    CookieManager.getInstance().flush()
   }
 
   // getMainComponentName and createReactActivityDelegate stay as in the template

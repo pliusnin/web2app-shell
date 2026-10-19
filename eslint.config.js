@@ -14,8 +14,8 @@ module.exports = [
   },
   ...reactNativeConfig,
   {
-    // The project uses TypeScript, not Flow. eslint-plugin-ft-flow@2 (pulled in
-    // by @react-native/eslint-config) is also incompatible with ESLint 9.
+    // Проект на TypeScript, а не на Flow. К тому же eslint-plugin-ft-flow@2
+    // (приходит из @react-native/eslint-config) несовместим с ESLint 9.
     files: ['**/*.js'],
     rules: {
       'ft-flow/define-flow-type': 'off',
@@ -23,8 +23,8 @@ module.exports = [
     },
   },
   {
-    // Any deviation from .prettierrc.js (indentation, spacing, quotes, ...)
-    // is reported as a lint error.
+    // Любое отклонение от .prettierrc.js (отступы, пробелы, кавычки, ...)
+    // считается ошибкой линтера.
     plugins: { prettier: prettierPlugin },
     rules: {
       'prettier/prettier': 'error',

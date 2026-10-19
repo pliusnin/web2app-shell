@@ -25,13 +25,15 @@ const ROUTES: Array<TabRoute> = [
   },
 ];
 
-// RN types say Promise<void>, but the native module resolves whether the URL opened
+// По типам RN это Promise<void>, но нативный модуль возвращает, открылся ли
+// URL
 const openURL = Linking.openURL as unknown as jest.Mock<
   Promise<boolean>,
   [string]
 >;
 
-// Jest resolves the iOS BackHandler, which never calls handlers, so the test presses back itself
+// Jest подключает iOS-версию BackHandler, которая не вызывает обработчики,
+// поэтому тест сам нажимает «назад»
 const mockBackHandler = () => {
   let onBackPress:
     Parameters<typeof BackHandler.addEventListener>[1] | undefined;

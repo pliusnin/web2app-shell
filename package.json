@@ -17,18 +17,26 @@
     "setup": "node packages/web2app-shell/scripts/setup.mjs"
   },
   "dependencies": {
+    "@dr.pogodin/react-native-fs": "^2.40.3",
+    "@dr.pogodin/react-native-static-server": "^0.28.0",
+    "@preeternal/react-native-cookie-manager": "^7.0.0",
     "@react-native-community/netinfo": "^12.0.1",
     "@react-native-firebase/app": "^26.4.0",
     "@react-native-firebase/messaging": "^26.4.0",
     "@react-native-vector-icons/get-image": "^13.0.1",
     "@react-native-vector-icons/material-design-icons": "^13.1.4",
+    "@sbaiahmed1/react-native-biometrics": "^0.16.1",
     "react": "19.2.3",
     "react-native": "0.87.1",
+    "react-native-blob-util": "^0.25.1",
     "react-native-bootsplash": "^7.3.4",
     "react-native-bottom-tabs": "^1.4.0",
+    "react-native-file-viewer-turbo": "^0.8.0",
+    "react-native-keychain": "^10.0.0",
     "react-native-notify-kit": "^10.8.0",
     "react-native-safe-area-context": "^5.5.2",
     "react-native-webview": "^14.0.1",
+    "react-native-zip-archive": "^9.5.3",
     "web2app-shell": "file:packages/web2app-shell"
   },
   "devDependencies": {

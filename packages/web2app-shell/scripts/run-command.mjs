@@ -1,8 +1,9 @@
 import { spawnSync } from 'node:child_process';
 
 /**
- * Runs a command in the current directory with its output shown, exits the script if it fails.
- * Args are quoted into one command string: `^` in version ranges is an escape character for cmd.exe.
+ * Запускает команду в текущей папке с выводом в консоль, при ошибке завершает скрипт.
+ * Аргументы собираются в одну строку в кавычках: `^` в диапазонах версий —
+ * escape-символ для cmd.exe.
  */
 export const runCommand = (command, args) => {
   const line = [command, ...args.map(arg => `"${arg}"`)].join(' ');

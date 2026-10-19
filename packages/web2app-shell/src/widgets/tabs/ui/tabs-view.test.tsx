@@ -1,20 +1,15 @@
 import type { ReactNode } from 'react';
 import { act, render, screen } from '@testing-library/react-native';
 
-import { COLORS, ConfigProvider } from '../../../shared/config';
+import { COLORS, ConfigProvider, SITE_ORIGIN } from '../../../shared/config';
 import type { ResolvedConfig } from '../../../shared/config';
 import { TabsView } from './tabs-view';
 
 const config: ResolvedConfig = {
-  startUrl: 'https://example.com/',
   theme: { primary: '#1E6FFF' },
   tabs: [
-    { title: 'Home', icon: 'home', url: 'https://example.com/' },
-    {
-      title: 'Catalog',
-      icon: 'view-grid',
-      url: 'https://example.com/catalog/',
-    },
+    { title: 'Home', icon: 'home', url: '/' },
+    { title: 'Catalog', icon: 'view-grid', url: '/catalog' },
     { title: 'Blog', icon: 'information', url: 'https://blog.other.com/' },
   ],
   startTabIndex: 0,
@@ -67,7 +62,7 @@ describe('TabsView', () => {
 
     expect(renderScene).toHaveBeenLastCalledWith({
       ref: expect.any(Function),
-      uri: 'https://example.com/',
+      uri: `${SITE_ORIGIN}/`,
       onNavigationStateChange: expect.any(Function),
     });
   });
@@ -78,7 +73,7 @@ describe('TabsView', () => {
     await act(() => tabView.props.onIndexChange(1));
 
     expect(renderScene).toHaveBeenLastCalledWith(
-      expect.objectContaining({ uri: 'https://example.com/catalog/' }),
+      expect.objectContaining({ uri: `${SITE_ORIGIN}/catalog` }),
     );
   });
 });

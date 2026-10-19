@@ -4,8 +4,8 @@ import type { RemoteMessage } from '@react-native-firebase/messaging';
 import { mapRemoteMessageToNotificationHelper } from './map-remote-message-to-notification.helper';
 
 /**
- * Shows a received push as a system notification. FCM doesn't show pushes
- * itself while the app is open. Data-only messages are skipped.
+ * Показывает полученный пуш системным уведомлением: при открытом приложении
+ * FCM сам пуши не показывает. Data-only сообщения пропускаются.
  */
 export const displayRemoteMessageHelper = async (message: RemoteMessage) => {
   if (!message.notification) {

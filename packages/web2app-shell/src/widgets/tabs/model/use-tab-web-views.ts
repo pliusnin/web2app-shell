@@ -1,28 +1,37 @@
 import { useMemo, useRef } from 'react';
+import type { RefCallback } from 'react';
 
+import { callPageScriptHelper } from '../../../shared/bridge';
 import type { WebViewControls } from '../../../shared/lib';
 import type { TabWebViews } from './tabs.types';
 
 /**
- * Keeps the WebView of every tab by its key, so the navigation can control
- * the pages: track whether a tab can go back, go back, and reset a tab to
- * its root URL.
+ * Хранит WebView каждого таба по его ключу, чтобы навигация управляла
+ * страницами: знала, может ли таб вернуться назад, возвращала назад и
+ * сбрасывала таб на корневой URL без перезагрузки.
  */
 export const useTabWebViews = (): TabWebViews => {
   const webViews = useRef<Record<string, WebViewControls | null>>({});
+  const refs = useRef<Record<string, RefCallback<WebViewControls>>>({});
   const canGoBack = useRef<Record<string, boolean>>({});
 
   return useMemo(
     () => ({
-      ref: key => webView => {
-        webViews.current[key] = webView;
-      },
+      // Один колбэк на ключ: новый ref на каждом рендере заставил бы React
+      // отвязывать и снова привязывать WebView
+      ref: key =>
+        (refs.current[key] ??= webView => {
+          webViews.current[key] = webView;
+        }),
       onNavigationStateChange: key => navState => {
         canGoBack.current[key] = navState.canGoBack;
       },
       resetToRoot: (key, uri) => {
         webViews.current[key]?.injectJavaScript(
-          `window.location.href = ${JSON.stringify(uri)}; true;`,
+          callPageScriptHelper({
+            fn: 'invoke',
+            args: [{ cmd: 'CHANGE_LOCATION', args: { url: uri } }],
+          }),
         );
       },
       tryGoBack: key => {

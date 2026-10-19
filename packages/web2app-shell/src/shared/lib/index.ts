@@ -1,16 +1,17 @@
+export { clearSecureItemHelper } from './clear-secure-item.helper';
 export { getHostHelper } from './get-host.helper';
 export { hideSplashHelper } from './hide-splash.helper';
 export { mergeRefsHelper } from './merge-refs.helper';
+export { readSecureItemHelper } from './read-secure-item.helper';
+export { resetSecureStorageAfterInstallHelper } from './reset-secure-storage-after-install.helper';
 export { useAndroidBackHandler } from './use-android-back-handler';
-export { useNetworkChange } from './use-network-change';
-export { useNetworkStatus } from './use-network-status';
+export { useConnectionLost } from './use-connection-lost';
 export { useSchemeColors } from './use-scheme-colors';
+export { writeSecureItemHelper } from './write-secure-item.helper';
 export type {
   ErrorHandler,
-  HttpErrorHandler,
-  LoadProgressHandler,
+  MessageHandler,
   ShouldStartLoadHandler,
   ShouldStartLoadRequest,
   WebViewControls,
-  WebViewError,
 } from './web-view.types';

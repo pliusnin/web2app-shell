@@ -4,8 +4,8 @@ import type { RemoteMessage } from '@react-native-firebase/messaging';
 import { NOTIFICATIONS } from '../config/notifications';
 
 /**
- * Converts an FCM message into a notifee notification: title, body and data
- * as they are, plus the push channel on Android.
+ * Превращает сообщение FCM в уведомление notifee: заголовок, текст и данные
+ * как есть, плюс канал пушей на Android.
  */
 export const mapRemoteMessageToNotificationHelper = ({
   notification,
@@ -16,7 +16,7 @@ export const mapRemoteMessageToNotificationHelper = ({
   data,
   android: {
     channelId: NOTIFICATIONS.channelId,
-    // Without a pressAction Android doesn't open the app on tap
+    // Без pressAction Android не открывает приложение по тапу
     pressAction: { id: 'default' },
   },
 });

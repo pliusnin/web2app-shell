@@ -1,8 +1,8 @@
 import type { Ref, RefCallback } from 'react';
 
 /**
- * Combines several refs into one ref callback, so one element can have
- * several owners: the parent's ref and the component's own ref.
+ * Объединяет несколько ref в один ref-колбэк, чтобы у элемента могло быть
+ * несколько владельцев: ref родителя и собственный ref компонента.
  */
 export const mergeRefsHelper =
   <T>(...refs: Array<Ref<T> | undefined>): RefCallback<T> =>
