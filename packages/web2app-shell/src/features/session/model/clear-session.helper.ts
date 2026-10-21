@@ -7,8 +7,8 @@ import { removeSessionCookiesHelper } from './remove-session-cookies.helper';
 import type { StoredSession } from './session.types';
 
 /**
- * Завершает сессию, когда пользователь выходит на сайте: удаляет токен и
- * куки, которые приложение поставило для него.
+ * Ends the session when the user signs out on the site: removes the token and
+ * the cookies the app set for it.
  */
 export const clearSessionHelper = async () => {
   const stored = await readSecureItemHelper<StoredSession>(

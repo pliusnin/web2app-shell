@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
 
 /**
- * Создаёт WebView заново, когда его процесс контента завершился (например,
- * из-за нехватки памяти): Android больше не может использовать этот WebView.
- * Новый открывает страницу, на которой был старый. Возвращает key и uri
- * для WebView.
+ * Recreates the WebView when its content process has terminated (for example
+ * due to low memory): Android can no longer use that WebView. The new one
+ * opens the page the old one was on. Returns the key and uri for the
+ * WebView.
  */
 export const useWebViewRecovery = (uri: string) => {
   const lastUrl = useRef(uri);

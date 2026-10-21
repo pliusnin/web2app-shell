@@ -1,5 +1,9 @@
 import type { RefObject } from 'react';
 
+import {
+  readSensorHelper,
+  verifyUserHelper,
+} from '../../../../features/biometric-login';
 import { isAppUrlHelper } from '../../../../features/link-routing';
 import {
   clearSessionHelper,
@@ -11,16 +15,14 @@ import {
 } from '../../../../shared/bridge';
 import { hideSplashHelper } from '../../../../shared/lib';
 import type { MessageHandler, WebViewControls } from '../../../../shared/lib';
-import { readSensorHelper } from '../biometric-login/read-sensor.helper';
 import { useBiometricLogin } from '../biometric-login/use-biometric-login';
-import { verifyUserHelper } from '../biometric-login/verify-user.helper';
 import { openDownloadedFileHelper } from '../file-download/open-downloaded-file.helper';
 import { showFileErrorToastHelper } from '../file-download/show-file-error-toast.helper';
 import { useNativeFetch } from '../native-fetch/use-native-fetch';
 
 /**
- * Возвращает обработчик onMessage WebView для команд, которые присылает
- * скрипт моста на сайте.
+ * Returns the WebView onMessage handler for the commands sent by the bridge
+ * file on the site.
  */
 export const useBridgeMessages = (
   webView: RefObject<WebViewControls | null>,
@@ -34,8 +36,8 @@ export const useBridgeMessages = (
     );
 
   return ({ nativeEvent }) => {
-    // Сообщения может прислать любая страница или фрейм в WebView. Запросы без
-    // CORS и сохранение файлов приложение делает только для страниц самого сайта
+    // Any page or frame in the WebView can send messages. The app makes
+    // requests without CORS and saves files only for pages of the site itself
     if (!isAppUrlHelper(nativeEvent.url)) {
       return;
     }
@@ -43,8 +45,8 @@ export const useBridgeMessages = (
 
     switch (message?.cmd) {
       case 'WEB_READY':
-        // Сайт отрисовал первый экран. Табы монтируются лениво, поэтому при
-        // запуске сплэш может скрыть только стартовый таб
+        // The site rendered its first screen. Tabs mount lazily, so at launch
+        // the splash can only be hidden by the start tab
         hideSplashHelper();
         biometricLogin.sendState();
         break;
@@ -63,9 +65,6 @@ export const useBridgeMessages = (
       case 'SAVE_TOKEN':
         saveSessionTokenHelper(message.args.token).catch(console.warn);
         break;
-      case 'LOGGED_IN':
-        biometricLogin.signIn(message.args.user);
-        break;
       case 'LOGGED_OUT':
         biometricLogin.signOut();
         clearSessionHelper().catch(console.warn);
@@ -74,10 +73,7 @@ export const useBridgeMessages = (
       case 'BIOMETRICS_OFF':
         biometricLogin.setEnabled(message.cmd === 'BIOMETRICS_ON');
         break;
-      case 'LOGIN_WITH_BIOMETRICS':
-        biometricLogin.login();
-        break;
-      // WebAuthn сайта, на который отвечает биометрический промпт
+      // The bridge's verifyUser(): biometric prompt
       case 'VERIFY_USER':
         verifyUserHelper()
           .catch(() => false)

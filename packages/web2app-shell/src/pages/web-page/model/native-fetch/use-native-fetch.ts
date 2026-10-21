@@ -7,8 +7,8 @@ import type { WebViewControls } from '../../../../shared/lib';
 import { nativeFetchHelper } from './native-fetch.helper';
 
 /**
- * Выполняет запросы, которые страница отправляет через мост, и возвращает ей
- * ответы. Страница может отменить запрос, которого ждёт.
+ * Performs the requests the page sends through the bridge and returns the
+ * responses to it. The page can cancel a request it is waiting for.
  */
 export const useNativeFetch = (webView: RefObject<WebViewControls | null>) => {
   const requests = useRef(new Map<string, AbortController>());

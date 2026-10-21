@@ -1,10 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <!-- Здесь настраивается тема. -->
+        <!-- Customize the theme here. -->
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">@bool/light_navigation_bar</item>
-        <!-- Без этого система рисует scrim поверх панели навигации, и она перестаёт
-             совпадать по цвету с таб-баром -->
+        <!-- Without this the system draws a scrim over the navigation bar, and it stops
+             matching the color of the tab bar -->
         <item name="android:enforceNavigationBarContrast" tools:targetApi="29">false</item>
     </style>
 

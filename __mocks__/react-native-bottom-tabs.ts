@@ -6,7 +6,7 @@ type TabViewProps<Route> = {
   renderScene: (props: { route: Route }) => ReactNode;
 };
 
-// В библиотеке вкладки ленивые, поэтому на старте монтируется только активная сцена
+// Tabs are lazy in the library, so only the active scene is mounted at start
 const TabView = <Route>({
   navigationState,
   renderScene,

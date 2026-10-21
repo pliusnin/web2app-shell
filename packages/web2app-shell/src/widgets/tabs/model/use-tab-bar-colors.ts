@@ -3,8 +3,8 @@ import { Platform } from 'react-native';
 import { useSchemeColors } from '../../../shared/lib';
 
 /**
- * Возвращает цвета таб-бара для текущей цветовой схемы. Цвет неактивной
- * иконки задаётся только на Android, iOS оставляет системный.
+ * Returns the tab bar colors for the current color scheme. The inactive icon
+ * color is set only on Android, iOS keeps the system one.
  */
 export const useTabBarColors = () => {
   const { background, foreground } = useSchemeColors();

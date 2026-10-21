@@ -1,8 +1,8 @@
 import type { BridgeMessage } from './bridge.types';
 
 /**
- * Превращает data сообщения WebView в команду моста, а всё остальное, что
- * может прислать страница, — в null.
+ * Turns the WebView message data into a bridge command, and anything else
+ * the page may send into null.
  */
 export const parseBridgeMessageHelper = (
   data: string,

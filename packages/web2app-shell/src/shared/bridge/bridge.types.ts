@@ -5,7 +5,7 @@ export type FetchRequest = {
     method: string;
     headers: Record<string, string>;
     credentials: 'include' | 'omit';
-    // Байты тела в том виде, как их закодировал браузер, в base64
+    // Body bytes as the browser encoded them, in base64
     body?: string;
   };
 };
@@ -17,12 +17,12 @@ export type FetchResponse =
       statusText: string;
       url: string;
       headers: Record<string, string>;
-      // Байты тела в base64
+      // Body bytes in base64
       body: string;
     }
   | {
       resolve: false;
-      // Текст ошибки
+      // Error text
       body: string;
     };
 
@@ -30,11 +30,6 @@ export type DownloadedFile = {
   fileName: string;
   mimeType: string;
   base64: string;
-};
-
-export type SignedInUser = {
-  login: string;
-  password: string;
 };
 
 export type BiometricsState = {
@@ -49,19 +44,15 @@ export type BridgeMessage =
   | { cmd: 'ABORT_CALL'; args: { callID: string } }
   | { cmd: 'DOWNLOAD_FILE'; args: DownloadedFile }
   | { cmd: 'SAVE_TOKEN'; args: { token: string } }
-  | { cmd: 'LOGGED_IN'; args: { user: SignedInUser } }
   | { cmd: 'LOGGED_OUT' }
   | { cmd: 'BIOMETRICS_ON' }
   | { cmd: 'BIOMETRICS_OFF' }
-  | { cmd: 'LOGIN_WITH_BIOMETRICS' }
   | { cmd: 'VERIFY_USER'; args: { callID: string } }
   | { cmd: 'IS_BIOMETRICS_AVAILABLE'; args: { callID: string } };
 
-export type AppCommand =
-  | { cmd: 'LOGIN'; args: { email: string; password: string } }
-  | { cmd: 'CHANGE_LOCATION'; args: { url: string } };
+export type AppCommand = { cmd: 'CHANGE_LOCATION'; args: { url: string } };
 
-// Функции window.__MG_Native_<fn>, которые приложение вызывает на странице
+// Functions window.__MG_Native_<fn> that the app calls on the page
 export type PageCall =
   | { fn: 'invoke'; args: [command: AppCommand] }
   | { fn: 'reply'; args: [callID: string, value: unknown] }

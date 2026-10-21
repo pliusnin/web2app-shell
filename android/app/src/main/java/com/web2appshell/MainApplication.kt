@@ -14,7 +14,7 @@ class MainApplication : Application(), ReactApplication {
       context = applicationContext,
       packageList =
         PackageList(this).packages.apply {
-          // Пакеты, которые пока не подключаются autolinking, добавляются здесь вручную, например:
+          // Packages not yet picked up by autolinking are added here manually, for example:
           // add(MyReactNativePackage())
         },
     )

@@ -7,6 +7,7 @@ export { resetSecureStorageAfterInstallHelper } from './reset-secure-storage-aft
 export { useAndroidBackHandler } from './use-android-back-handler';
 export { useConnectionLost } from './use-connection-lost';
 export { useSchemeColors } from './use-scheme-colors';
+export { waitForActiveAppHelper } from './wait-for-active-app.helper';
 export { writeSecureItemHelper } from './write-secure-item.helper';
 export type {
   ErrorHandler,

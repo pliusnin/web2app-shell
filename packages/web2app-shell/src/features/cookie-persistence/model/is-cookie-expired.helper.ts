@@ -1,8 +1,8 @@
 import type { Cookie } from '@preeternal/react-native-cookie-manager';
 
 /**
- * Проверяет, истёк ли срок куки. Кука без срока живёт до конца сессии
- * и никогда не считается истёкшей.
+ * Checks whether a cookie has expired. A cookie without an expiry lives until
+ * the end of the session and is never considered expired.
  */
 export const isCookieExpiredHelper = ({ expires }: Cookie) =>
   expires !== undefined && Date.parse(expires) <= Date.now();

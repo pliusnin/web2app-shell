@@ -6,14 +6,14 @@ import type { ErrorHandler } from '../../../../shared/lib';
 const ANDROID_UNKNOWN_URL_SCHEME = -10;
 
 /**
- * Обрабатывает неудачную загрузку WebView: WebView показывает свою страницу
- * ошибки, а сплэш скрывается, потому что неудачно загруженная страница
- * никогда не отправит WEB_READY.
+ * Handles a failed WebView load: the WebView shows its own error page and
+ * the splash is hidden, because a page that failed to load will never send
+ * WEB_READY.
  */
 export const handleLoadErrorHelper: ErrorHandler = event => {
-  // Android сообщает об этой ошибке для tel:, mailto: и других ссылок
-  // в приложения, даже если onShouldStartLoadWithRequest заблокировал их
-  // и открыл снаружи: страница остаётся прежней
+  // Android reports this error for tel:, mailto: and other app links even if
+  // onShouldStartLoadWithRequest blocked them and opened them externally:
+  // the page stays the same
   if (
     Platform.OS === 'android' &&
     event.nativeEvent.code === ANDROID_UNKNOWN_URL_SCHEME

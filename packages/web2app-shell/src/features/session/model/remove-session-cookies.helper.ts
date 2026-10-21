@@ -3,8 +3,8 @@ import CookieManager from '@preeternal/react-native-cookie-manager';
 import { SITE_ORIGIN, WEB_VIEW_COOKIE_STORE } from '../../../shared/config';
 
 /**
- * Удаляет из cookie-хранилища WebView куки, которые приложение поставило
- * сайту для сессии.
+ * Removes from the WebView cookie store the cookies the app set for the site
+ * for the session.
  */
 export const removeSessionCookiesHelper = async (
   cookieNames: Array<string>,

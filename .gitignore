@@ -42,8 +42,8 @@ yarn-error.log
 
 # fastlane
 #
-# Скриншоты лучше не хранить в git, а при необходимости заново генерировать через fastlane.
-# Подробнее о рекомендуемой настройке:
+# Screenshots are better not stored in git; regenerate them with fastlane when needed.
+# More about the recommended setup:
 # https://docs.fastlane.tools/best-practices/source-control/
 
 **/fastlane/report.xml
@@ -58,7 +58,7 @@ yarn-error.log
 **/Pods/
 /vendor/bundle/
 
-# Временные файлы, которые Metro создаёт для проверки file watcher
+# Temporary files Metro creates to check the file watcher
 .metro-health-check*
 
 # testing

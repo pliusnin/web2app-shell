@@ -5,9 +5,9 @@ import { runCommand } from './run-command.mjs';
 const CONFIG_FILE = 'web-app-config.json';
 
 /**
- * Генерирует нативный boot splash из `splash` в web-app-config.json приложения.
- * Если конфига или его `splash` нет, пропускает шаг с подсказкой вместо ошибки,
- * чтобы setup всё равно установил зависимости.
+ * Generates the native boot splash from `splash` in the app's web-app-config.json.
+ * If the config or its `splash` is missing, skips the step with a hint instead of
+ * an error, so setup still installs the dependencies.
  */
 export const generateSplash = () => {
   const splash = existsSync(CONFIG_FILE)

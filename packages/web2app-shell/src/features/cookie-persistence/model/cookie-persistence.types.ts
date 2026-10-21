@@ -1,6 +1,6 @@
 import type { Cookie } from '@preeternal/react-native-cookie-manager';
 
-// Кука и URL, для которого её ставят при восстановлении
+// A cookie and the URL it is set for when restoring
 export type StoredCookie = {
   url: string;
   cookie: Cookie;

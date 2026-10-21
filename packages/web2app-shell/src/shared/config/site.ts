@@ -1,8 +1,8 @@
-// IP не требует DNS-запроса: Android блокирует такие запросы, включая
-// "localhost", пока у приложения нет доступа к сети (например, при запуске
-// с заблокированным экраном)
+// An IP address needs no DNS lookup: Android blocks such lookups, including
+// "localhost", while the app has no network access (for example, when launched
+// with a locked screen)
 export const SITE_HOSTNAME = '127.0.0.1';
-// Фиксированный порт сохраняет origin, а с ним и хранилище сайта, между
-// запусками
+// A fixed port keeps the origin, and with it the site storage, the same
+// across launches
 export const SITE_PORT = 3035;
 export const SITE_ORIGIN = `http://${SITE_HOSTNAME}:${SITE_PORT}`;

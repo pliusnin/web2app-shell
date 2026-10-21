@@ -5,10 +5,10 @@ import { useAndroidBackHandler } from '../../../shared/lib';
 import type { TabRoute, TabWebViews } from './tabs.types';
 
 /**
- * Хранит выбранный таб и обрабатывает нажатия на табы: внешний таб открывает
- * свой URL вне приложения, повторное нажатие на активный таб возвращает его
- * к корневому URL таба. Кнопка «назад» Android идёт назад по истории
- * активного таба.
+ * Stores the selected tab and handles tab presses: an external tab opens
+ * its URL outside the app, pressing the active tab again returns it to the
+ * tab's root URL. The Android "back" button goes back through the active
+ * tab's history.
  */
 export const useTabNavigation = (
   routes: Array<TabRoute>,

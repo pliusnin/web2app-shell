@@ -15,7 +15,8 @@ const createRequest = (url: string): ShouldStartLoadRequest => ({
   navigationType: 'click',
 });
 
-// В типах RN Promise<void>, но нативный модуль резолвит, открылся ли URL
+// RN types say Promise<void>, but the native module resolves whether the URL
+// opened
 const openURL = Linking.openURL as unknown as jest.Mock<
   Promise<boolean>,
   [string]

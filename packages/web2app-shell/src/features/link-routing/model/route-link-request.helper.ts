@@ -3,15 +3,16 @@ import { openExternalUrlHelper } from './open-external-url.helper';
 import { shouldLoadInAppHelper } from './should-load-in-app.helper';
 
 /**
- * Обработчик onShouldStartLoadWithRequest для WebView: страницы встроенного
- * сайта грузятся внутри, остальные ссылки открываются вне приложения
- * и блокируются в WebView.
+ * The onShouldStartLoadWithRequest handler for the WebView: pages of the
+ * bundled site load inside, other links open outside the app and are blocked
+ * in the WebView.
  */
 export const routeLinkRequestHelper: ShouldStartLoadHandler = request => {
   if (shouldLoadInAppHelper(request)) {
     return true;
   }
-  // Android ждёт ответа всего 250 мс, поэтому URL открывается без ожидания
+  // Android waits for the answer only 250 ms, so the URL is opened without
+  // waiting
   openExternalUrlHelper(request.url);
 
   return false;

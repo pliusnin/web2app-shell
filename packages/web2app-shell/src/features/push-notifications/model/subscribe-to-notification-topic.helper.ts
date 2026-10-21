@@ -6,8 +6,8 @@ import {
 import { NOTIFICATIONS } from '../config/notifications';
 
 /**
- * Подписывает устройство на общий FCM-топик, чтобы пуш в топик доходил
- * до каждого установленного приложения без сбора токенов устройств.
+ * Subscribes the device to a shared FCM topic so a push to the topic reaches
+ * every installed app without collecting device tokens.
  */
 export const subscribeToNotificationTopicHelper = () =>
   subscribeToTopic(getMessaging(), NOTIFICATIONS.topic);

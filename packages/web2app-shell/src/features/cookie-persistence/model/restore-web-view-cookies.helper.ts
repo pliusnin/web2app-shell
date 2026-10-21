@@ -10,7 +10,7 @@ import { isCookieExpiredHelper } from './is-cookie-expired.helper';
 import { visitedHosts } from './visited-hosts';
 
 const restoreMissing = async (url: string, cookies: Array<Cookie>) => {
-  // Куки, которые WebView сохранил сам, свежее сохранённых
+  // Cookies the WebView saved itself are fresher than the stored ones
   const existing = await CookieManager.getAsArray(url, WEB_VIEW_COOKIE_STORE);
   const existingNames = new Set(existing.map(({ name }) => name));
   await Promise.all(
@@ -21,9 +21,8 @@ const restoreMissing = async (url: string, cookies: Array<Cookie>) => {
 };
 
 /**
- * Возвращает в хранилище WebView куки, сохранённые прошлым запуском, —
- * только те, которых в нём нет. Должен завершиться до загрузки первой
- * страницы.
+ * Puts cookies saved by the previous launch back into the WebView store, only
+ * those it does not already have. Must finish before the first page loads.
  */
 export const restoreWebViewCookiesHelper = async () => {
   const stored = await readSecureItemHelper<StoredCookies>(

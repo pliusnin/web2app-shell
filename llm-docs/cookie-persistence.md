@@ -7,6 +7,7 @@ Keeps the user signed in to the site after the system unloads the app: the cooki
 - `src/features/cookie-persistence/model/restore-web-view-cookies.helper.ts`: restore on launch, called from `app`.
 - `save-web-view-cookies.helper.ts`: save, run by `useCookieSaving` when the app leaves the foreground.
 - `track-visited-host.helper.ts`: the page calls it on every navigation.
+- `clear-web-view-cookies.helper.ts`: deletes all WebView cookies and the saved copy, for the sign-out from the lock screen ([biometric-login.md](biometric-login.md)).
 
 ## Flow
 

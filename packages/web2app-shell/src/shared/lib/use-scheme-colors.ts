@@ -3,8 +3,8 @@ import { useColorScheme } from 'react-native';
 import { COLORS } from '../config';
 
 /**
- * Возвращает цвета фона и текста для текущей системной схемы и
- * перерисовывает компонент, когда пользователь переключает тёмную тему.
+ * Returns the background and text colors for the current system scheme and
+ * re-renders the component when the user switches dark mode.
  */
 export const useSchemeColors = () => {
   const isDark = useColorScheme() === 'dark';

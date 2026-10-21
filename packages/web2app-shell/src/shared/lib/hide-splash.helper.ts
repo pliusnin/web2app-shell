@@ -1,8 +1,8 @@
 import BootSplash from 'react-native-bootsplash';
 
 /**
- * Скрывает нативный сплэш с затуханием. Вызывается, когда уже есть что
- * показать, чтобы пользователь не увидел пустой WebView при старте.
+ * Hides the native splash with a fade. Called once there is something to
+ * show, so the user does not see an empty WebView at startup.
  */
 export const hideSplashHelper = () => {
   BootSplash.hide({ fade: true });

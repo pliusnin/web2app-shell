@@ -11,9 +11,9 @@ const isIconName = (name: string): name is MaterialDesignIconsIconName =>
   Object.hasOwn(glyphMap, name);
 
 /**
- * Превращает имя Material Design Icons из конфига таба в изображение для
- * нативного таб-бара: он принимает изображения, а не компоненты. Неизвестное
- * имя даёт таб без иконки и предупреждение в dev вместо глифа "?" библиотеки.
+ * Turns a Material Design Icons name from the tab config into an image for
+ * the native tab bar: it takes images, not components. An unknown name gives
+ * a tab without an icon and a dev warning instead of the library's "?" glyph.
  */
 export const getTabIconHelper = (
   name: string,

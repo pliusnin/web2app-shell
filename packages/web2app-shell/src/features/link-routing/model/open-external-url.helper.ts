@@ -3,12 +3,11 @@ import { Alert, Linking } from 'react-native';
 import { TEXTS } from '../../../shared/config';
 
 /**
- * Открывает URL вне приложения (браузер, телефон, почта или другое
- * приложение) и показывает алерт, если ни одно установленное приложение не
- * может его открыть.
+ * Opens the URL outside the app (browser, phone, mail or another app) and
+ * shows an alert if no installed app can open it.
  */
 export const openExternalUrlHelper = (url: string) => {
-  // Симулятор iOS резолвит tel: в false вместо ошибки
+  // The iOS simulator resolves tel: to false instead of an error
   Linking.openURL(url)
     .catch(() => false)
     .then(opened => {

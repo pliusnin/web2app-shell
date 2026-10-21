@@ -29,7 +29,7 @@ Native bottom tabs (`react-native-bottom-tabs`) built from `config.tabs`. Every 
 - `getTabIconHelper` checks the name against the library glyph map (`glyphmaps/MaterialDesignIcons.json`) with `Object.hasOwn`, so `constructor` and other prototype keys don't pass. An unknown name gives a tab without an icon and a dev-only `console.warn`; the library itself would draw a `?` glyph.
 - The native tab bar takes images, not components: icons go through `MaterialDesignIcons.getImageSourceSync`.
 - The active tab shows the icon from the config, the inactive ones its `-outline` variant (`getOutlineTabIconHelper`). An icon without one (`jira`, `dev-to`) shows the same image in both states.
-- `resetToRoot` relies on the site's router listening to `popstate`, as react-router does. A page still loading ignores it.
+- `resetToRoot` relies on the site's bridge file navigating on `CHANGE_LOCATION`. A page still loading ignores it.
 - Colors: active tint is `theme.primary`, background comes from `useSchemeColors`. The inactive tint is set on Android only; iOS keeps the system one.
 - `react-native-bottom-tabs` 1.4.0 is patched for the iOS build ([native-build.md](native-build.md)).
 

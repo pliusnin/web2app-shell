@@ -5,13 +5,13 @@ import type {
 import { parseSetCookie } from 'set-cookie-parser';
 
 /**
- * Превращает заголовок Set-Cookie из проверки сессии в куки для сайта
- * с тем сроком жизни и атрибутами, что задал сервер. Домен отбрасывается:
- * это хост API, а куки принадлежат сайту.
+ * Turns the Set-Cookie header of the session check into cookies for the site,
+ * with the lifetime and attributes set by the server. The domain is dropped:
+ * it is the API host, while the cookies belong to the site.
  */
 export const toSiteCookiesHelper = (setCookieHeader: string): Array<Cookie> =>
-  // В fetch React Native нет getSetCookie(), парсер сам делит склеенный
-  // заголовок
+  // React Native fetch has no getSetCookie(); the parser splits the joined
+  // header itself
   parseSetCookie(setCookieHeader, { decodeValues: false })
     .filter(({ name }) => name)
     .map(

@@ -1,6 +1,6 @@
 /**
- * Кодирует blob в base64 — в этом виде байты идут через мост. FileReader
- * в React Native читает только data URL, base64 берётся из него.
+ * Encodes a blob as base64, the form in which bytes go through the bridge.
+ * FileReader in React Native reads only a data URL; base64 is taken from it.
  */
 export const blobToBase64Helper = (blob: Blob) =>
   new Promise<string>((resolve, reject) => {

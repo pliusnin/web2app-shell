@@ -2,8 +2,8 @@ import { isSensorAvailable } from '@sbaiahmed1/react-native-biometrics';
 import type { BiometricSensorInfo } from '@sbaiahmed1/react-native-biometrics';
 
 /**
- * Читает, есть ли на устройстве биометрия для промпта и какая. Неудачная
- * проверка считается отсутствием биометрии.
+ * Reads whether the device has biometrics available for the prompt, and which
+ * kind. A failed check counts as no biometrics.
  */
 export const readSensorHelper = (): Promise<
   Pick<BiometricSensorInfo, 'available' | 'biometryType'>

@@ -15,9 +15,9 @@ const toIsOnline = (
 };
 
 /**
- * Вызывает обработчик, когда соединение пропадает. Срабатывает только при
- * переходе из онлайна в офлайн: старт без сети и пока NetInfo ещё ничего не
- * знает — не изменение.
+ * Calls the handler when the connection drops. Fires only on a transition
+ * from online to offline: starting without network, and while NetInfo does
+ * not know anything yet, are not changes.
  */
 export const useConnectionLost = (onLost: () => void) => {
   const { isConnected, isInternetReachable } = useNetInfo();

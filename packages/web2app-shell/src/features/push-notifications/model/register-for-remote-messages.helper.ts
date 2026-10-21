@@ -4,9 +4,9 @@ import {
 } from '@react-native-firebase/messaging';
 
 /**
- * Регистрирует устройство в APNs и ждёт его токен, чтобы FCM смог создать
- * свой токен, а подписка на топик не падала на iOS.
- * На Android резолвится сразу.
+ * Registers the device with APNs and waits for its token so FCM can create its
+ * own token and the topic subscription does not fail on iOS. Resolves
+ * immediately on Android.
  */
 export const registerForRemoteMessagesHelper = () =>
   registerDeviceForRemoteMessages(getMessaging());

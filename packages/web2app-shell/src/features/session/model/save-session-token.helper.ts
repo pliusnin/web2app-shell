@@ -6,8 +6,8 @@ import { SESSION_STORAGE_SERVICE } from '../config/session-storage';
 import type { StoredSession } from './session.types';
 
 /**
- * Сохраняет токен, который сайт присылает после входа. Следующий запуск
- * проверит его до открытия сайта.
+ * Saves the token the site sends after sign-in. The next launch checks it
+ * before opening the site.
  */
 export const saveSessionTokenHelper = async (token: string) => {
   const stored = await readSecureItemHelper<StoredSession>(

@@ -2,7 +2,7 @@ import { MAX_VISITED_HOSTS } from '../config/cookie-storage';
 
 let hosts: Array<string> = [];
 
-// Хосты, открытые в WebView, последние — первыми
+// Hosts opened in the WebView, latest first
 export const visitedHosts = {
   get: () => hosts,
   add: (newHosts: Array<string>) => {

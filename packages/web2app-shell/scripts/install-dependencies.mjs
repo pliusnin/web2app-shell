@@ -13,10 +13,10 @@ const sortKeys = object =>
   );
 
 /**
- * Добавляет в package.json приложения web2app-shell и недостающие peer-зависимости,
- * настраивает patch-package для патчей пакета и запускает npm install.
- * Нативные модули должны быть прямыми зависимостями приложения:
- * RN autolinking читает только package.json приложения.
+ * Adds web2app-shell and the missing peer dependencies to the app's package.json,
+ * sets up patch-package for the package patches and runs npm install.
+ * Native modules must be direct dependencies of the app:
+ * RN autolinking reads only the app's package.json.
  */
 export const installDependencies = () => {
   const packageDir = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -29,8 +29,8 @@ export const installDependencies = () => {
   const app = readJson(appPackageJson);
   const appDependencies = { ...app.dependencies, ...app.devDependencies };
 
-  // Версии, которые уже есть в приложении, сохраняются: npm сверяет их с peerDependencies
-  // и падает при несовпадении.
+  // Versions already present in the app are kept: npm checks them against
+  // peerDependencies and fails on a mismatch.
   const missingPeers = Object.entries(shell.peerDependencies)
     .filter(([name]) => !(name in appDependencies))
     .map(([name, range]) => `${name}@${range}`);
@@ -60,8 +60,8 @@ export const installDependencies = () => {
     ...missingPeers,
   ]);
 
-  // `npm install <package>` не запускает postinstall приложения, поэтому патчи применяются
-  // здесь один раз.
+  // `npm install <package>` does not run the app's postinstall, so the patches are
+  // applied here once.
   if (hasPatches) {
     runCommand('npx patch-package --patch-dir', [patchesDir]);
   }

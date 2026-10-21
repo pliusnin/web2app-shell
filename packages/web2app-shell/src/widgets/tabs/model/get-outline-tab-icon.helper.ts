@@ -3,9 +3,9 @@ import glyphMap from '@react-native-vector-icons/material-design-icons/glyphmaps
 import { getTabIconHelper } from './get-tab-icon.helper';
 
 /**
- * Возвращает контурный вариант иконки таба ("home" → "home-outline") для
- * неактивного таба или undefined, если у иконки его нет: тогда таб-бар
- * показывает залитую иконку в обоих состояниях.
+ * Returns the outline variant of a tab icon ("home" → "home-outline") for an
+ * inactive tab, or undefined if the icon has none: then the tab bar shows
+ * the filled icon in both states.
  */
 export const getOutlineTabIconHelper = (name: string) => {
   const outlineName = `${name}-outline`;

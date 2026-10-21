@@ -6,9 +6,9 @@ import type { WebViewControls } from '../../../shared/lib';
 import type { TabWebViews } from './tabs.types';
 
 /**
- * Хранит WebView каждого таба по его ключу, чтобы навигация управляла
- * страницами: знала, может ли таб вернуться назад, возвращала назад и
- * сбрасывала таб на корневой URL без перезагрузки.
+ * Stores each tab's WebView by its key so navigation can manage the pages:
+ * know whether a tab can go back, go back, and reset a tab to the root URL
+ * without reloading.
  */
 export const useTabWebViews = (): TabWebViews => {
   const webViews = useRef<Record<string, WebViewControls | null>>({});
@@ -17,8 +17,8 @@ export const useTabWebViews = (): TabWebViews => {
 
   return useMemo(
     () => ({
-      // Один колбэк на ключ: новый ref на каждом рендере заставил бы React
-      // отвязывать и снова привязывать WebView
+      // One callback per key: a new ref on every render would make React
+      // detach and reattach the WebView
       ref: key =>
         (refs.current[key] ??= webView => {
           webViews.current[key] = webView;

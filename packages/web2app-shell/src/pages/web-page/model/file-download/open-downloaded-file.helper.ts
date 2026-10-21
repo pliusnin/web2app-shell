@@ -5,12 +5,12 @@ import { TEXTS } from '../../../../shared/config';
 import type { DownloadedFile } from '../../../../shared/bridge';
 import { getDownloadFileNameHelper } from './get-download-file-name.helper';
 
-// FileProvider просмотрщика на Android отдаёт файлы из директории кэша
+// The viewer's FileProvider on Android serves files from the cache directory
 const DOWNLOADS_DIR = `${ReactNativeBlobUtil.fs.dirs.CacheDir}/downloads`;
 
 /**
- * Сохраняет файл, который скачивает сайт, и открывает его в системном
- * просмотрщике: Quick Look на iOS, приложение для этого типа файла на Android.
+ * Saves the file the site downloads and opens it in the system viewer:
+ * Quick Look on iOS, the app registered for the file type on Android.
  */
 export const openDownloadedFileHelper = async ({
   fileName,

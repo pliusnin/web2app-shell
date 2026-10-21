@@ -4,9 +4,9 @@ import { getHostHelper } from '../../../shared/lib';
 import { visitedHosts } from './visited-hosts';
 
 /**
- * Запоминает хост страницы, открытой в WebView. Android читает куки только
- * по URL, поэтому его куки сохраняются по запомненным хостам. iOS читает все
- * куки сразу, хосты ему не нужны.
+ * Remembers the host of the page opened in the WebView. Android reads cookies
+ * only by URL, so its cookies are saved per remembered host. iOS reads all
+ * cookies at once and needs no hosts.
  */
 export const trackVisitedHostHelper = (url: string) => {
   const host = getHostHelper(url);

@@ -1,6 +1,6 @@
 import type { AppConfig, ResolvedConfig } from './app-config.types';
 
-// "/catalog" и "/catalog/" — одна и та же страница
+// "/catalog" and "/catalog/" are the same page
 const normalizeUrl = (url: string) => url.replace(/\/+$/, '');
 
 export const resolveConfig = ({

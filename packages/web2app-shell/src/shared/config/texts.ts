@@ -5,5 +5,8 @@ export const TEXTS = {
   notificationChannelName: 'Notifications',
   fileOpenError: "Couldn't open the file",
   fileViewerDone: 'Done',
-  biometricPrompt: 'Sign in',
+  biometricPrompt: "Confirm it's you",
+  lockTitle: 'The app is locked',
+  lockUnlock: 'Unlock',
+  lockSignOut: 'Sign out',
 };

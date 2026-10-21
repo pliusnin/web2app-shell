@@ -9,7 +9,7 @@ import { visitedHosts } from './visited-hosts';
 let saving = Promise.resolve();
 
 const save = async () => {
-  // Android записывает cookie-хранилище на диск лениво
+  // Android writes the cookie store to disk lazily
   await CookieManager.flush();
   const stored: StoredCookies = {
     hosts: visitedHosts.get(),
@@ -19,7 +19,8 @@ const save = async () => {
 };
 
 /**
- * Сохраняет куки всех WebView в Keychain. Сохранения идут одно за другим.
+ * Saves the cookies of all WebViews to the Keychain. Saves run one after
+ * another.
  */
 export const saveWebViewCookiesHelper = () => {
   saving = saving.then(save).catch(console.warn);

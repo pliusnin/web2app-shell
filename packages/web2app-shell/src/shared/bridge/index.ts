@@ -6,5 +6,4 @@ export type {
   DownloadedFile,
   FetchRequest,
   FetchResponse,
-  SignedInUser,
 } from './bridge.types';

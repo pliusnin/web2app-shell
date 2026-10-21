@@ -2,17 +2,18 @@ import type { FetchRequest, FetchResponse } from '../../../../shared/bridge';
 import { base64ToBytesHelper } from './base64-to-bytes.helper';
 import { blobToBase64Helper } from './blob-to-base64.helper';
 
-// React Native отправляет байты только с типом: без него Android их отклоняет,
-// а iOS шлёт как URL-encoded форму. Байты без типа в HTTP — octet-stream
+// React Native sends bytes only with a type: without it Android rejects them
+// and iOS sends them as a URL-encoded form. Bytes without a type in HTTP are
+// octet-stream
 const withBodyType = ({ headers, body }: FetchRequest['options']) =>
   body && !headers['content-type']
     ? { ...headers, 'content-type': 'application/octet-stream' }
     : headers;
 
 /**
- * Выполняет запрос страницы из приложения, где CORS не действует. Тело
- * и ответ остаются байтами: приложению не нужно знать их формат.
- * Неудачный запрос не бросает исключение, а возвращает ошибку.
+ * Performs the page's request from the app, where CORS does not apply. The
+ * body and the response stay bytes: the app does not need to know their
+ * format. A failed request does not throw but returns an error.
  */
 export const nativeFetchHelper = async (
   { url, options }: FetchRequest,

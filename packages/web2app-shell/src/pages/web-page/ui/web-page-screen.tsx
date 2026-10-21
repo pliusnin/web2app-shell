@@ -5,6 +5,7 @@ import type { WebViewNavigation } from 'react-native-webview';
 
 import { trackVisitedHostHelper } from '../../../features/cookie-persistence';
 import { routeLinkRequestHelper } from '../../../features/link-routing';
+import { BRIDGE_SCRIPT } from '../../../shared/bridge';
 import { useConfig } from '../../../shared/config';
 import { mergeRefsHelper } from '../../../shared/lib';
 import type { WebViewControls } from '../../../shared/lib';
@@ -41,6 +42,7 @@ export const WebPageScreen = ({
         recovery.trackUrl(navState.url);
         trackVisitedHostHelper(navState.url);
       }}
+      injectedJavaScriptBeforeContentLoaded={BRIDGE_SCRIPT}
       originWhitelist={['*']}
       onShouldStartLoadWithRequest={routeLinkRequestHelper}
       onMessage={onMessage}

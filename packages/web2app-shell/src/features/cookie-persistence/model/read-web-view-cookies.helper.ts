@@ -11,7 +11,7 @@ const readAllCookies = async () => {
     const cookies = await CookieManager.getAllAsArray(WEB_VIEW_COOKIE_STORE);
     return cookies.map(cookie => toStoredCookieHelper(cookie));
   }
-  // В Android нет «всех кук», только куки конкретного URL
+  // Android has no "all cookies", only the cookies of a specific URL
   const perHost = await Promise.all(
     visitedHosts.get().map(host =>
       CookieManager.getAsArray(`https://${host}/`)
@@ -25,8 +25,8 @@ const readAllCookies = async () => {
 };
 
 /**
- * Читает куки всех WebView без дублей: в Android кука домена приходит с
- * каждого его хоста.
+ * Reads the cookies of all WebViews without duplicates: on Android a domain
+ * cookie comes from each of its hosts.
  */
 export const readWebViewCookiesHelper = async () => {
   const unique = new Map<string, StoredCookie>();

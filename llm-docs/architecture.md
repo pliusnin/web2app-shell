@@ -21,7 +21,8 @@ A React Native shell that turns a website into a native app: the site ships insi
 | `features` | `offline-toast`      | toast when the connection drops                                                                 | [offline-toast.md](offline-toast.md)           |
 | `features` | `cookie-persistence` | WebView cookies in the Keychain between launches                                                | [cookie-persistence.md](cookie-persistence.md) |
 | `features` | `session`            | session token check before the first page                                                       | [session.md](session.md)                       |
-| `shared`   | `bridge`             | site ↔ app contract, the in-page script                                                         | [bridge.md](bridge.md)                         |
+| `features` | `biometric-login`    | biometric on/off, the lock at a cold start                                                      | [biometric-login.md](biometric-login.md)       |
+| `shared`   | `bridge`             | site ↔ app contract, `window.__MG_Native` for the page                                          | [bridge.md](bridge.md)                         |
 | `shared`   | `config`             | config types, `resolveConfig`, `ConfigProvider` / `useConfig`, `SITE_ORIGIN`, `COLORS`, `TEXTS` | [config.md](config.md)                         |
 | `shared`   | `lib`, `ui`          | generic hooks, helpers, components                                                              | below                                          |
 
@@ -31,9 +32,10 @@ A React Native shell that turns a website into a native app: the site ships insi
 
 1. `resolveConfig(config)` in `useMemo` → `ConfigProvider`.
 2. `useWebViewsReady` (`app/entrypoint`): `true` once the bundled site is served ([bundled-site.md](bundled-site.md)) and, at the latest after 5 s, the Keychain reset after an iOS reinstall → cookie restore → session check have run. It also turns cookie saving on.
-3. App-wide hooks: `useOfflineToast`, `usePushNotifications`.
-4. `SafeAreaProvider` → `SafeAreaView` with the scheme background → `<TabsView renderScene={scene => <WebPageScreen {...scene} />} />` once the WebViews are ready.
-5. `ToastHost` after the tabs, so toasts are drawn on top.
+3. `useLaunchLock` (`features/biometric-login`): with biometric login on, the prompt at a cold start; `LockScreen` while it is not passed, its "Sign out" runs `signOutHelper` (`app/entrypoint`).
+4. App-wide hooks: `useOfflineToast`, `usePushNotifications`.
+5. `SafeAreaProvider` → `SafeAreaView` with the scheme background → `<TabsView renderScene={scene => <WebPageScreen {...scene} />} />` once the WebViews are ready and the app is unlocked, or `LockScreen` once they are ready and it is locked.
+6. `ToastHost` after the tabs, so toasts are drawn on top.
 
 `widgets` can't import `pages`, so the page reaches the tabs through the `renderScene` render prop. The page gets only `TabScene` (`ref`, `uri`, `onNavigationStateChange`) and must not know it is shown in a tab.
 
@@ -51,6 +53,7 @@ Check this list before writing a new helper.
 - `useAndroidBackHandler`: hardware back subscription that always calls the latest handler.
 - `useConnectionLost`: calls the handler on a real online → offline change only, not when the app starts offline or while NetInfo doesn't know yet.
 - `useSchemeColors`: background and foreground for the system light/dark scheme.
+- `waitForActiveAppHelper`: resolves once the app is in the foreground; iOS cancels system prompts shown earlier.
 - `web-view.types.ts`: `WebViewControls` and typed WebView handler props.
 
 `src/shared/ui`:

@@ -1,7 +1,13 @@
+import { Platform } from 'react-native';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 
-// Один каталог: в него распаковываем и из него же раздаём
+// One directory: we unpack into it and serve from it
 export const SITE_DIR = `${ReactNativeBlobUtil.fs.dirs.DocumentDir}/www/app`;
-// В Android assets и в main bundle iOS
+// In Android assets and in the iOS main bundle
 export const SITE_ZIP_NAME = 'webapp.zip';
-export const BRIDGE_FILE_NAME = 'native-bridge.js';
+export const SITE_ZIP_PATH =
+  Platform.OS === 'android'
+    ? ReactNativeBlobUtil.fs.asset(SITE_ZIP_NAME)
+    : `${ReactNativeBlobUtil.fs.dirs.MainBundleDir}/${SITE_ZIP_NAME}`;
+// Hash of the archive the site was unpacked from; lives inside SITE_DIR
+export const SITE_ZIP_HASH_FILE_NAME = '.webapp-zip-md5';

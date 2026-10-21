@@ -4,10 +4,10 @@ import * as Keychain from 'react-native-keychain';
 const INSTALL_MARKER_KEY = 'web2appShellInstalled';
 
 /**
- * Удаляет всё, что приложение хранит в Keychain, при первом запуске после
- * установки. Keychain на iOS переживает удаление приложения, а NSUserDefaults
- * нет, поэтому переустановленное приложение не войдёт с данными прошлой
- * установки.
+ * Deletes everything the app stores in the Keychain on the first launch after
+ * install. The iOS Keychain survives app deletion while NSUserDefaults does
+ * not, so a reinstalled app won't sign in with the previous install's
+ * data.
  */
 export const resetSecureStorageAfterInstallHelper = async () => {
   if (Platform.OS !== 'ios' || Settings.get(INSTALL_MARKER_KEY)) {

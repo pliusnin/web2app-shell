@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+import { LockScreen, useLaunchLock } from '../../features/biometric-login';
 import { useOfflineToast } from '../../features/offline-toast';
 import { usePushNotifications } from '../../features/push-notifications';
 import type { CheckSession } from '../../features/session';
@@ -11,6 +12,7 @@ import type { AppConfig } from '../../shared/config';
 import { useSchemeColors } from '../../shared/lib';
 import { ToastHost } from '../../shared/ui';
 import { TabsView } from '../../widgets/tabs';
+import { signOutHelper } from './sign-out.helper';
 import { useWebViewsReady } from './use-web-views-ready';
 
 type WebAppShellProps = {
@@ -21,6 +23,7 @@ type WebAppShellProps = {
 export const WebAppShell = ({ config, checkSession }: WebAppShellProps) => {
   const resolvedConfig = useMemo(() => resolveConfig(config), [config]);
   const isWebViewsReady = useWebViewsReady(checkSession);
+  const launchLock = useLaunchLock();
   useOfflineToast();
   usePushNotifications();
   const schemeColors = useSchemeColors();
@@ -35,8 +38,17 @@ export const WebAppShell = ({ config, checkSession }: WebAppShellProps) => {
           ]}
           edges={['top', 'left', 'right']}
         >
-          {isWebViewsReady && (
+          {isWebViewsReady && launchLock.isUnlocked && (
             <TabsView renderScene={scene => <WebPageScreen {...scene} />} />
+          )}
+          {isWebViewsReady && launchLock.isLocked && (
+            <LockScreen
+              isChecking={launchLock.isChecking}
+              onUnlock={launchLock.unlock}
+              onSignOut={() =>
+                signOutHelper().catch(console.warn).finally(launchLock.open)
+              }
+            />
           )}
         </SafeAreaView>
 

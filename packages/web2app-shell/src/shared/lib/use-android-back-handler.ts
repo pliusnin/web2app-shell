@@ -2,9 +2,9 @@ import { useEffect, useEffectEvent } from 'react';
 import { BackHandler } from 'react-native';
 
 /**
- * Подписывается на аппаратную кнопку «назад» Android, пока компонент
- * смонтирован, и всегда вызывает последний обработчик. Обработчик возвращает
- * true, если обработал нажатие; false оставляет его системе.
+ * Subscribes to the Android hardware "back" button while the component is
+ * mounted and always calls the latest handler. The handler returns true if
+ * it handled the press; false leaves it to the system.
  */
 export const useAndroidBackHandler = (handler: () => boolean) => {
   const onBackPress = useEffectEvent(handler);

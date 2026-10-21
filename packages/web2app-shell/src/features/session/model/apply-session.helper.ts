@@ -12,10 +12,10 @@ import type { CheckSession, StoredSession } from './session.types';
 import { toSiteCookiesHelper } from './to-site-cookies.helper';
 
 /**
- * Проверяет сохранённый токен и ставит сайту куки из ответа проверки, чтобы
- * первая страница открылась уже с входом. Невалидный токен удаляет, а при
- * неудачной проверке оставляет: следующий запуск проверит его снова. Должен
- * завершиться до загрузки первой страницы.
+ * Checks the saved token and sets the site cookies from the check response so
+ * the first page opens already signed in. An invalid token is removed; if the
+ * check fails it is kept: the next launch checks it again. Must finish before
+ * the first page loads.
  */
 export const applySessionHelper = async (checkSession: CheckSession) => {
   const stored = await readSecureItemHelper<StoredSession>(

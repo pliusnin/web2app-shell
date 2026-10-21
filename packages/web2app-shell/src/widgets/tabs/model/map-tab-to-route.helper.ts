@@ -5,10 +5,10 @@ import { getTabIconHelper } from './get-tab-icon.helper';
 import type { TabRoute } from './tabs.types';
 
 /**
- * Превращает таб из конфига в маршрут таб-бара: key, title, URL на локальном
- * origin для пути сайта ("/catalog"), залитая иконка для активного таба
- * и контурная для неактивного, isExternal для табов с URL другого сайта,
- * которые открываются вне приложения, а не переключают таб.
+ * Turns a tab from the config into a tab bar route: key, title, a URL on the
+ * local origin for a site path ("/catalog"), a filled icon for the active tab
+ * and an outline one for the inactive tab, isExternal for tabs with another
+ * site's URL that open outside the app instead of switching the tab.
  */
 export const mapTabToRouteHelper = (
   tab: TabConfig,

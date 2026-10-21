@@ -15,14 +15,14 @@ class MainActivity : ReactActivity() {
   }
 
   /**
-   * Возвращает имя главного компонента, зарегистрированного из JavaScript. По нему планируется
-   * рендер компонента.
+   * Returns the name of the main component registered from JavaScript. It is used
+   * to schedule the component rendering.
    */
   override fun getMainComponentName(): String = "web2appShell"
 
   /**
-   * Возвращает экземпляр [ReactActivityDelegate]. Используется [DefaultReactActivityDelegate],
-   * который включает New Architecture одним булевым флагом [fabricEnabled]
+   * Returns an instance of [ReactActivityDelegate]. Uses [DefaultReactActivityDelegate],
+   * which enables the New Architecture with a single boolean flag [fabricEnabled]
    */
   override fun createReactActivityDelegate(): ReactActivityDelegate =
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)

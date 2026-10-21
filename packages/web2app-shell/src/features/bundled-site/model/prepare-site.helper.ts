@@ -1,23 +1,12 @@
-import { Platform } from 'react-native';
-import { WebAppManager } from 'web-in-mobile-tools';
-
-import { SITE_DIR, SITE_ZIP_NAME } from '../config/bundled-site';
-import { addBridgeToSiteHelper } from './add-bridge-to-site.helper';
+import { installBundledSiteHelper } from './install-bundled-site.helper';
 import { startSiteServerHelper } from './start-site-server.helper';
 
-const webApp = new WebAppManager({
-  appDir: SITE_DIR,
-  bundledZipName: SITE_ZIP_NAME,
-  platform: Platform.OS === 'ios' ? 'ios' : 'android',
-});
-
 /**
- * Делает встроенный сайт доступным на локальном origin: при первом запуске
- * распаковывает zip из приложения, добавляет мост и запускает сервер.
- * Должен завершиться до открытия WebView.
+ * Makes the bundled site available on the local origin: unpacks the zip from
+ * the app when the site is missing or the archive changed, and starts the
+ * server. Must finish before the WebView opens.
  */
 export const prepareSiteHelper = async () => {
-  await webApp.install();
-  await addBridgeToSiteHelper();
+  await installBundledSiteHelper();
   await startSiteServerHelper();
 };

@@ -3,8 +3,8 @@ import type { Cookie } from '@preeternal/react-native-cookie-manager';
 import type { StoredCookie } from './cookie-persistence.types';
 
 /**
- * Связывает куку с URL для восстановления: её доменом или хостом, с которого
- * её прочитали. Оставляет только поля, которые принимает установка куки.
+ * Binds a cookie to a URL for restoring: its domain or the host it was read
+ * from. Keeps only the fields that cookie setting accepts.
  */
 export const toStoredCookieHelper = (
   cookie: Cookie,
@@ -31,14 +31,14 @@ export const toStoredCookieHelper = (
       name,
       value,
       path,
-      // Домен без ведущей точки — только для хоста: если задать его явно,
-      // Android распространит куку на поддомены
+      // A domain without a leading dot is host-only: if set explicitly, Android
+      // spreads the cookie to subdomains
       domain: domain?.startsWith('.') ? domain : undefined,
       expires,
       secure,
       httpOnly,
-      // WebKit отдаёт "none" для куки, поставленной без SameSite, а установка
-      // отклоняет "none" без secure
+      // WebKit returns "none" for a cookie set without SameSite, while setting
+      // rejects "none" without secure
       sameSite: sameSite === 'none' && !secure ? undefined : sameSite,
     },
   };

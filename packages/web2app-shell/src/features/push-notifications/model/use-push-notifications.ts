@@ -8,10 +8,10 @@ import { requestNotificationPermissionHelper } from './request-notification-perm
 import { subscribeToNotificationTopicHelper } from './subscribe-to-notification-topic.helper';
 
 /**
- * Настраивает пуши при старте: Android-канал, разрешение, регистрация в APNs,
- * подписка на топик. Ошибки только логируются, чтобы проблема с пушами не
- * ломала приложение. Пуши, пришедшие при открытом приложении, показывает
- * сам: в фоне и у закрытого приложения их показывает система.
+ * Sets up pushes on start: Android channel, permission, APNs registration,
+ * topic subscription. Errors are only logged so a push problem does not break
+ * the app. Pushes that arrive while the app is open are shown by the app
+ * itself; in the background or when the app is closed the system shows them.
  */
 export const usePushNotifications = () => {
   useEffect(() => {

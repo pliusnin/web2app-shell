@@ -5,7 +5,7 @@ jest.mock(
   'react-native-safe-area-context',
   () => jest.requireActual('react-native-safe-area-context/jest/mock').default,
 );
-// Модуль React Native, а не пакет: __mocks__ не может его подменить
+// A React Native module, not a package: __mocks__ cannot replace it
 jest.mock('react-native/Libraries/Settings/Settings', () => ({
   __esModule: true,
   default: { get: jest.fn(), set: jest.fn() },

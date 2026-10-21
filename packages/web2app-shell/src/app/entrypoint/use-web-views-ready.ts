@@ -9,7 +9,8 @@ import { applySessionHelper } from '../../features/session';
 import type { CheckSession } from '../../features/session';
 import { resetSecureStorageAfterInstallHelper } from '../../shared/lib';
 
-// Медленный Keychain или проверка сессии не держат приложение на сплэше дольше
+// A slow Keychain or session check does not hold the app on the splash screen
+// any longer
 const SESSION_TIMEOUT_MS = 5000;
 
 const restoreCookies = () =>
@@ -18,10 +19,10 @@ const restoreCookies = () =>
     .catch(console.warn);
 
 /**
- * Готовит всё, что нужно WebView до загрузки первой страницы: встроенный сайт
- * на локальном сервере, куки прошлого запуска и сохранённую сессию, если у
- * приложения есть проверка. Возвращает true, когда WebView можно показать.
- * Включает сохранение кук после их восстановления.
+ * Prepares what the WebView needs before the first page: the bundled site on a
+ * local server, cookies from the last launch and the saved session, if the app
+ * has a check. Returns true when WebViews can be shown. Enables cookie saving
+ * once they are restored.
  */
 export const useWebViewsReady = (checkSession?: CheckSession) => {
   const [isSiteReady, setIsSiteReady] = useState(false);
@@ -32,7 +33,8 @@ export const useWebViewsReady = (checkSession?: CheckSession) => {
   );
 
   useEffect(() => {
-    // Сайт, который не запустился, всё равно открывается: WebView покажет свою страницу ошибки
+    // A site that failed to start still opens: the WebView shows its own error
+    // page
     prepareSiteHelper()
       .catch(console.warn)
       .finally(() => setIsSiteReady(true));
@@ -44,8 +46,8 @@ export const useWebViewsReady = (checkSession?: CheckSession) => {
     restoreCookies()
       .then(() => {
         setIsRestored(true);
-        // После восстановления: оно возвращает куки сессии прошлого запуска,
-        // которые проверка сессии заменяет
+        // After restore: it brings back the session cookies of the previous
+        // launch, which the session check replaces
         return applySession();
       })
       .catch(console.warn)

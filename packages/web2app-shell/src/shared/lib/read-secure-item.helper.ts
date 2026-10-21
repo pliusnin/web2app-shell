@@ -1,8 +1,8 @@
 import * as Keychain from 'react-native-keychain';
 
 /**
- * Читает JSON-значение, сохранённое под service хелпером
- * writeSecureItemHelper, или null, если его нет.
+ * Reads the JSON value saved under service by writeSecureItemHelper, or
+ * null if there is none.
  */
 export const readSecureItemHelper = async <T>(
   service: string,

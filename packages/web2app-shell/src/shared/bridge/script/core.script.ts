@@ -1,20 +1,11 @@
-// window.__MG_Native и обмен сообщениями, которым пользуются остальные части
-// скрипта. Имена сохраняют контракт, на который уже опираются сайты
+// window.__MG_Native that the site's bridge file reads, and the messaging
+// used by the other parts of the script
 export const CORE_SCRIPT = `
   const post = message => {
     window.ReactNativeWebView.postMessage(JSON.stringify(message));
   };
 
-  // FileReader отдаёт data URL, base64 — часть после запятой
-  const readAsBase64 = blob =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
-      reader.onerror = () => reject(reader.error);
-      reader.readAsDataURL(blob);
-    });
-
-  // Добавляет слушателя, возвращённая функция его удаляет
+  // Adds a listener, the returned function removes it
   const subscribe = listeners => callback => {
     listeners.add(callback);
     return () => listeners.delete(callback);
@@ -22,12 +13,10 @@ export const CORE_SCRIPT = `
 
   const stateListeners = new Set();
   const eventListeners = new Set();
-  // Команды приложения, которые скрипт обрабатывает сам, остальные получает сайт
-  const commandHandlers = {};
 
   const bridge = {
     isNative: true,
-    // Настоящее состояние приложение присылает, когда страница готова
+    // The app sends the real state when the page is ready
     state: {
       isFingerprintAvailable: false,
       isFaceIdAvailable: false,
@@ -43,14 +32,14 @@ export const CORE_SCRIPT = `
     stateListeners.forEach(callback => callback(state));
   };
 
-  // ID разные у каждой загрузки страницы: ответ для ушедшей страницы не
-  // попадёт в вызов страницы, загруженной после неё
+  // IDs differ on every page load: a reply meant for a departed page will
+  // not reach a call of the page loaded after it
   const pageID = Math.random().toString(36).slice(2);
   const calls = new Map();
   let callCount = 0;
 
-  // Отправляет команду приложению и резолвится его ответом. Отмена signal
-  // отклоняет вызов и сообщает приложению через ABORT_CALL
+  // Sends a command to the app and resolves with its reply. Aborting the
+  // signal rejects the call and tells the app via ABORT_CALL
   const callApp = (cmd, args, signal) =>
     new Promise((resolve, reject) => {
       if (signal && signal.aborted) {
@@ -85,11 +74,6 @@ export const CORE_SCRIPT = `
   };
 
   window.__MG_Native_invoke = event => {
-    const handler = commandHandlers[event.cmd];
-    if (handler) {
-      handler(event.args);
-      return;
-    }
     eventListeners.forEach(callback => callback(event));
   };
 `;
