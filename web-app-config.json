@@ -9,9 +9,9 @@
     "logoWidth": 160
   },
   "tabs": [
-    { "title": "Главная", "icon": "home", "url": "/" },
-    { "title": "Каталог", "icon": "view-grid", "url": "/catalog" },
-    { "title": "Корзина", "icon": "cart", "url": "/cart" },
-    { "title": "Профиль", "icon": "account", "url": "/profile" }
+    { "title": "Home", "icon": "home-variant", "url": "/" },
+    { "title": "Payments", "icon": "credit-card", "url": "/payments" },
+    { "title": "Tickets", "icon": "wrench", "url": "/maintenance" },
+    { "title": "Profile", "icon": "account-circle", "url": "/account" }
   ]
 }

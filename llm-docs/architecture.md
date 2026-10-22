@@ -4,8 +4,8 @@ A React Native shell that turns a website into a native app: the site ships insi
 
 ## Host and public API
 
-- `App.tsx` imports `web-app-config.json` and renders `<WebAppShell config={...} />` from `web2app-shell`.
-- `src/index.ts` is the package API: `WebAppShell`, `type AppConfig` and `type CheckSession` (the optional `checkSession` prop, [session.md](session.md)), nothing else.
+- `App.tsx` imports `web-app-config.json` and the client's fetch interceptors from `interceptors.ts` ([bridge.md](bridge.md#interceptors)), and renders `<WebAppShell config={...} interceptors={...} />` from `web2app-shell`.
+- `src/index.ts` is the package API: `WebAppShell`, `type AppConfig`, `type CheckSession` (the optional `checkSession` prop, [session.md](session.md)) and `type FetchInterceptor` (the optional `interceptors` prop, [bridge.md](bridge.md#interceptors)), nothing else.
 - `index.js` only registers `App`.
 
 ## Layer map
@@ -24,6 +24,7 @@ A React Native shell that turns a website into a native app: the site ships insi
 | `features` | `biometric-login`    | biometric on/off, the lock at a cold start                                                      | [biometric-login.md](biometric-login.md)       |
 | `shared`   | `bridge`             | site ↔ app contract, `window.__MG_Native` for the page                                          | [bridge.md](bridge.md)                         |
 | `shared`   | `config`             | config types, `resolveConfig`, `ConfigProvider` / `useConfig`, `SITE_ORIGIN`, `COLORS`, `TEXTS` | [config.md](config.md)                         |
+| `shared`   | `fetch-interceptors` | host app's `FetchInterceptor` type, `FetchInterceptorsProvider` / `useFetchInterceptors`        | [bridge.md](bridge.md#interceptors)            |
 | `shared`   | `lib`, `ui`          | generic hooks, helpers, components                                                              | below                                          |
 
 ## Composition
@@ -34,7 +35,7 @@ A React Native shell that turns a website into a native app: the site ships insi
 2. `useWebViewsReady` (`app/entrypoint`): `true` once the bundled site is served ([bundled-site.md](bundled-site.md)) and, at the latest after 5 s, the Keychain reset after an iOS reinstall → cookie restore → session check have run. It also turns cookie saving on.
 3. `useLaunchLock` (`features/biometric-login`): with biometric login on, the prompt at a cold start; `LockScreen` while it is not passed, its "Sign out" runs `signOutHelper` (`app/entrypoint`).
 4. App-wide hooks: `useOfflineToast`, `usePushNotifications`.
-5. `SafeAreaProvider` → `SafeAreaView` with the scheme background → `<TabsView renderScene={scene => <WebPageScreen {...scene} />} />` once the WebViews are ready and the app is unlocked, or `LockScreen` once they are ready and it is locked.
+5. `SafeAreaProvider` → `SafeAreaView` with the scheme background → `FetchInterceptorsProvider` with the `interceptors` prop → `<TabsView renderScene={scene => <WebPageScreen {...scene} />} />` once the WebViews are ready and the app is unlocked, or `LockScreen` once they are ready and it is locked.
 6. `ToastHost` after the tabs, so toasts are drawn on top.
 
 `widgets` can't import `pages`, so the page reaches the tabs through the `renderScene` render prop. The page gets only `TabScene` (`ref`, `uri`, `onNavigationStateChange`) and must not know it is shown in a tab.

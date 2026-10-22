@@ -16,14 +16,14 @@ The site talks to the app through its own bridge file: the site's developers add
 
 Site → app, posted by the bridge file:
 
-| Command                            | Args                             | Handled by                                           |
-| ---------------------------------- | -------------------------------- | ---------------------------------------------------- |
-| `WEB_READY`                        |                                  | splash, biometric state ([web-page.md](web-page.md)) |
-| `DOWNLOAD_FILE`                    | `{ fileName, mimeType, base64 }` | `openDownloadedFileHelper`                           |
-| `SAVE_TOKEN`                       | `{ token }`                      | [session.md](session.md)                             |
-| `LOGGED_IN`                        | `{ user: { login, password } }`  | ignored, the app keeps no password                   |
-| `LOGGED_OUT`                       |                                  | biometric login and session                          |
-| `BIOMETRICS_ON` / `BIOMETRICS_OFF` |                                  | [biometric-login.md](biometric-login.md)             |
+| Command                            | Args                            | Handled by                                           |
+| ---------------------------------- | ------------------------------- | ---------------------------------------------------- |
+| `WEB_READY`                        |                                 | splash, biometric state ([web-page.md](web-page.md)) |
+| `DOWNLOAD_FILE`                    | `{ fileName, url }`             | `openDownloadedFileHelper`                           |
+| `SAVE_TOKEN`                       | `{ token }`                     | [session.md](session.md)                             |
+| `LOGGED_IN`                        | `{ user: { login, password } }` | ignored, the app keeps no password                   |
+| `LOGGED_OUT`                       |                                 | biometric login and session                          |
+| `BIOMETRICS_ON` / `BIOMETRICS_OFF` |                                 | [biometric-login.md](biometric-login.md)             |
 
 Site → app, sent by `window.__MG_Native` with a `callID`, the reply resolves the call:
 
@@ -50,6 +50,30 @@ A request through the app, whose requests need no CORS headers. The bridge file 
 2. `nativeFetchHelper` sends them with React Native's `fetch`, a body without a type as `application/octet-stream`, and replies with status, headers, final URL and the body in base64.
 3. The script rebuilds a real `Response`. A failed request is a `TypeError`, an HTTP error is a response with its status.
 4. An aborted signal sends `ABORT_CALL` with the call's `callID`, the app aborts the request.
+
+### Interceptors
+
+Client-specific code around the app's requests. The host passes `interceptors?: FetchInterceptor[]` to `WebAppShell`; `FetchInterceptorsProvider` (`src/shared/fetch-interceptors`) hands them to the tab pages, `useNativeFetch` passes them to `nativeFetchHelper`. Without the prop nothing changes.
+
+- `onRequest(request)` gets the `Request` built from the page's call. A returned `Request` replaces it, nothing returned keeps it. Its body is read through `request.clone()`, otherwise it can't be sent.
+- `onResponse(response, request)` gets a clone of the `Response`, so `await response.json()` keeps the body for the page. A returned `Response` replaces the one sent to the page.
+- They run in array order and are awaited. An interceptor that throws is skipped with `console.warn`.
+- Only `FETCH` goes through them: not `DOWNLOAD_FILE`, page loads or the page's own `fetch` / XHR.
+
+```tsx
+const interceptors: FetchInterceptor[] = [
+  {
+    onResponse: async response => {
+      const data = await response.json().catch(() => null);
+      if (data?.access_token) {
+        accessToken = data.access_token;
+      }
+    },
+  },
+];
+
+<WebAppShell config={config} interceptors={interceptors} />;
+```
 
 ## Gotchas
 

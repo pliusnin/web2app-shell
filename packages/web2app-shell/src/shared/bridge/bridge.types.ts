@@ -28,8 +28,8 @@ export type FetchResponse =
 
 export type DownloadedFile = {
   fileName: string;
-  mimeType: string;
-  base64: string;
+  // A base64 data: URL or an http(s) URL
+  url: string;
 };
 
 export type BiometricsState = {
