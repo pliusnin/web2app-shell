@@ -1,6 +1,6 @@
 # Architecture
 
-A React Native shell that turns a website into a native app: the site ships inside the app as a zip and is served locally, native bottom tabs show its pages, a WebView per tab, push notifications. The host app passes a JSON config; the shell lives in the local package `packages/web2app-shell` → [package.md](package.md).
+A React Native shell that turns a website into a native app: the site ships inside the app as a zip and is served locally, native bottom tabs show its pages, a WebView per tab, push notifications. The host app passes a JSON config; the shell is this package → [package.md](package.md).
 
 ## Host and public API
 
@@ -15,7 +15,7 @@ A React Native shell that turns a website into a native app: the site ships insi
 | `app`      | `entrypoint`         | providers, app-wide hooks, composition                                                          | below                                          |
 | `pages`    | `web-page`           | the screen of every tab: WebView, bridge commands, splash                                       | [web-page.md](web-page.md)                     |
 | `widgets`  | `tabs`               | native bottom tabs, per-tab WebView control                                                     | [tabs.md](tabs.md)                             |
-| `features` | `bundled-site`       | unpacks the site from the zip and serves it locally                                             | [bundled-site.md](bundled-site.md)             |
+| `features` | `bundled-site`       | unpacks the site from the zip, serves it locally, updates it over the air                       | [bundled-site.md](bundled-site.md)             |
 | `features` | `link-routing`       | in-app vs external links                                                                        | [link-routing.md](link-routing.md)             |
 | `features` | `push-notifications` | FCM + notify-kit                                                                                | [push-notifications.md](push-notifications.md) |
 | `features` | `offline-toast`      | toast when the connection drops                                                                 | [offline-toast.md](offline-toast.md)           |
@@ -34,7 +34,7 @@ A React Native shell that turns a website into a native app: the site ships insi
 1. `resolveConfig(config)` in `useMemo` → `ConfigProvider`.
 2. `useWebViewsReady` (`app/entrypoint`): `true` once the bundled site is served ([bundled-site.md](bundled-site.md)) and, at the latest after 5 s, the Keychain reset after an iOS reinstall → cookie restore → session check have run. It also turns cookie saving on.
 3. `useLaunchLock` (`features/biometric-login`): with biometric login on, the prompt at a cold start; `LockScreen` while it is not passed, its "Sign out" runs `signOutHelper` (`app/entrypoint`).
-4. App-wide hooks: `useOfflineToast`, `usePushNotifications`.
+4. App-wide hooks: `useSiteUpdate` (over-the-air site update, [bundled-site.md](bundled-site.md)), `useOfflineToast`, `usePushNotifications`.
 5. `SafeAreaProvider` → `SafeAreaView` with the scheme background → `FetchInterceptorsProvider` with the `interceptors` prop → `<TabsView renderScene={scene => <WebPageScreen {...scene} />} />` once the WebViews are ready and the app is unlocked, or `LockScreen` once they are ready and it is locked.
 6. `ToastHost` after the tabs, so toasts are drawn on top.
 

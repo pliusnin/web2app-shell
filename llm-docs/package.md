@@ -1,6 +1,6 @@
 # Package
 
-The shell is the local package `packages/web2app-shell`. Any React Native CLI app gets it by copying the folder and running one command. Native setup stays with the app. Consumer steps and the native checklist: `packages/web2app-shell/README.md`. It copies native code and config from this repo, so a change to `ios/`, `android/` or the config schema goes to the README in the same change.
+The shell is this package: the repo root is the package. Any React Native CLI app gets it by copying the folder and running one command. Native setup stays with the app. Consumer steps and the native checklist: [README.md](../README.md). The README is the single source of the native setup (there is no `ios/`/`android/` in this repo), so a change to the native setup or the config schema goes to the README in the same change.
 
 ## Layout
 
@@ -17,11 +17,11 @@ The shell is the local package `packages/web2app-shell`. Any React Native CLI ap
 
 - Native modules plus `react` and `react-native` go to `peerDependencies`. React Native autolinking reads only the app's `package.json` (`findDependencies` in `@react-native-community/cli-config`), and the app needs a single copy of each.
 - Pure JS libraries go to `dependencies` and come with the package.
-- A new native dependency of `src/` goes to the package's `peerDependencies` and to the root `package.json` of this repo.
+- A new native dependency of `src/` goes to `peerDependencies` (the consumer app provides it) and to `devDependencies` (so it is installed here to run the tests).
 
 ## Setup command
 
-`node packages/web2app-shell/scripts/setup.mjs` from the app root (`npm run setup` here). Its install step runs one `npm install` with:
+`node packages/web2app-shell/scripts/setup.mjs` from the app root (the path the consumer copied the folder to). Its install step runs one `npm install` with:
 
 - `file:packages/web2app-shell`: npm links the folder into `node_modules` and installs its `dependencies`;
 - every peer dependency missing from the app's `dependencies` and `devDependencies`, at the package's range.
@@ -32,5 +32,5 @@ When `patches/` exists, before the install it adds `patch-package` to the app's 
 
 ## Gotchas
 
-- No `node_modules` inside the package folder: Metro would resolve a second `react` from it.
-- This repo is the first consumer: the root `package.json` has `"web2app-shell": "file:packages/web2app-shell"`, and the dev tooling (Jest, ESLint, Steiger, Prettier, `__mocks__`) stays at the root.
+- In a consumer app, no `node_modules` inside the copied package folder: Metro would resolve a second `react` from it. This repo's own `node_modules`, installed at the root to run the tests, is a different thing.
+- This repo is the package itself: `package.json` at the root is the package manifest, and the dev tooling (Jest, ESLint, Steiger, Prettier, `__mocks__`) sits at the root beside `src/` to run the tests and checks. Peer dependencies are duplicated into `devDependencies` so a fresh clone can install and test.

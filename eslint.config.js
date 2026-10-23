@@ -3,14 +3,7 @@ const prettierPlugin = require('eslint-plugin-prettier');
 
 module.exports = [
   {
-    ignores: [
-      'android/',
-      'ios/',
-      'vendor/',
-      'coverage/',
-      '.bundle/',
-      '**/build/',
-    ],
+    ignores: ['vendor/', 'coverage/', '.claude/', '**/build/'],
   },
   ...reactNativeConfig,
   {

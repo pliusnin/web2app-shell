@@ -1,6 +1,6 @@
 # Code conventions
 
-Rules for every code change in `src/` of the package `packages/web2app-shell`. Layer map and composition: [architecture.md](architecture.md).
+Rules for every code change in `src/` of this package. Layer map and composition: [architecture.md](architecture.md).
 
 ## FSD
 

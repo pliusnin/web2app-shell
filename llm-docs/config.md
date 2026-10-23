@@ -11,7 +11,7 @@ The host app configures the shell with one JSON file. Types and resolution live 
 
 ## Schema
 
-The keys and their meaning are described once, in the package README: [Config](../packages/web2app-shell/README.md#config). Update the table there when the schema changes.
+The keys and their meaning are described once, in the package README: [Config](../README.md#config). Update the table there when the schema changes.
 
 ## Flow
 
@@ -21,7 +21,7 @@ The keys and their meaning are described once, in the package README: [Config](.
 
 - The site itself is not in the config: it is `webapp.zip` in the native projects, served on `SITE_ORIGIN` (`src/shared/config/site.ts`) → [bundled-site.md](bundled-site.md).
 - `theme` has no defaults on purpose: no hardcoded fallback colors.
-- `splash` is build-time: the shell ignores it and `AppConfig` doesn't type it. The setup command `packages/web2app-shell/scripts/setup.mjs` (`npm run setup` here) passes `logo` (path from the app root), `background` (hex) and `logoWidth` (dp at @1x, bootsplash default if missing) to `react-native-bootsplash generate`. Rerun it after changing them → [native-build.md](native-build.md).
+- `splash` is build-time: the shell ignores it and `AppConfig` doesn't type it. The setup command `scripts/setup.mjs`, run from the app root, passes `logo` (path from the app root), `background` (hex) and `logoWidth` (dp at @1x, bootsplash default if missing) to `react-native-bootsplash generate`. Rerun it after changing them → [native-build.md](native-build.md).
 
 ## Colors and texts
 

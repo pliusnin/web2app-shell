@@ -7,7 +7,7 @@ iOS and Android projects, native dependencies and the quirks that broke builds b
 iOS pods use the prebuilt React-Core, the RN 0.87 default. Native libs that rely on React internals missing from it break the iOS build, so check that a native lib supports the New Architecture with the prebuilt core before adding it.
 
 - `@react-native-community/progress-view` (abandoned, used the removed `SharedImageManager`) breaks the build. Don't bring it back.
-- `react-native-bottom-tabs` 1.4.0 is patched by `patch-package` (`packages/web2app-shell/patches/react-native-bottom-tabs+1.4.0.patch`, applied on `postinstall` with `--patch-dir`) with the upstream `__has_include(<React/RCTConversions.h>)` fix. Drop the patch once a release after 1.4.0 includes it.
+- `react-native-bottom-tabs` 1.4.0 is patched by `patch-package` (`patches/react-native-bottom-tabs+1.4.0.patch`, applied on the app's `postinstall` with `--patch-dir`) with the upstream `__has_include(<React/RCTConversions.h>)` fix. Drop the patch once a release after 1.4.0 includes it.
 
 ## iOS
 
@@ -38,4 +38,4 @@ iOS pods use the prebuilt React-Core, the RN 0.87 default. Native libs that rely
 
 ## Splash assets
 
-`npm run setup` (`packages/web2app-shell/scripts/setup.mjs`) installs the package's dependencies and then runs `react-native-bootsplash generate` with `splash` from `web-app-config.json` (here `assets/splash-logo.png`, white background, 160 dp logo) for both platforms. It writes `assets/bootsplash` and the native splash resources, adds them to the Xcode project, and sets `UILaunchStoryboardName` in `Info.plist` and `BootTheme` on `MainActivity` in the manifest. The `RNBootSplash` init lines in `AppDelegate` and `MainActivity` are not generated. Hiding it at runtime → [web-page.md](web-page.md).
+The setup command (`scripts/setup.mjs`, run from the app root) installs the package's dependencies and then runs `react-native-bootsplash generate` with `splash` from the app's `web-app-config.json` for both platforms. It writes `assets/bootsplash` and the native splash resources, adds them to the Xcode project, and sets `UILaunchStoryboardName` in `Info.plist` and `BootTheme` on `MainActivity` in the manifest. The `RNBootSplash` init lines in `AppDelegate` and `MainActivity` are not generated. Hiding it at runtime → [web-page.md](web-page.md).

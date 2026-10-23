@@ -1,97 +1,373 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# web2app-shell
 
-# Getting Started
+React Native shell that turns a website into a native app: the site ships inside the app as `webapp.zip` and is served from a local server, native bottom tabs open its pages, a WebView per tab, push notifications, an offline toast, a boot splash, a login that survives app restarts, a session check before the site opens, biometric sign-in, requests to other origins without CORS and downloads of files the site makes.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+The package holds the JS code. The native setup is done once per app by hand, this README lists every step.
 
-## Step 1: Start Metro
+## Requirements
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- React Native CLI app on React Native 0.87, New Architecture on, prebuilt React-Core (the 0.87 default). Expo is not supported.
+- npm. The scripts call `npm` and `npx`; yarn and pnpm are not supported.
+- Node 22.11 or newer.
+- Xcode with CocoaPods, Android Studio.
+- A Firebase project for push notifications.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Install
 
-```sh
-# Using npm
-npm start
+1. Copy this folder to `packages/web2app-shell` of the app.
+2. Create `web-app-config.json` in the app root, see [Config](#config). With `splash` set, the next step generates the boot splash too.
+3. From the app root:
 
-# OR using Yarn
-yarn start
+   ```sh
+   node packages/web2app-shell/scripts/setup.mjs
+   ```
+
+   The command:
+   - adds `"web2app-shell": "file:packages/web2app-shell"` to the app's `dependencies`;
+   - adds every peer dependency of the package the app doesn't have yet. Native modules must be direct app dependencies: React Native autolinking reads only the app's `package.json`;
+   - keeps the versions the app already has. npm fails with `ERESOLVE` if one doesn't match the package's `peerDependencies`;
+   - adds `patch-package` and `patch-package --patch-dir packages/web2app-shell/patches` to the app's `postinstall`, and applies the patches once. `react-native-bottom-tabs` 1.4.0 doesn't build on iOS without the patch;
+   - runs `npm install`;
+   - generates the boot splash from `splash` in `web-app-config.json`, see [Boot splash](#boot-splash). Without `splash` it skips this step and says so.
+
+   Run it again after changing the splash logo or background, or after updating the package. A rerun changes nothing that is already set.
+
+Don't run `npm install` inside this folder: a second `node_modules` here means a second copy of `react` and `react-native`.
+
+## Config
+
+`web-app-config.json` in the app root:
+
+```json
+{
+  "userAgentSuffix": "MyApp/1.0.0",
+  "theme": {
+    "primary": "#1E6FFF"
+  },
+  "splash": {
+    "logo": "assets/splash-logo.png",
+    "background": "#FFFFFF",
+    "logoWidth": 160
+  },
+  "tabs": [
+    { "title": "Home", "icon": "home", "url": "/" },
+    { "title": "Catalog", "icon": "view-grid", "url": "/catalog" }
+  ]
+}
 ```
 
-## Step 2: Build and run your app
+| Key                 | Required       | Meaning                                                                                                                           |
+| ------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `tabs[]`            | yes            | one bottom tab per item: `title`, `icon`, `url`. `url` is a path of the site, or a URL of another site that opens outside the app |
+| `tabs[].icon`       | yes            | `icon` is the name of any icon of [Material Design Icons](https://pictogrammers.com/library/mdi/)                                 |
+| `theme.primary`     | yes            | brand accent color, hex, see below. No default                                                                                    |
+| `startUrl`          | no             | the `url` of the tab that opens first. Defaults to the first tab                                                                  |
+| `updateUrl`         | no             | URL of a `webapp.zip` to update the site from over the air. Omit to disable. See [The site](#the-site)                            |
+| `userAgentSuffix`   | no             | appended to the WebView user agent                                                                                                |
+| `splash.logo`       | for the splash | PNG or SVG path from the app root                                                                                                 |
+| `splash.background` | for the splash | splash background, hex                                                                                                            |
+| `splash.logoWidth`  | no             | logo width in dp at @1x, bootsplash default 100                                                                                   |
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+## Usage
 
-### Android
+`App.tsx`:
 
-```sh
-# Using npm
-npm run android
+```tsx
+import { WebAppShell } from 'web2app-shell';
 
-# OR using Yarn
-yarn android
+import webAppConfig from './web-app-config.json';
+
+function App() {
+  return <WebAppShell config={webAppConfig} />;
+}
+
+export default App;
 ```
+
+A site with sign-in can be opened signed in: it sends the app a token after signing in (`SAVE_TOKEN`), and `checkSession` checks it before the first page loads. Return the response when the token is valid (its `Set-Cookie` sign the user in on the site), `null` when it is not, and throw when the check failed:
+
+```tsx
+const checkSession: CheckSession = async token => {
+  const response = await fetch('https://api.example.com/session', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.ok ? response : null;
+};
+
+<WebAppShell config={webAppConfig} checkSession={checkSession} />;
+```
+
+## The site
+
+Build the site so that `index.html` is at the root of a zip, name it `webapp.zip` and put the same file into both native projects:
+
+- iOS: `ios/<App>/webapp.zip`, added to the app target (Copy Bundle Resources);
+- Android: `android/app/src/main/assets/webapp.zip`.
+
+On the first launch the shell unpacks it and serves it on `http://127.0.0.1:3035`; tab `url`s are paths of it. A single-page app gets `index.html` for every path without a file. The unpacked site is kept: a new zip bundled in the app reaches users after a reinstall.
+
+With `updateUrl` set, the shell also updates the site over the air: on launch and on every return to the foreground it sends a `HEAD` to that URL and compares its `last-modified` with the installed version. A newer archive is downloaded in the background, validated and swapped in; the running site is untouched and the new version is served on the next launch. The host must serve the `webapp.zip` there with a `last-modified` header.
+
+## Native setup
+
+`<App>` below is the iOS project folder (`ios/<App>`), `<AppName>` is `name` from the app's `app.json`.
+
+### Shared
+
+**Firebase.** Set up `@react-native-firebase/app` and `@react-native-firebase/messaging` for iOS and Android by [their docs](https://rnfirebase.io/). On top of them the shell needs:
+
+- `firebase.json` in the app root. The shell registers for remote messages itself and posts to the `default` channel:
+
+  ```json
+  {
+    "react-native": {
+      "messaging_android_notification_channel_id": "default",
+      "messaging_ios_auto_register_for_remote_messages": false
+    }
+  }
+  ```
+
+- `ios/Podfile`, above `target '<App>' do`: React Native Firebase as static frameworks from CocoaPods, the setup the shell is built with:
+
+  ```ruby
+  $RNFirebaseDisableSPM = true
+  $RNFirebaseAsStaticFramework = true
+  use_frameworks! :linkage => :static
+  ```
+
+- `ios/Podfile`: iOS 15.5, which `react-native-zip-archive` requires, and the same minimum for every pod, Xcode 27 rejects lower ones:
+
+  ```ruby
+  IOS_DEPLOYMENT_TARGET = '15.5'
+  platform :ios, IOS_DEPLOYMENT_TARGET
+  ```
+
+  and at the end of `post_install`:
+
+  ```ruby
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |build_config|
+      if build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < IOS_DEPLOYMENT_TARGET.to_f
+        build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = IOS_DEPLOYMENT_TARGET
+      end
+    end
+  end
+  ```
+
+  Set the app target's deployment target in Xcode to 15.5 too.
+
+#### Boot splash
+
+1. Set `splash` in `web-app-config.json`, see [Config](#config).
+2. Run the setup command, see [Install](#install), and again after changing the logo or the background.
+
+   It runs `react-native-bootsplash generate`. iOS: the `BootSplash` storyboard, logo and color assets added to the Xcode project, `UILaunchStoryboardName` in `Info.plist`. Android: the resources, `BootTheme` in `styles.xml`, set on `MainActivity` in the manifest.
+
+3. The two init lines are added by hand: `AppDelegate.swift` and `MainActivity.kt` below.
+
+The shell hides the splash once the site has painted its first screen, or when its page failed to load.
 
 ### iOS
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+**`Info.plist`**:
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+- the tab icon font:
 
-```sh
-bundle install
+  ```xml
+  <key>UIAppFonts</key>
+  <array>
+    <string>MaterialDesignIcons.ttf</string>
+  </array>
+  ```
+
+- the Face ID prompt text for biometric sign-in:
+
+  ```xml
+  <key>NSFaceIDUsageDescription</key>
+  <string>Face ID confirms your sign-in to the site</string>
+  ```
+
+- the scene manifest, React Native starts from `SceneDelegate`:
+
+  ```xml
+  <key>UIApplicationSceneManifest</key>
+  <dict>
+    <key>UIApplicationSupportsMultipleScenes</key>
+    <false/>
+    <key>UISceneConfigurations</key>
+    <dict>
+      <key>UIWindowSceneSessionRoleApplication</key>
+      <array>
+        <dict>
+          <key>UISceneConfigurationName</key>
+          <string>Default Configuration</string>
+          <key>UISceneDelegateClassName</key>
+          <string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+        </dict>
+      </array>
+    </dict>
+  </dict>
+  ```
+
+**`AppDelegate.swift`**, replacing the template one. It configures Firebase, keeps the React Native factory for `SceneDelegate`, and inits the splash:
+
+```swift
+import UIKit
+import FirebaseCore
+import React
+import React_RCTAppDelegate
+import ReactAppDependencyProvider
+import RNBootSplash
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+  // Stays nil, the window lives in SceneDelegate. RNFB Messaging reads
+  // `delegate.window` at launch and crashes when the property doesn't exist.
+  var window: UIWindow?
+  var reactNativeDelegate: ReactNativeDelegate?
+  var reactNativeFactory: RCTReactNativeFactory?
+
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
+    FirebaseApp.configure()
+
+    let delegate = ReactNativeDelegate()
+    let factory = RCTReactNativeFactory(delegate: delegate)
+    delegate.dependencyProvider = RCTAppDependencyProvider()
+
+    reactNativeDelegate = delegate
+    reactNativeFactory = factory
+
+    return true
+  }
+
+  func application(
+    _ application: UIApplication,
+    configurationForConnecting connectingSceneSession: UISceneSession,
+    options: UIScene.ConnectionOptions
+  ) -> UISceneConfiguration {
+    UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+  }
+}
+
+class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
+  override func sourceURL(for bridge: RCTBridge) -> URL? {
+    self.bundleURL()
+  }
+
+  override func bundleURL() -> URL? {
+#if DEBUG
+    RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
+#else
+    Bundle.main.url(forResource: "main", withExtension: "jsbundle")
+#endif
+  }
+
+  override func customize(_ rootView: RCTRootView) {
+    super.customize(rootView)
+    RNBootSplash.initWithStoryboard("BootSplash", rootView: rootView)
+  }
+}
 ```
 
-Then, and every time you update your native dependencies, run:
+**`SceneDelegate.swift`**, a new file in `ios/<App>/` added to the app target. It creates the window and starts React Native. Replace `<AppName>`:
 
-```sh
-bundle exec pod install
+```swift
+import UIKit
+
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+  var window: UIWindow?
+
+  func scene(
+    _ scene: UIScene,
+    willConnectTo session: UISceneSession,
+    options connectionOptions: UIScene.ConnectionOptions
+  ) {
+    guard
+      let windowScene = scene as? UIWindowScene,
+      let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    else { return }
+
+    let window = UIWindow(windowScene: windowScene)
+    self.window = window
+
+    appDelegate.reactNativeFactory?.startReactNative(
+      withModuleName: "<AppName>",
+      in: window
+    )
+  }
+}
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+### Android
+
+**Release builds**: plain HTTP to the local server. Debug builds allow it already. `android/app/src/release/res/xml/network_security_config.xml`:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+  <domain-config cleartextTrafficPermitted="true">
+    <domain includeSubdomains="false">127.0.0.1</domain>
+  </domain-config>
+</network-security-config>
+```
+
+and `android/app/src/release/AndroidManifest.xml`:
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <application android:networkSecurityConfig="@xml/network_security_config" />
+</manifest>
+```
+
+**`AndroidManifest.xml`**: the Android 13+ push permission, the shell requests it at runtime, and the biometric sign-in permission:
+
+```xml
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+<uses-permission android:name="android.permission.USE_BIOMETRIC" />
+```
+
+**`MainActivity.kt`**: the splash init:
+
+```kotlin
+import android.os.Bundle
+import com.zoontek.rnbootsplash.RNBootSplash
+
+class MainActivity : ReactActivity() {
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    RNBootSplash.init(this, R.style.BootTheme)
+    super.onCreate(savedInstanceState)
+  }
+
+  // getMainComponentName and createReactActivityDelegate stay as in the template
+}
+```
+
+**Navigation bar**: the system navigation bar takes the tab bar color, light or dark with the system theme.
+
+- `android/app/src/main/res/values/styles.xml`, in `AppTheme`:
+
+  ```xml
+  <item name="android:windowLightNavigationBar" tools:targetApi="27">@bool/light_navigation_bar</item>
+  <item name="android:enforceNavigationBarContrast" tools:targetApi="29">false</item>
+  ```
+
+  with `xmlns:tools="http://schemas.android.com/tools"` on `<resources>`. Without `enforceNavigationBarContrast` the system draws a scrim over the bar.
+
+- `res/values/bools.xml` with `<bool name="light_navigation_bar">true</bool>` and `res/values-night/bools.xml` with `false`, both inside `<resources>`.
+
+## Build and run
 
 ```sh
-# Using npm
+cd ios && bundle exec pod install
+```
+
+Run it after the Podfile is edited, and again after any native dependency changes. `pod install` crashes with `Encoding::CompatibilityError` in a non-UTF-8 shell, then prefix it with `LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8`.
+
+```sh
 npm run ios
-
-# OR using Yarn
-yarn ios
+npm run android
 ```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
