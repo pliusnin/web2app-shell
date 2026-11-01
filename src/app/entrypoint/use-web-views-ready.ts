@@ -1,6 +1,5 @@
 import { useEffect, useEffectEvent, useState } from 'react';
 
-import { prepareSiteHelper } from '../../features/bundled-site';
 import {
   restoreWebViewCookiesHelper,
   useCookieSaving,
@@ -33,11 +32,7 @@ export const useWebViewsReady = (checkSession?: CheckSession) => {
   );
 
   useEffect(() => {
-    // A site that failed to start still opens: the WebView shows its own error
-    // page
-    prepareSiteHelper()
-      .catch(console.warn)
-      .finally(() => setIsSiteReady(true));
+    setIsSiteReady(true);
 
     const timeout = setTimeout(
       () => setIsSessionReady(true),

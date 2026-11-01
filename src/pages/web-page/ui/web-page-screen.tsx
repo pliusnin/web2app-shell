@@ -5,11 +5,9 @@ import type { WebViewNavigation } from 'react-native-webview';
 
 import { trackVisitedHostHelper } from '../../../features/cookie-persistence';
 import { routeLinkRequestHelper } from '../../../features/link-routing';
-import { BRIDGE_SCRIPT } from '../../../shared/bridge';
 import { useConfig } from '../../../shared/config';
 import { mergeRefsHelper } from '../../../shared/lib';
 import type { WebViewControls } from '../../../shared/lib';
-import { useBridgeMessages } from '../model/bridge/use-bridge-messages';
 import { handleLoadErrorHelper } from '../model/load-error/handle-load-error.helper';
 import { useWebViewRecovery } from '../model/process-recovery/use-web-view-recovery';
 
@@ -27,7 +25,6 @@ export const WebPageScreen = ({
   const { userAgentSuffix } = useConfig();
   const webView = useRef<WebViewControls | null>(null);
   const webViewRef = useMemo(() => mergeRefsHelper(ref, webView), [ref]);
-  const onMessage = useBridgeMessages(webView);
   const recovery = useWebViewRecovery(uri);
 
   return (
@@ -42,10 +39,10 @@ export const WebPageScreen = ({
         recovery.trackUrl(navState.url);
         trackVisitedHostHelper(navState.url);
       }}
-      injectedJavaScriptBeforeContentLoaded={BRIDGE_SCRIPT}
       originWhitelist={['*']}
-      onShouldStartLoadWithRequest={routeLinkRequestHelper}
-      onMessage={onMessage}
+      onShouldStartLoadWithRequest={request =>
+        routeLinkRequestHelper(request, uri)
+      }
       onError={handleLoadErrorHelper}
       onContentProcessDidTerminate={recovery.onContentProcessDidTerminate}
       onRenderProcessGone={recovery.onRenderProcessGone}

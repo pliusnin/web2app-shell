@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { LockScreen, useLaunchLock } from '../../features/biometric-login';
-import { useSiteUpdate } from '../../features/bundled-site';
 import { useOfflineToast } from '../../features/offline-toast';
 import { usePushNotifications } from '../../features/push-notifications';
 import type { CheckSession } from '../../features/session';
@@ -32,7 +31,7 @@ export const WebAppShell = ({
   const resolvedConfig = useMemo(() => resolveConfig(config), [config]);
   const isWebViewsReady = useWebViewsReady(checkSession);
   const launchLock = useLaunchLock();
-  useSiteUpdate(resolvedConfig.updateUrl);
+
   useOfflineToast();
   usePushNotifications();
   const schemeColors = useSchemeColors();

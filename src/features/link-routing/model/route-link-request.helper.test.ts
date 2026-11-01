@@ -1,8 +1,9 @@
 import { Linking } from 'react-native';
 
-import { SITE_ORIGIN } from '../../../shared/config';
 import type { ShouldStartLoadRequest } from '../../../shared/lib';
 import { routeLinkRequestHelper } from './route-link-request.helper';
+
+const TAB_URL = 'https://app.example.com/orders';
 
 const createRequest = (url: string): ShouldStartLoadRequest => ({
   url,
@@ -31,17 +32,20 @@ describe('routeLinkRequestHelper', () => {
     openURL.mockReset();
   });
 
-  it('loads pages of the bundled site in the WebView', () => {
+  it('loads pages of the tab site in the WebView', () => {
     expect(
-      routeLinkRequestHelper(createRequest(`${SITE_ORIGIN}/catalog`)),
+      routeLinkRequestHelper(
+        createRequest('https://app.example.com/catalog'),
+        TAB_URL,
+      ),
     ).toBe(true);
     expect(openURL).not.toHaveBeenCalled();
   });
 
   it('blocks other links and opens them outside the app', () => {
-    expect(routeLinkRequestHelper(createRequest('https://other.com/'))).toBe(
-      false,
-    );
+    expect(
+      routeLinkRequestHelper(createRequest('https://other.com/'), TAB_URL),
+    ).toBe(false);
     expect(openURL).toHaveBeenCalledWith('https://other.com/');
   });
 });

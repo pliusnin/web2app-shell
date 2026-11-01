@@ -10,7 +10,7 @@ const config: ResolvedConfig = {
   tabs: [
     { title: 'Home', icon: 'home', url: '/' },
     { title: 'Catalog', icon: 'view-grid', url: '/catalog' },
-    { title: 'Blog', icon: 'information', url: 'https://blog.other.com/' },
+    { title: 'Support', icon: 'email', url: 'mailto:help@example.com' },
   ],
   startTabIndex: 0,
 };
@@ -35,7 +35,7 @@ describe('TabsView', () => {
       routes: [
         { key: 'tab-0', title: 'Home', isExternal: false },
         { key: 'tab-1', title: 'Catalog', isExternal: false },
-        { key: 'tab-2', title: 'Blog', isExternal: true },
+        { key: 'tab-2', title: 'Support', isExternal: true },
       ],
     });
   });
@@ -51,10 +51,10 @@ describe('TabsView', () => {
 
   it('stops the native tab switch for external tabs only', async () => {
     const { tabView } = await renderTabsView();
-    const [home, , blog] = tabView.props.navigationState.routes;
+    const [home, , support] = tabView.props.navigationState.routes;
 
     expect(tabView.props.getPreventsDefault({ route: home })).toBe(false);
-    expect(tabView.props.getPreventsDefault({ route: blog })).toBe(true);
+    expect(tabView.props.getPreventsDefault({ route: support })).toBe(true);
   });
 
   it('renders the page of the active tab', async () => {

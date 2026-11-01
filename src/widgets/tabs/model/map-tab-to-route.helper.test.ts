@@ -32,9 +32,21 @@ describe('mapTabToRouteHelper', () => {
     expect(route.unfocusedIcon).toBeUndefined();
   });
 
-  it('marks a tab with a URL of another site as external', () => {
+  it('opens a tab with a URL of any site inside the app', () => {
     const route = mapTabToRouteHelper(
       { title: 'Blog', icon: 'information', url: 'https://blog.other.com/' },
+      0,
+    );
+
+    expect(route).toMatchObject({
+      uri: 'https://blog.other.com/',
+      isExternal: false,
+    });
+  });
+
+  it('marks a tab with a non-web URL as external', () => {
+    const route = mapTabToRouteHelper(
+      { title: 'Support', icon: 'email', url: 'mailto:help@example.com' },
       0,
     );
 

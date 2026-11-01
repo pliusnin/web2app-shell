@@ -13,11 +13,17 @@ export type TabRoute = {
   unfocusedIcon?: ImageSourcePropType;
 };
 
+export type TabSource = {
+  uri: string;
+  version: number;
+};
+
 export type TabWebViews = {
   ref: (key: string) => RefCallback<WebViewControls>;
   onNavigationStateChange: (
     key: string,
   ) => (navState: WebViewNavigation) => void;
+  source: (key: string, uri: string) => TabSource;
   resetToRoot: (key: string, uri: string) => void;
   tryGoBack: (key: string) => boolean;
 };

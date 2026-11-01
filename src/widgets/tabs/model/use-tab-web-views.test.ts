@@ -1,7 +1,9 @@
-import { renderHook } from '@testing-library/react-native';
+import { act, renderHook } from '@testing-library/react-native';
 import type { WebViewNavigation } from 'react-native-webview';
 
 import { useTabWebViews } from './use-tab-web-views';
+
+const ROOT_URI = 'https://example.com/catalog/';
 
 const createWebView = () => ({
   goBack: jest.fn(),
@@ -64,26 +66,47 @@ describe('useTabWebViews', () => {
     expect(result.current.tryGoBack('home')).toBe(false);
   });
 
-  it('sends only the tab page to the tab root URL without a reload', async () => {
-    const { result, webViews } = await renderTabWebViews();
+  it('gives a tab its own URI until it is reset', async () => {
+    const { result } = await renderTabWebViews();
 
-    result.current.resetToRoot('catalog', 'https://example.com/catalog/');
-
-    expect(webViews.catalog.injectJavaScript).toHaveBeenCalledWith(
-      'window.__MG_Native_invoke && window.__MG_Native_invoke({"cmd":"CHANGE_LOCATION","args":{"url":"https://example.com/catalog/"}}); true;',
-    );
-    expect(webViews.home.injectJavaScript).not.toHaveBeenCalled();
+    expect(result.current.source('catalog', ROOT_URI)).toEqual({
+      uri: ROOT_URI,
+      version: 0,
+    });
   });
 
-  it('does nothing for a tab whose WebView is unmounted', async () => {
+  it('loads the passed URI in a new WebView of only that tab', async () => {
     const { result, webViews } = await renderTabWebViews();
 
-    result.current.ref('catalog')(null);
+    await act(() => result.current.resetToRoot('catalog', ROOT_URI));
 
-    expect(() =>
-      result.current.resetToRoot('catalog', 'https://example.com/catalog/'),
-    ).not.toThrow();
+    expect(result.current.source('catalog', ROOT_URI)).toEqual({
+      uri: ROOT_URI,
+      version: 1,
+    });
+    expect(result.current.source('home', 'https://example.com/')).toEqual({
+      uri: 'https://example.com/',
+      version: 0,
+    });
     expect(webViews.catalog.injectJavaScript).not.toHaveBeenCalled();
+  });
+
+  it('gives every reset of a tab a new version', async () => {
+    const { result } = await renderTabWebViews();
+
+    await act(() => result.current.resetToRoot('catalog', ROOT_URI));
+    await act(() => result.current.resetToRoot('catalog', ROOT_URI));
+
+    expect(result.current.source('catalog', ROOT_URI).version).toBe(2);
+  });
+
+  it('forgets the tab history on reset', async () => {
+    const { result } = await renderTabWebViews();
+
+    result.current.onNavigationStateChange('catalog')(createNavState(true));
+    await act(() => result.current.resetToRoot('catalog', ROOT_URI));
+
+    expect(result.current.tryGoBack('catalog')).toBe(false);
   });
 
   it('keeps the same controls between renders', async () => {

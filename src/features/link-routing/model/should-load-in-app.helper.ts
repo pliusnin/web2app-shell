@@ -4,17 +4,17 @@ import type { ShouldStartLoadRequest } from '../../../shared/lib';
 import { isAppUrlHelper } from './is-app-url.helper';
 
 /**
- * Decides whether the WebView may load a request: pages of the bundled site
- * load inside, everything else must be opened outside the app.
+ * Decides whether the WebView may load a request: pages of the tab's site load
+ * inside, everything else must be opened outside the app.
  */
-export const shouldLoadInAppHelper = ({
-  url,
-  isTopFrame,
-}: ShouldStartLoadRequest) => {
+export const shouldLoadInAppHelper = (
+  { url, isTopFrame }: ShouldStartLoadRequest,
+  tabUrl: string,
+) => {
   // iOS also asks about iframe loads (maps, analytics); they must stay inside
   // the page
   if (Platform.OS === 'ios' && !isTopFrame) {
     return true;
   }
-  return isAppUrlHelper(url);
+  return isAppUrlHelper(url, tabUrl);
 };

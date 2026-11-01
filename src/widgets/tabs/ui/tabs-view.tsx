@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import TabView from 'react-native-bottom-tabs';
 
@@ -33,13 +33,21 @@ export const TabsView = ({ renderScene }: TabsViewProps) => {
       tabBarActiveTintColor={theme.primary}
       tabBarInactiveTintColor={tabBarColors.inactiveTint}
       tabBarStyle={{ backgroundColor: tabBarColors.background }}
-      renderScene={({ route }) =>
-        renderScene({
-          ref: webViews.ref(route.key),
-          uri: route.uri,
-          onNavigationStateChange: webViews.onNavigationStateChange(route.key),
-        })
-      }
+      renderScene={({ route }) => {
+        const source = webViews.source(route.key, route.uri);
+
+        return (
+          <Fragment key={source.version}>
+            {renderScene({
+              ref: webViews.ref(route.key),
+              uri: source.uri,
+              onNavigationStateChange: webViews.onNavigationStateChange(
+                route.key,
+              ),
+            })}
+          </Fragment>
+        );
+      }}
     />
   );
 };

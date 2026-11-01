@@ -1,10 +1,10 @@
 import { Platform } from 'react-native';
 
-import { SITE_ORIGIN } from '../../../shared/config';
 import type { ShouldStartLoadRequest } from '../../../shared/lib';
 import { shouldLoadInAppHelper } from './should-load-in-app.helper';
 
-const APP_URL = `${SITE_ORIGIN}/catalog`;
+const TAB_URL = 'https://app.example.com/orders';
+const APP_URL = 'https://app.example.com/catalog';
 const OTHER_URL = 'https://other.com/';
 
 const createRequest = (
@@ -32,15 +32,21 @@ describe('shouldLoadInAppHelper', () => {
     });
 
     it('loads iframe requests from any host', () => {
-      expect(shouldLoadInAppHelper(createRequest(OTHER_URL, false))).toBe(true);
+      expect(
+        shouldLoadInAppHelper(createRequest(OTHER_URL, false), TAB_URL),
+      ).toBe(true);
     });
 
     it('loads top-frame pages of the app host', () => {
-      expect(shouldLoadInAppHelper(createRequest(APP_URL, true))).toBe(true);
+      expect(shouldLoadInAppHelper(createRequest(APP_URL, true), TAB_URL)).toBe(
+        true,
+      );
     });
 
     it('rejects top-frame pages of another host', () => {
-      expect(shouldLoadInAppHelper(createRequest(OTHER_URL, true))).toBe(false);
+      expect(
+        shouldLoadInAppHelper(createRequest(OTHER_URL, true), TAB_URL),
+      ).toBe(false);
     });
   });
 
@@ -50,13 +56,15 @@ describe('shouldLoadInAppHelper', () => {
     });
 
     it('loads pages of the app host', () => {
-      expect(shouldLoadInAppHelper(createRequest(APP_URL, true))).toBe(true);
+      expect(shouldLoadInAppHelper(createRequest(APP_URL, true), TAB_URL)).toBe(
+        true,
+      );
     });
 
     it('rejects another host even in an iframe', () => {
-      expect(shouldLoadInAppHelper(createRequest(OTHER_URL, false))).toBe(
-        false,
-      );
+      expect(
+        shouldLoadInAppHelper(createRequest(OTHER_URL, false), TAB_URL),
+      ).toBe(false);
     });
   });
 });

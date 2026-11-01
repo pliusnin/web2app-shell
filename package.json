@@ -15,12 +15,9 @@
   },
   "dependencies": {
     "react-native-toast-message": "^2.5.2",
-    "set-cookie-parser": "^3.1.4",
-    "web-in-mobile-tools": "https://github.com/pliusnin/web-in-mobile-tools/archive/refs/tags/0.1.0.tar.gz"
+    "set-cookie-parser": "^3.1.4"
   },
   "peerDependencies": {
-    "@dr.pogodin/react-native-fs": ">=2.40.3",
-    "@dr.pogodin/react-native-static-server": ">=0.28.0",
     "@preeternal/react-native-cookie-manager": ">=7.0.0",
     "@react-native-community/netinfo": ">=12.0.1",
     "@react-native-firebase/app": ">=26.4.0",
@@ -37,8 +34,7 @@
     "react-native-keychain": ">=10.0.0",
     "react-native-notify-kit": ">=10.8.0",
     "react-native-safe-area-context": ">=5.5.2",
-    "react-native-webview": ">=14.0.1",
-    "react-native-zip-archive": ">=9.5.3"
+    "react-native-webview": ">=14.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
