@@ -14,19 +14,26 @@ import type { FetchInterceptor } from '../../shared/fetch-interceptors';
 import { useSchemeColors } from '../../shared/lib';
 import { ToastHost } from '../../shared/ui';
 import { TabsView } from '../../widgets/tabs';
+import type { AuthToken } from '../../widgets/tabs';
 import { signOutHelper } from './sign-out.helper';
 import { useWebViewsReady } from './use-web-views-ready';
+
+type TabsVisibilityProps =
+  | { hideTabsWhenSignedOut?: false; authToken?: never }
+  | { hideTabsWhenSignedOut: true; authToken: AuthToken };
 
 type WebAppShellProps = {
   config: AppConfig;
   checkSession?: CheckSession;
   interceptors?: readonly FetchInterceptor[];
-};
+} & TabsVisibilityProps;
 
 export const WebAppShell = ({
   config,
   checkSession,
   interceptors = NO_INTERCEPTORS,
+  hideTabsWhenSignedOut,
+  authToken,
 }: WebAppShellProps) => {
   const resolvedConfig = useMemo(() => resolveConfig(config), [config]);
   const isWebViewsReady = useWebViewsReady(checkSession);
@@ -48,7 +55,10 @@ export const WebAppShell = ({
         >
           {isWebViewsReady && launchLock.isUnlocked && (
             <FetchInterceptorsProvider value={interceptors}>
-              <TabsView renderScene={scene => <WebPageScreen {...scene} />} />
+              <TabsView
+                renderScene={scene => <WebPageScreen {...scene} />}
+                authToken={hideTabsWhenSignedOut ? authToken : undefined}
+              />
             </FetchInterceptorsProvider>
           )}
           {isWebViewsReady && launchLock.isLocked && (

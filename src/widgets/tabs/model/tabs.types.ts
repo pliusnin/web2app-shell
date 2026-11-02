@@ -32,4 +32,6 @@ export type TabScene = {
   ref: RefCallback<WebViewControls>;
   uri: string;
   onNavigationStateChange: (navState: WebViewNavigation) => void;
+  localStorageKey?: string;
+  onLocalStorageKeyChange: (hasValue: boolean) => void;
 };

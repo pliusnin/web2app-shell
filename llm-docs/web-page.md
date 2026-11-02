@@ -8,6 +8,7 @@ The screen of every tab: a WebView of the [bundled site](bundled-site.md) wired 
 - `src/pages/web-page/model/bridge/use-bridge-messages.ts`: the commands of the bridge, see [bridge.md](bridge.md).
 - `src/pages/web-page/model/process-recovery/use-web-view-recovery.ts`: a new WebView after its process is gone.
 - `src/pages/web-page/model/load-error/handle-load-error.helper.ts`: a failed load.
+- `src/pages/web-page/model/local-storage-watch/use-local-storage-watch.ts`: reports whether a localStorage key has a value, see below.
 - `model/native-fetch`, `model/file-download`, `model/biometric-login`: what the bridge commands do; biometrics itself is in `features/biometric-login` ([biometric-login.md](biometric-login.md)).
 
 ## Flow
@@ -19,10 +20,25 @@ The screen of every tab: a WebView of the [bundled site](bundled-site.md) wired 
 
 ## Contracts
 
-- `TabScene` props from [tabs.md](tabs.md): `ref` (merged with the page's own ref by `mergeRefsHelper`), `uri`, `onNavigationStateChange`.
-- `injectedJavaScriptBeforeContentLoaded` is `BRIDGE_SCRIPT`, `window.__MG_Native` for the site ([bridge.md](bridge.md)).
+- `TabScene` props from [tabs.md](tabs.md): `ref` (merged with the page's own ref by `mergeRefsHelper`), `uri`, `onNavigationStateChange`, `localStorageKey`, `onLocalStorageKeyChange`.
+- `injectedJavaScriptBeforeContentLoaded`, `injectedJavaScript` and `onMessage` come from `useLocalStorageWatch`, set only with a `localStorageKey`.
 - `onShouldStartLoadWithRequest` is `routeLinkRequestHelper` ([link-routing.md](link-routing.md)).
 - Every navigation goes to `trackVisitedHostHelper` ([cookie-persistence.md](cookie-persistence.md)).
+
+## localStorage watch
+
+With `localStorageKey` (the tab bar's `authToken`, [tabs.md](tabs.md#hidden-tab-bar-while-signed-out)) the page reports whether that key has a non-empty value. The page doesn't know what the key means.
+
+1. `createLocalStorageWatchScriptHelper(key)` builds the script, injected before the content loads and again after the load. The first run wraps `Storage.prototype.setItem`, `removeItem` and `clear` and listens to `storage` events; a later run on the same page only reports.
+2. The script posts `{ cmd: 'LOCAL_STORAGE_KEY', args: { hasValue } }` on its first run and whenever `hasValue` changes, not on every write.
+3. `parseLocalStorageMessageHelper` drops messages whose `nativeEvent.url` fails `isAppUrlHelper` against the tab URL ([link-routing.md](link-routing.md)) and anything else the page posts; `onLocalStorageKeyChange(hasValue)` gets the rest.
+
+Gotchas:
+
+- The script is a string: Hermes keeps no function source to `toString()`. `tsc` and ESLint don't check it, its test runs it against a fake page. Keep it in plain browser JS.
+- Android (react-native-webview 14) injects the early script in `onPageStarted`, where it can land in the previous document and be lost; the run after the load installs it then.
+- `window.ReactNativeWebView` exists only while `onMessage` is set, so the WebView gets `onMessage` only together with the script.
+- iOS fails an injected script whose last value can't be serialized: the script ends with `true;`.
 
 ## Gotchas
 

@@ -97,6 +97,18 @@ const checkSession: CheckSession = async token => {
 <WebAppShell config={webAppConfig} checkSession={checkSession} />;
 ```
 
+To keep a signed-out user on the sign-in page, hide the bottom tabs until the site stores its auth token. `authToken` says where the token is: a cookie (`storage: 'cookie'`, `key` is the cookie name, HttpOnly cookies work) or localStorage (`storage: 'localStorage'`, `key` is the localStorage key). The token counts while it has a non-empty value. Without `hideTabsWhenSignedOut` the tabs are always visible:
+
+```tsx
+<WebAppShell
+  config={webAppConfig}
+  hideTabsWhenSignedOut
+  authToken={{ storage: 'localStorage', key: 'accessToken' }}
+/>
+```
+
+A cookie is checked after each page load in the active tab and on every tab switch. A localStorage key is seen as soon as the site calls `localStorage.setItem`, `removeItem` or `clear`.
+
 ## The site
 
 Build the site so that `index.html` is at the root of a zip, name it `webapp.zip` and put the same file into both native projects:

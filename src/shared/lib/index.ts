@@ -1,6 +1,7 @@
 export { clearSecureItemHelper } from './clear-secure-item.helper';
 export { getHostHelper } from './get-host.helper';
 export { getOriginHelper } from './get-origin.helper';
+export { hasWebViewCookieHelper } from './has-web-view-cookie.helper';
 export { hideSplashHelper } from './hide-splash.helper';
 export { mergeRefsHelper } from './merge-refs.helper';
 export { readSecureItemHelper } from './read-secure-item.helper';

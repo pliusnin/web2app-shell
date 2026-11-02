@@ -5,7 +5,7 @@ A React Native shell that turns a website into a native app: the site ships insi
 ## Host and public API
 
 - `App.tsx` imports `web-app-config.json` and the client's fetch interceptors from `interceptors.ts` ([bridge.md](bridge.md#interceptors)), and renders `<WebAppShell config={...} interceptors={...} />` from `web2app-shell`.
-- `src/index.ts` is the package API: `WebAppShell`, `type AppConfig`, `type CheckSession` (the optional `checkSession` prop, [session.md](session.md)) and `type FetchInterceptor` (the optional `interceptors` prop, [bridge.md](bridge.md#interceptors)), nothing else.
+- `src/index.ts` is the package API: `WebAppShell`, `type AppConfig`, `type CheckSession` (the optional `checkSession` prop, [session.md](session.md)) and `type FetchInterceptor` (the optional `interceptors` prop, [bridge.md](bridge.md#interceptors)), `type AuthToken`, nothing else. `WebAppShell` also takes `hideTabsWhenSignedOut` with `authToken`, typed by the exported `type AuthToken` ([tabs.md](tabs.md#hidden-tab-bar-while-signed-out)).
 - `index.js` only registers `App`.
 
 ## Layer map
@@ -35,10 +35,10 @@ A React Native shell that turns a website into a native app: the site ships insi
 2. `useWebViewsReady` (`app/entrypoint`): `true` once the bundled site is served ([bundled-site.md](bundled-site.md)) and, at the latest after 5 s, the Keychain reset after an iOS reinstall → cookie restore → session check have run. It also turns cookie saving on.
 3. `useLaunchLock` (`features/biometric-login`): with biometric login on, the prompt at a cold start; `LockScreen` while it is not passed, its "Sign out" runs `signOutHelper` (`app/entrypoint`).
 4. App-wide hooks: `useSiteUpdate` (over-the-air site update, [bundled-site.md](bundled-site.md)), `useOfflineToast`, `usePushNotifications`.
-5. `SafeAreaProvider` → `SafeAreaView` with the scheme background → `FetchInterceptorsProvider` with the `interceptors` prop → `<TabsView renderScene={scene => <WebPageScreen {...scene} />} />` once the WebViews are ready and the app is unlocked, or `LockScreen` once they are ready and it is locked.
+5. `SafeAreaProvider` → `SafeAreaView` with the scheme background → `FetchInterceptorsProvider` with the `interceptors` prop → `<TabsView renderScene={scene => <WebPageScreen {...scene} />} authToken={...} />` (`authToken` only with `hideTabsWhenSignedOut`) once the WebViews are ready and the app is unlocked, or `LockScreen` once they are ready and it is locked.
 6. `ToastHost` after the tabs, so toasts are drawn on top.
 
-`widgets` can't import `pages`, so the page reaches the tabs through the `renderScene` render prop. The page gets only `TabScene` (`ref`, `uri`, `onNavigationStateChange`) and must not know it is shown in a tab.
+`widgets` can't import `pages`, so the page reaches the tabs through the `renderScene` render prop. The page gets only `TabScene` (`ref`, `uri`, `onNavigationStateChange`, `localStorageKey`, `onLocalStorageKeyChange`) and must not know it is shown in a tab.
 
 ## Shared modules
 
@@ -47,6 +47,7 @@ Check this list before writing a new helper.
 `src/shared/lib`:
 
 - `getHostHelper`: lowercased host of an http(s) URL, `undefined` for `tel:`, `mailto:` and other non-web URLs.
+- `hasWebViewCookieHelper`: whether the WebView cookie store has a non-empty cookie with a name for a URL, HttpOnly included.
 - `mergeRefsHelper`: one ref callback for several refs.
 - `hideSplashHelper`: fades out the native boot splash.
 - `readSecureItemHelper`, `writeSecureItemHelper`, `clearSecureItemHelper`: JSON per service in the Keychain, readable after the first unlock, kept out of backups.

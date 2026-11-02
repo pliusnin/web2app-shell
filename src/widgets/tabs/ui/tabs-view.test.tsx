@@ -1,8 +1,12 @@
 import type { ReactNode } from 'react';
+import CookieManager from '@preeternal/react-native-cookie-manager';
 import { act, render, screen } from '@testing-library/react-native';
+import type { WebViewNavigation } from 'react-native-webview';
 
 import { COLORS, ConfigProvider, SITE_ORIGIN } from '../../../shared/config';
 import type { ResolvedConfig } from '../../../shared/config';
+import type { AuthToken } from '../model/auth-token.types';
+import type { TabScene } from '../model/tabs.types';
 import { TabsView } from './tabs-view';
 
 const config: ResolvedConfig = {
@@ -15,13 +19,27 @@ const config: ResolvedConfig = {
   startTabIndex: 0,
 };
 
+const signedInPage: WebViewNavigation = {
+  url: `${SITE_ORIGIN}/dashboard`,
+  title: '',
+  loading: false,
+  canGoBack: true,
+  canGoForward: false,
+  lockIdentifier: 0,
+  navigationType: 'click',
+};
+
+const LOCAL_STORAGE: AuthToken = { storage: 'localStorage', key: 'token' };
+
 const wrapper = ({ children }: { children: ReactNode }) => (
   <ConfigProvider value={config}>{children}</ConfigProvider>
 );
 
-const renderTabsView = async () => {
-  const renderScene = jest.fn(() => null);
-  await render(<TabsView renderScene={renderScene} />, { wrapper });
+const renderTabsView = async (authToken?: AuthToken) => {
+  const renderScene = jest.fn<ReactNode, [TabScene]>(() => null);
+  await render(<TabsView renderScene={renderScene} authToken={authToken} />, {
+    wrapper,
+  });
 
   return { renderScene, tabView: screen.getByTestId('tab-view') };
 };
@@ -64,6 +82,8 @@ describe('TabsView', () => {
       ref: expect.any(Function),
       uri: `${SITE_ORIGIN}/`,
       onNavigationStateChange: expect.any(Function),
+      localStorageKey: undefined,
+      onLocalStorageKeyChange: expect.any(Function),
     });
   });
 
@@ -75,5 +95,55 @@ describe('TabsView', () => {
     expect(renderScene).toHaveBeenLastCalledWith(
       expect.objectContaining({ uri: `${SITE_ORIGIN}/catalog` }),
     );
+  });
+
+  it('shows the tab bar without an auth token', async () => {
+    const { tabView } = await renderTabsView();
+
+    expect(tabView).toHaveProp('tabBarHidden', false);
+  });
+
+  it('hides the tab bar while the user is signed out', async () => {
+    jest.mocked(CookieManager.getAsArray).mockResolvedValue([]);
+
+    const { tabView } = await renderTabsView({ storage: 'cookie', key: 'sid' });
+
+    expect(tabView).toHaveProp('tabBarHidden', true);
+  });
+
+  it('shows the tab bar after a page loads signed in', async () => {
+    jest.mocked(CookieManager.getAsArray).mockResolvedValue([]);
+    const { renderScene } = await renderTabsView({
+      storage: 'cookie',
+      key: 'sid',
+    });
+    jest
+      .mocked(CookieManager.getAsArray)
+      .mockResolvedValue([{ name: 'sid', value: 'abc' }]);
+
+    const [scene] = renderScene.mock.lastCall!;
+    await act(() => scene.onNavigationStateChange(signedInPage));
+
+    expect(screen.getByTestId('tab-view')).toHaveProp('tabBarHidden', false);
+  });
+
+  it('shows the tab bar once the page reports the localStorage token', async () => {
+    const { renderScene } = await renderTabsView(LOCAL_STORAGE);
+    const [scene] = renderScene.mock.lastCall!;
+
+    expect(scene.localStorageKey).toBe('token');
+    await act(() => scene.onLocalStorageKeyChange(true));
+
+    expect(screen.getByTestId('tab-view')).toHaveProp('tabBarHidden', false);
+  });
+
+  it('ignores reports from a tab that is no longer active', async () => {
+    const { renderScene, tabView } = await renderTabsView(LOCAL_STORAGE);
+    const [homeScene] = renderScene.mock.lastCall!;
+
+    await act(() => tabView.props.onIndexChange(1));
+    await act(() => homeScene.onLocalStorageKeyChange(true));
+
+    expect(screen.getByTestId('tab-view')).toHaveProp('tabBarHidden', true);
   });
 });

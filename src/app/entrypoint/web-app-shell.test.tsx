@@ -21,4 +21,52 @@ describe('WebAppShell', () => {
       uri: `${SITE_ORIGIN}/catalog`,
     });
   });
+
+  it('keeps the tabs visible by default', async () => {
+    await render(<WebAppShell config={config} />);
+
+    expect(await screen.findByTestId('tab-view')).toHaveProp(
+      'tabBarHidden',
+      false,
+    );
+  });
+
+  it('hides the tabs while the user is signed out when asked to', async () => {
+    await render(
+      <WebAppShell
+        config={config}
+        hideTabsWhenSignedOut
+        authToken={{ storage: 'cookie', key: 'sid' }}
+      />,
+    );
+
+    expect(await screen.findByTestId('tab-view')).toHaveProp(
+      'tabBarHidden',
+      true,
+    );
+  });
+
+  it('runs the localStorage watch in the page for a localStorage token', async () => {
+    await render(
+      <WebAppShell
+        config={config}
+        hideTabsWhenSignedOut
+        authToken={{ storage: 'localStorage', key: 'token' }}
+      />,
+    );
+
+    const webView = await screen.findByTestId('web-view');
+    expect(webView.props.injectedJavaScriptBeforeContentLoaded).toContain(
+      '"token"',
+    );
+    expect(webView.props.onMessage).toEqual(expect.any(Function));
+  });
+
+  it('adds no script to the page without hiding the tabs', async () => {
+    await render(<WebAppShell config={config} />);
+
+    const webView = await screen.findByTestId('web-view');
+    expect(webView.props.injectedJavaScriptBeforeContentLoaded).toBeUndefined();
+    expect(webView.props.onMessage).toBeUndefined();
+  });
 });

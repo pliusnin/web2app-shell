@@ -9,23 +9,33 @@ import { useConfig } from '../../../shared/config';
 import { mergeRefsHelper } from '../../../shared/lib';
 import type { WebViewControls } from '../../../shared/lib';
 import { handleLoadErrorHelper } from '../model/load-error/handle-load-error.helper';
+import { useLocalStorageWatch } from '../model/local-storage-watch/use-local-storage-watch';
 import { useWebViewRecovery } from '../model/process-recovery/use-web-view-recovery';
 
 type WebPageScreenProps = {
   ref: RefCallback<WebViewControls>;
   uri: string;
   onNavigationStateChange: (navState: WebViewNavigation) => void;
+  localStorageKey?: string;
+  onLocalStorageKeyChange?: (hasValue: boolean) => void;
 };
 
 export const WebPageScreen = ({
   ref,
   uri,
   onNavigationStateChange,
+  localStorageKey,
+  onLocalStorageKeyChange,
 }: WebPageScreenProps) => {
   const { userAgentSuffix } = useConfig();
   const webView = useRef<WebViewControls | null>(null);
   const webViewRef = useMemo(() => mergeRefsHelper(ref, webView), [ref]);
   const recovery = useWebViewRecovery(uri);
+  const localStorageWatch = useLocalStorageWatch(
+    uri,
+    localStorageKey,
+    onLocalStorageKeyChange,
+  );
 
   return (
     <WebView
@@ -46,6 +56,11 @@ export const WebPageScreen = ({
       onError={handleLoadErrorHelper}
       onContentProcessDidTerminate={recovery.onContentProcessDidTerminate}
       onRenderProcessGone={recovery.onRenderProcessGone}
+      injectedJavaScriptBeforeContentLoaded={
+        localStorageWatch.injectedJavaScriptBeforeContentLoaded
+      }
+      injectedJavaScript={localStorageWatch.injectedJavaScript}
+      onMessage={localStorageWatch.onMessage}
     />
   );
 };
