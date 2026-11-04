@@ -5,8 +5,8 @@ A React Native shell that turns a website into a native app: the site ships insi
 ## Host and public API
 
 - `App.tsx` imports `web-app-config.json` and the client's fetch interceptors from `interceptors.ts` ([bridge.md](bridge.md#interceptors)), and renders `<WebAppShell config={...} interceptors={...} />` from `web2app-shell`.
-- `src/index.ts` is the package API: `WebAppShell`, `type AppConfig`, `type CheckSession` (the optional `checkSession` prop, [session.md](session.md)) and `type FetchInterceptor` (the optional `interceptors` prop, [bridge.md](bridge.md#interceptors)), `type AuthToken`, nothing else. `WebAppShell` also takes `hideTabsWhenSignedOut` with `authToken`, typed by the exported `type AuthToken` ([tabs.md](tabs.md#hidden-tab-bar-while-signed-out)).
-- `index.js` only registers `App`.
+- `src/index.ts` is the package API: `WebAppShell`, `type AppConfig`, `type CheckSession` (the optional `checkSession` prop, [session.md](session.md)) and `type FetchInterceptor` (the optional `interceptors` prop, [bridge.md](bridge.md#interceptors)), `type AuthToken`, `registerBackgroundMessageHandler` (the FCM background handler for the app's `index.js`, [push-notifications.md](push-notifications.md)), nothing else. `WebAppShell` also takes `hideTabsWhenSignedOut` with `authToken`, typed by the exported `type AuthToken` ([tabs.md](tabs.md#hidden-tab-bar-while-signed-out)).
+- `index.js` calls `registerBackgroundMessageHandler()`, then registers `App`.
 
 ## Layer map
 

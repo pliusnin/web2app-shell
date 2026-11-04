@@ -84,6 +84,20 @@ function App() {
 export default App;
 ```
 
+`index.js`: the push handler for the app in the background or closed. React Native Firebase needs it before the app is registered, outside React:
+
+```js
+import { AppRegistry } from 'react-native';
+import { registerBackgroundMessageHandler } from 'web2app-shell';
+
+import App from './App';
+import { name as appName } from './app.json';
+
+registerBackgroundMessageHandler();
+
+AppRegistry.registerComponent(appName, () => App);
+```
+
 A site with sign-in can be opened signed in: it sends the app a token after signing in (`SAVE_TOKEN`), and `checkSession` checks it before the first page loads. Return the response when the token is valid (its `Set-Cookie` sign the user in on the site), `null` when it is not, and throw when the check failed:
 
 ```tsx
@@ -126,18 +140,21 @@ With `updateUrl` set, the shell also updates the site over the air: on launch an
 
 ### Shared
 
-**Firebase.** Set up `@react-native-firebase/app` and `@react-native-firebase/messaging` for iOS and Android by [their docs](https://rnfirebase.io/). On top of them the shell needs:
+**Firebase.** Set up `@react-native-firebase/app` and `@react-native-firebase/messaging` for iOS and Android by [their docs](https://rnfirebase.io/). The Firebase project, the APNs key, the sending key and a first test push, step by step: [docs/push-notifications-setup.md](docs/push-notifications-setup.md). On top of them the shell needs:
 
-- `firebase.json` in the app root. The shell registers for remote messages itself and posts to the `default` channel:
+- `firebase.json` in the app root. The shell posts to the `default` channel:
 
   ```json
   {
     "react-native": {
-      "messaging_android_notification_channel_id": "default",
-      "messaging_ios_auto_register_for_remote_messages": false
+      "messaging_android_notification_channel_id": "default"
     }
   }
   ```
+
+  Keep `messaging_ios_auto_register_for_remote_messages` at its default `true`: RNFB then registers with APNs on every launch, and the shell waits for the APNs token before it subscribes to the push topic. With `false` the device gets no APNs token on launches after the first one. A changed `firebase.json` needs a native rebuild.
+
+- Firebase console → Project settings → Cloud Messaging → Apple app configuration: upload an APNs auth key (`.p8`). Without it FCM accepts iOS pushes but they never arrive.
 
 - `ios/Podfile`, above `target '<App>' do`: React Native Firebase as static frameworks from CocoaPods, the setup the shell is built with:
 
@@ -181,7 +198,18 @@ The shell hides the splash once the site has painted its first screen, or when i
 
 ### iOS
 
+**Push Notifications**: in Xcode, the app target → Signing & Capabilities → `+ Capability` → Push Notifications. It adds `<App>.entitlements` with `aps-environment` and sets `CODE_SIGN_ENTITLEMENTS`; without it iOS gives the app no APNs token. Test pushes on a physical iPhone, the Simulator gets no APNs token.
+
 **`Info.plist`**:
+
+- background pushes:
+
+  ```xml
+  <key>UIBackgroundModes</key>
+  <array>
+    <string>remote-notification</string>
+  </array>
+  ```
 
 - the tab icon font:
 

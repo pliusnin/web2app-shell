@@ -61,6 +61,7 @@ export const WebPageScreen = ({
       }
       injectedJavaScript={localStorageWatch.injectedJavaScript}
       onMessage={localStorageWatch.onMessage}
+      bounces={false}
     />
   );
 };
