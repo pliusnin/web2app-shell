@@ -26,6 +26,7 @@ type WebAppShellProps = {
   config: AppConfig;
   checkSession?: CheckSession;
   interceptors?: readonly FetchInterceptor[];
+  customInjectJavascript?: string;
 } & TabsVisibilityProps;
 
 export const WebAppShell = ({
@@ -34,6 +35,7 @@ export const WebAppShell = ({
   interceptors = NO_INTERCEPTORS,
   hideTabsWhenSignedOut,
   authToken,
+  customInjectJavascript,
 }: WebAppShellProps) => {
   const resolvedConfig = useMemo(() => resolveConfig(config), [config]);
   const isWebViewsReady = useWebViewsReady(checkSession);
@@ -56,7 +58,12 @@ export const WebAppShell = ({
           {isWebViewsReady && launchLock.isUnlocked && (
             <FetchInterceptorsProvider value={interceptors}>
               <TabsView
-                renderScene={scene => <WebPageScreen {...scene} />}
+                renderScene={scene => (
+                  <WebPageScreen
+                    customInjectedJavascript={customInjectJavascript}
+                    {...scene}
+                  />
+                )}
                 authToken={hideTabsWhenSignedOut ? authToken : undefined}
               />
             </FetchInterceptorsProvider>

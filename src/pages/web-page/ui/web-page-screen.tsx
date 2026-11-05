@@ -18,6 +18,7 @@ type WebPageScreenProps = {
   onNavigationStateChange: (navState: WebViewNavigation) => void;
   localStorageKey?: string;
   onLocalStorageKeyChange?: (hasValue: boolean) => void;
+  customInjectedJavascript?: string;
 };
 
 export const WebPageScreen = ({
@@ -26,6 +27,7 @@ export const WebPageScreen = ({
   onNavigationStateChange,
   localStorageKey,
   onLocalStorageKeyChange,
+  customInjectedJavascript,
 }: WebPageScreenProps) => {
   const { userAgentSuffix } = useConfig();
   const webView = useRef<WebViewControls | null>(null);
@@ -59,8 +61,9 @@ export const WebPageScreen = ({
       injectedJavaScriptBeforeContentLoaded={
         localStorageWatch.injectedJavaScriptBeforeContentLoaded
       }
-      injectedJavaScript={localStorageWatch.injectedJavaScript}
+      injectedJavaScript={`${customInjectedJavascript} ${localStorageWatch.injectedJavaScript}`}
       onMessage={localStorageWatch.onMessage}
+      sharedCookiesEnabled={true}
       bounces={false}
     />
   );
