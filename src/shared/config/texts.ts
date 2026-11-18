@@ -1,5 +1,8 @@
 export const TEXTS = {
   offlineTitle: 'No internet connection',
+  loadErrorTitle: "Couldn't load the page",
+  loadErrorMessage: 'Check your internet connection and try again.',
+  loadErrorRetry: 'Try again',
   cantOpenLinkTitle: "Can't open the link",
   cantOpenLinkMessage: 'No app is installed to open it.',
   notificationChannelName: 'Notifications',

@@ -76,6 +76,36 @@ describe('WebAppShell', () => {
 
     const webView = await screen.findByTestId('web-view');
     expect(webView.props.injectedJavaScriptBeforeContentLoaded).toBeUndefined();
+    expect(webView.props.injectedJavaScript).toBeUndefined();
     expect(webView.props.onMessage).toBeUndefined();
+  });
+
+  it('runs the custom script of the host app in the page', async () => {
+    await render(
+      <WebAppShell
+        config={config}
+        customInjectJavascript="window.custom = 1;"
+      />,
+    );
+
+    expect(await screen.findByTestId('web-view')).toHaveProp(
+      'injectedJavaScript',
+      'window.custom = 1;',
+    );
+  });
+
+  it('runs the localStorage watch after the load without a custom script', async () => {
+    await render(
+      <WebAppShell
+        config={config}
+        hideTabsWhenSignedOut
+        authToken={{ storage: 'localStorage', key: 'token' }}
+      />,
+    );
+
+    const webView = await screen.findByTestId('web-view');
+    expect(webView.props.injectedJavaScript).toBe(
+      webView.props.injectedJavaScriptBeforeContentLoaded,
+    );
   });
 });

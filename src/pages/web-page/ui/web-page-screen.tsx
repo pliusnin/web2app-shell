@@ -8,9 +8,12 @@ import { routeLinkRequestHelper } from '../../../features/link-routing';
 import { useConfig } from '../../../shared/config';
 import { mergeRefsHelper } from '../../../shared/lib';
 import type { WebViewControls } from '../../../shared/lib';
+import { joinScriptsHelper } from '../model/injected-scripts/join-scripts.helper';
 import { handleLoadErrorHelper } from '../model/load-error/handle-load-error.helper';
 import { useLocalStorageWatch } from '../model/local-storage-watch/use-local-storage-watch';
 import { useWebViewRecovery } from '../model/process-recovery/use-web-view-recovery';
+import { useSplashHide } from '../model/splash/use-splash-hide';
+import { LoadErrorView } from './load-error-view';
 
 type WebPageScreenProps = {
   ref: RefCallback<WebViewControls>;
@@ -33,6 +36,7 @@ export const WebPageScreen = ({
   const webView = useRef<WebViewControls | null>(null);
   const webViewRef = useMemo(() => mergeRefsHelper(ref, webView), [ref]);
   const recovery = useWebViewRecovery(uri);
+  const splash = useSplashHide();
   const localStorageWatch = useLocalStorageWatch(
     uri,
     localStorageKey,
@@ -56,12 +60,19 @@ export const WebPageScreen = ({
         routeLinkRequestHelper(request, uri)
       }
       onError={handleLoadErrorHelper}
+      onLoadEnd={splash.onLoadEnd}
+      renderError={() => (
+        <LoadErrorView onRetry={() => webView.current?.reload()} />
+      )}
       onContentProcessDidTerminate={recovery.onContentProcessDidTerminate}
       onRenderProcessGone={recovery.onRenderProcessGone}
       injectedJavaScriptBeforeContentLoaded={
         localStorageWatch.injectedJavaScriptBeforeContentLoaded
       }
-      injectedJavaScript={`${customInjectedJavascript} ${localStorageWatch.injectedJavaScript}`}
+      injectedJavaScript={joinScriptsHelper(
+        customInjectedJavascript,
+        localStorageWatch.injectedJavaScript,
+      )}
       onMessage={localStorageWatch.onMessage}
       sharedCookiesEnabled={true}
       bounces={false}

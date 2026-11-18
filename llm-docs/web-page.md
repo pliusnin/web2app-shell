@@ -8,20 +8,23 @@ The screen of every tab: a WebView of the [bundled site](bundled-site.md) wired 
 - `src/pages/web-page/model/bridge/use-bridge-messages.ts`: the commands of the bridge, see [bridge.md](bridge.md).
 - `src/pages/web-page/model/process-recovery/use-web-view-recovery.ts`: a new WebView after its process is gone.
 - `src/pages/web-page/model/load-error/handle-load-error.helper.ts`: a failed load.
+- `src/pages/web-page/ui/load-error-view.tsx`: `LoadErrorView`, the screen of a failed load with a retry button.
+- `src/pages/web-page/model/splash/use-splash-hide.ts`: hides the native splash.
+- `src/pages/web-page/model/injected-scripts/join-scripts.helper.ts`: one post-load script out of the host app's and the page's own.
 - `src/pages/web-page/model/local-storage-watch/use-local-storage-watch.ts`: reports whether a localStorage key has a value, see below.
 - `model/native-fetch`, `model/file-download`, `model/biometric-login`: what the bridge commands do; biometrics itself is in `features/biometric-login` ([biometric-login.md](biometric-login.md)).
 
 ## Flow
 
-1. `WEB_READY` (sent by the site's bridge file) → `hideSplashHelper` fades out the native splash.
-2. A failed load → the WebView's own error page, and the splash hides: a failed page never sends `WEB_READY`.
+1. The page has finished loading (`onLoadEnd`, a failed load included) → `useSplashHide` fades out the native splash. A page that is still loading after 8 seconds loses the splash too.
+2. A failed load → `LoadErrorView` over the page (`renderError`): a message and a "Try again" button that reloads the WebView.
 3. The WebView's content process is gone (`onContentProcessDidTerminate`, `onRenderProcessGone`) → a new WebView (`key`) opens the last URL.
 4. `DOWNLOAD_FILE` → `readFileUrlHelper` takes the file from `url`: a base64 `data:` URL is decoded in place, an http(s) URL is downloaded by the app with React Native's `fetch` (no cookies of the WebView on iOS, a non-2xx status is a failure) and its type comes from `Content-Type`. The file goes to `cache/downloads` under the site's name (unsafe characters removed, the extension added by type when missing) and opens in Quick Look on iOS or an app for the type on Android. A failure shows a toast.
 
 ## Contracts
 
 - `TabScene` props from [tabs.md](tabs.md): `ref` (merged with the page's own ref by `mergeRefsHelper`), `uri`, `onNavigationStateChange`, `localStorageKey`, `onLocalStorageKeyChange`.
-- `injectedJavaScriptBeforeContentLoaded`, `injectedJavaScript` and `onMessage` come from `useLocalStorageWatch`, set only with a `localStorageKey`.
+- `injectedJavaScriptBeforeContentLoaded` and `onMessage` come from `useLocalStorageWatch`, set only with a `localStorageKey`. `injectedJavaScript` is the host app's `customInjectJavascript` followed by the watch script, joined by `joinScriptsHelper`; unset when there is neither. Never build it with a template string: a missing part becomes the word `undefined` and the script throws.
 - `onShouldStartLoadWithRequest` is `routeLinkRequestHelper` ([link-routing.md](link-routing.md)).
 - Every navigation goes to `trackVisitedHostHelper` ([cookie-persistence.md](cookie-persistence.md)).
 
@@ -46,7 +49,7 @@ Gotchas:
 - The site is served locally, so a page always loads: there are no offline or HTTP error screens. Requests of the site to its APIs fail inside the site; the [offline toast](offline-toast.md) tells about the connection.
 - `originWhitelist={['*']}` sends every navigation, `tel:` and `mailto:` included, through `onShouldStartLoadWithRequest`. With the default whitelist the OS would open non-http links itself, bypassing link routing.
 - Android reports error `-10` (unknown URL scheme) for `tel:`, `mailto:` and other app links even after `onShouldStartLoadWithRequest` blocked them and opened them outside. `handleLoadErrorHelper` prevents the error page for it.
-- The splash doesn't wait for `onLoadEnd`: a page is loaded before the site has drawn anything, which shows a blank screen. Tabs mount lazily, so on launch only the start tab's page can hide it.
+- The splash hides on `onLoadEnd`: a remote site has no bridge file to send `WEB_READY`. Tabs mount lazily, so on launch only the start tab's page can hide it. The host app must call `RNBootSplash.init` natively ([native-build.md](native-build.md)); without it there is no splash to hide and the page shows up half-loaded.
 - `allowsBackForwardNavigationGestures` gives iOS swipe-back inside the WebView. The Android back button is handled by the tabs ([tabs.md](tabs.md)).
 - The WebView can't download files the site makes in the browser (`blob:`), and the app can't read a `blob:` URL either: the site's bridge file turns such a file into a base64 `data:` URL and hands it over with `DOWNLOAD_FILE` ([bridge.md](bridge.md)).
 

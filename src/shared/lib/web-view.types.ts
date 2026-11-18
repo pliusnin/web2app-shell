@@ -1,6 +1,9 @@
 import type { WebView, WebViewProps } from 'react-native-webview';
 
-export type WebViewControls = Pick<WebView, 'goBack' | 'injectJavaScript'>;
+export type WebViewControls = Pick<
+  WebView,
+  'goBack' | 'injectJavaScript' | 'reload'
+>;
 
 export type ErrorHandler = NonNullable<WebViewProps['onError']>;
 export type MessageHandler = NonNullable<WebViewProps['onMessage']>;
