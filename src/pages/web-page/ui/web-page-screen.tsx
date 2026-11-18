@@ -65,6 +65,9 @@ export const WebPageScreen = ({
       onMessage={localStorageWatch.onMessage}
       sharedCookiesEnabled={true}
       bounces={false}
+      // iOS draws the tab bar over the page; "automatic" insets the scroll
+      // view by its height (0 while hidden). The WebView default is "never".
+      contentInsetAdjustmentBehavior="automatic"
     />
   );
 };

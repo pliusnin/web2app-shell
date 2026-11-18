@@ -42,6 +42,7 @@ Gotchas:
 
 ## Gotchas
 
+- iOS draws the native tab bar over the tab's content. `contentInsetAdjustmentBehavior="automatic"` makes the WebView's scroll view inset its content by the tab bar's height, which follows the bar when it hides ([tabs.md](tabs.md#hidden-tab-bar-while-signed-out)). react-native-webview defaults to `"never"`, which leaves the bottom of every page under the bar. The inset is native, so `position: fixed` bottom elements of the site still need `viewport-fit=cover` and `env(safe-area-inset-bottom)` on the site's side. Android lays the tab bar out below the page and ignores the prop.
 - The site is served locally, so a page always loads: there are no offline or HTTP error screens. Requests of the site to its APIs fail inside the site; the [offline toast](offline-toast.md) tells about the connection.
 - `originWhitelist={['*']}` sends every navigation, `tel:` and `mailto:` included, through `onShouldStartLoadWithRequest`. With the default whitelist the OS would open non-http links itself, bypassing link routing.
 - Android reports error `-10` (unknown URL scheme) for `tel:`, `mailto:` and other app links even after `onShouldStartLoadWithRequest` blocked them and opened them outside. `handleLoadErrorHelper` prevents the error page for it.

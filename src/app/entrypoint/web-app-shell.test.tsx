@@ -22,6 +22,15 @@ describe('WebAppShell', () => {
     });
   });
 
+  it('lets iOS inset the page by the tab bar so it is not hidden behind it', async () => {
+    await render(<WebAppShell config={config} />);
+
+    expect(await screen.findByTestId('web-view')).toHaveProp(
+      'contentInsetAdjustmentBehavior',
+      'automatic',
+    );
+  });
+
   it('keeps the tabs visible by default', async () => {
     await render(<WebAppShell config={config} />);
 
