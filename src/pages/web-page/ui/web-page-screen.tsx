@@ -8,9 +8,11 @@ import { routeLinkRequestHelper } from '../../../features/link-routing';
 import { useConfig } from '../../../shared/config';
 import { mergeRefsHelper } from '../../../shared/lib';
 import type { WebViewControls } from '../../../shared/lib';
+import { useFileDownload } from '../model/file-download/use-file-download';
 import { joinScriptsHelper } from '../model/injected-scripts/join-scripts.helper';
 import { handleLoadErrorHelper } from '../model/load-error/handle-load-error.helper';
 import { useLocalStorageWatch } from '../model/local-storage-watch/use-local-storage-watch';
+import { joinMessageHandlersHelper } from '../model/messages/join-message-handlers.helper';
 import { useWebViewRecovery } from '../model/process-recovery/use-web-view-recovery';
 import { useSplashHide } from '../model/splash/use-splash-hide';
 import { LoadErrorView } from './load-error-view';
@@ -37,6 +39,7 @@ export const WebPageScreen = ({
   const webViewRef = useMemo(() => mergeRefsHelper(ref, webView), [ref]);
   const recovery = useWebViewRecovery(uri);
   const splash = useSplashHide();
+  const fileDownload = useFileDownload(uri);
   const localStorageWatch = useLocalStorageWatch(
     uri,
     localStorageKey,
@@ -73,7 +76,10 @@ export const WebPageScreen = ({
         customInjectedJavascript,
         localStorageWatch.injectedJavaScript,
       )}
-      onMessage={localStorageWatch.onMessage}
+      onMessage={joinMessageHandlersHelper(
+        localStorageWatch.onMessage,
+        fileDownload,
+      )}
       sharedCookiesEnabled={true}
       bounces={false}
       // iOS draws the tab bar over the page; "automatic" insets the scroll

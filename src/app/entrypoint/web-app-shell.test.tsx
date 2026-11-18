@@ -77,7 +77,15 @@ describe('WebAppShell', () => {
     const webView = await screen.findByTestId('web-view');
     expect(webView.props.injectedJavaScriptBeforeContentLoaded).toBeUndefined();
     expect(webView.props.injectedJavaScript).toBeUndefined();
-    expect(webView.props.onMessage).toBeUndefined();
+  });
+
+  it('always listens to the page so it can hand over a file to save', async () => {
+    await render(<WebAppShell config={config} />);
+
+    expect(await screen.findByTestId('web-view')).toHaveProp(
+      'onMessage',
+      expect.any(Function),
+    );
   });
 
   it('runs the custom script of the host app in the page', async () => {
